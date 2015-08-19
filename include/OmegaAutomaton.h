@@ -3,11 +3,12 @@
 
 #include <vector>
 #include <string>
+#include "TransitionRelation.h"
 
 namespace omalg {
 
   class OmegaAutomaton {
-  private:
+  protected:
     int numberOfStates;
     std::vector<std::string> stateNames;
     
@@ -15,6 +16,8 @@ namespace omalg {
     std::vector<std::string> alphabet;
     
     int initialState;
+    
+    TransitionRelation transitionRelation;
     
   };
 }
