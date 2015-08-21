@@ -1,9 +1,13 @@
 SOURCES=src/
 BUILD=build/
 HEADER=include/
+OPTPARSER=OptParser/
+BIN=bin/
 
-CXXFLAGS=-I$(HEADER)
-LFLAGS=-I$(HEADER)
+CXXFLAGS+=-I$(HEADER)
+CXXFLAGS+=-I$(OPTPARSER)
+LFLAGS+=-I$(HEADER)
+LFLAGS+=-I$(OPTPARSER)
 
 SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
@@ -11,17 +15,23 @@ OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 all: clean B20S
 	
 
-B2OS: $(BUILD) $(BUILD)BuechiToOmegaSemigroup.o
-	$(CXX) -o $(BUILD)B2OS $(OBJ_FILES) $(BUILD)BuechiToOmegaSemigroup.o $(LFLAGS)
+B2OS: $(BUILD) $(BIN) OptParser $(BUILD)BuechiToOmegaSemigroup.o
+	$(CXX) -o $(BIN)B2OS $(OBJ_FILES) $(BUILD)BuechiToOmegaSemigroup.o $(LFLAGS)
 	
 $(BUILD)BuechiToOmegaSemigroup.o: BuechiToOmegaSemigroup.cpp $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD)%.o: $(SOURCES)%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
+	
+OptParser: $(OPTPARSER)OptParser.cpp
+	$(CXX) $(CXXFLAGS) -c -o $(BUILD)OptParser.o $<
+	
 $(BUILD):
 	mkdir $(BUILD)
+	
+$(BIN):
+	mkdir $(BIN)
 	
 clean:
 	rm -r $(BUILD)
