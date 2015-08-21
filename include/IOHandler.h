@@ -16,7 +16,7 @@ namespace omalg {
 	  OmegaAutomaton readAutomatonFromStream(std::istream &in);
 	  void writeAutomatonToStream(OmegaAutomaton A, std::ostream &out);
 	  
-	  Semigroup readSemigroupFromStream(std:istream &in);
+	  Semigroup readSemigroupFromStream(std::istream &in);
 	  void writeSemigroupToStream(Semigroup S, std::ostream &out);
 	  
 	  OmegaSemigroup readOmegaSemigroupFromStream(std::istream &in);

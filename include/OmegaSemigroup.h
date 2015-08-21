@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "Semigroup.h"
+
 namespace omalg {
 
   class OmegaSemigroup {

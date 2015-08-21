@@ -7,7 +7,7 @@ namespace omalg {
 
   class BuechiAutomaton: OmegaAutomaton {
   private:
-    boolean coBuechi;
+    bool coBuechi;
     std::vector<int> finalStates;
   };
 

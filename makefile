@@ -12,7 +12,7 @@ LFLAGS+=-I$(OPTPARSER)
 SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 
-all: clean B20S
+all: B2OS
 	
 
 B2OS: $(BUILD) $(BIN) OptParser $(BUILD)BuechiToOmegaSemigroup.o
@@ -33,5 +33,5 @@ $(BUILD):
 $(BIN):
 	mkdir $(BIN)
 	
-clean:
+clean: $(BUILD)
 	rm -r $(BUILD)

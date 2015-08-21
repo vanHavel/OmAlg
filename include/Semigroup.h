@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "UnionFind.h"
+
 namespace omalg {
 
   class Semigroup {
