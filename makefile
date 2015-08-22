@@ -11,11 +11,12 @@ LFLAGS+=-I$(OPTPARSER)
 
 SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
+OBJ_FILES+=$(BUILD)OptParser.o
 
 all: B2OS
 	
 
-B2OS: $(BUILD) $(BIN) OptParser $(BUILD)BuechiToOmegaSemigroup.o
+B2OS: $(BUILD) $(BIN) $(BUILD)BuechiToOmegaSemigroup.o
 	$(CXX) -o $(BIN)B2OS $(OBJ_FILES) $(BUILD)BuechiToOmegaSemigroup.o $(LFLAGS)
 	
 $(BUILD)BuechiToOmegaSemigroup.o: BuechiToOmegaSemigroup.cpp $(OBJ_FILES)
@@ -24,7 +25,7 @@ $(BUILD)BuechiToOmegaSemigroup.o: BuechiToOmegaSemigroup.cpp $(OBJ_FILES)
 $(BUILD)%.o: $(SOURCES)%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 	
-OptParser: $(OPTPARSER)OptParser.cpp
+$(BUILD)OptParser.o: $(OPTPARSER)OptParser.cpp
 	$(CXX) $(CXXFLAGS) -c -o $(BUILD)OptParser.o $<
 	
 $(BUILD):
@@ -33,5 +34,5 @@ $(BUILD):
 $(BIN):
 	mkdir $(BIN)
 	
-clean: $(BUILD)
-	rm -r $(BUILD)
+clean: $(BUILD) $(BIN)
+	rm -r $(BUILD); rm -r $(BIN)

@@ -2,15 +2,19 @@
 #define OMALG_BUECHI_AUTOMATON
 
 #include "OmegaAutomaton.h"
+#include "OmegaSemigroup.h"
 
 namespace omalg {
 
   class BuechiAutomaton: OmegaAutomaton {
-  private:
+  protected:
     bool coBuechi;
     std::vector<int> finalStates;
-  };
 
+  public:
+      OmegaSemigroup* toOmegaSemigroup();
+  
+  };
 }
 
 #endif

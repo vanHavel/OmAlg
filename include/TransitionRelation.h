@@ -7,7 +7,7 @@
 namespace omalg {
 
   class TransitionRelation {
-  private:
+  protected:
     std::vector<std::vector<std::set<int> > > TransitionTable;
     
   public:

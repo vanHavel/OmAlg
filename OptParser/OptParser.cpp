@@ -191,7 +191,7 @@ namespace Kanedo{
 		}
 		vector<string> required = this->required;
 		unordered_map<string, string> defaults = this->defaults;
-		for (int i = 0; i < argc; ++i) {
+		for (int i = 1; i < argc; ++i) {
 			string arg_name = string(argv[i]);
 			std::unordered_map<string, OptParser::Option>::iterator opt_iterator = this->findOption(argv[i]);
 			if (opt_iterator != this->options.end()) {
@@ -211,6 +211,11 @@ namespace Kanedo{
 					defaults.erase(arg_name);
 				}
 			}
+            else {
+              *this->output << "Warning: I don't know the option " << arg_name;
+              *this->output << " and I'm going to ignore it. (Type ";
+              *this->output << this->binary_name << " -h for help)" << endl;
+            }
 		}
 		if(required.size() > 0){
 			*this->output << "error: missing required options " << endl;

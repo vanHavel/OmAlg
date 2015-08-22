@@ -13,30 +13,35 @@ namespace omalg {
 
   class IOHandler {
   private:
-	  OmegaAutomaton readAutomatonFromStream(std::istream &in);
-	  void writeAutomatonToStream(OmegaAutomaton A, std::ostream &out);
+	  bool readAutomatonFromStream(OmegaAutomaton* A, std::istream &in);
+	  bool writeAutomatonToStream(OmegaAutomaton* A, std::ostream &out);
+          
+          bool readBuechiAutomatonFromStream(BuechiAutomaton* A, std::istream &in);
 	  
-	  Semigroup readSemigroupFromStream(std::istream &in);
-	  void writeSemigroupToStream(Semigroup S, std::ostream &out);
+	  bool readSemigroupFromStream(Semigroup* S, std::istream &in);
+	  bool writeSemigroupToStream(Semigroup* S, std::ostream &out);
 	  
-	  OmegaSemigroup readOmegaSemigroupFromStream(std::istream &in);
-	  void writeOmegaSemigroupToStream(OmegaSemigroup S, std::ostream &out);
+	  bool readOmegaSemigroupFromStream(OmegaSemigroup* S, std::istream &in);
+	  bool writeOmegaSemigroupToStream(OmegaSemigroup* S, std::ostream &out);
 		  
   public: 
-	  OmegaAutomaton readAutomatonFromFile(std::string inputFileName);
-	  OmegaAutomaton readAutomatonFromStdin();
-	  void writeAutomatonToFile(OmegaAutomaton A, std::string outputFileName);
-	  void writeAutomatonToStdout(OmegaAutomaton A);
+	  bool readAutomatonFromFile(OmegaAutomaton* A, std::string inputFileName);
+	  bool readAutomatonFromStdin(OmegaAutomaton* A);
+	  bool writeAutomatonToFile(OmegaAutomaton* A, std::string outputFileName);
+	  bool writeAutomatonToStdout(OmegaAutomaton* A);
+          
+          bool readBuechiAutomatonFromFile(BuechiAutomaton* A, std::string inputFileName);
+	  bool readBuechiAutomatonFromStdin(BuechiAutomaton* A);
 	  
-	  Semigroup readSemigroupFromFile(std::string inputFileName);
-	  Semigroup readSemigroupFromStdin();
-	  void writeSemigroupToFile(Semigroup S, std::string filename);
-	  void writeSemigroupToStdout(Semigroup S);
+	  bool readSemigroupFromFile(Semigroup* S, std::string inputFileName);
+	  bool readSemigroupFromStdin(Semigroup* S);
+	  bool writeSemigroupToFile(Semigroup* S, std::string filename);
+	  bool writeSemigroupToStdout(Semigroup* S);
 	  
-	  OmegaSemigroup readOmegaSemigroupFromFile(std::string inputFileName);
-	  OmegaSemigroup readOmegaSemigroupFromStdin();
-	  void writeOmegaSemigroupToFile(OmegaSemigroup S, std::string outputFileName);
-	  void writeOmegaSemigroupToStdout(OmegaSemigroup S);
+	  bool readOmegaSemigroupFromFile(OmegaSemigroup* S, std::string inputFileName);
+	  bool readOmegaSemigroupFromStdin(OmegaSemigroup* S);
+	  bool writeOmegaSemigroupToFile(OmegaSemigroup* S, std::string outputFileName);
+	  bool writeOmegaSemigroupToStdout(OmegaSemigroup* S);
   };
 
 }
