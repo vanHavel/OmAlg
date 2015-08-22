@@ -16,6 +16,7 @@ int main(int argc, char const *argv[]) {
   optParser->addFlag("suppress_output", "s", "suppress-output", "Suppress output of warnings by b2os");
   
   if(!optParser->parseOptions(argc, argv)) {
+    delete optParser;
     return EXIT_FAILURE;
   }
   
@@ -23,6 +24,7 @@ int main(int argc, char const *argv[]) {
     optParser->showUsage();
     std::cout << "Consult the manual for additional help and examples.";
     std::cout << std::endl;
+    delete optParser;
     return 0;
   }
   
@@ -40,6 +42,8 @@ int main(int argc, char const *argv[]) {
     if(!ioHandler->readBuechiAutomatonFromStdin(A)) {
       std::cerr << "Error: failed to read Buechi automaton from stdin";
       std::cerr << std::endl;
+      delete optParser;
+      delete ioHandler;
       return EXIT_FAILURE;
     }
   }
@@ -47,6 +51,8 @@ int main(int argc, char const *argv[]) {
     if(!ioHandler->readBuechiAutomatonFromFile(A, inputFile)) {
       std::cerr << "Error: failed to read Buechi automaton from file " << inputFile;
       std::cerr << std::endl;
+      delete optParser;
+      delete ioHandler;
       return EXIT_FAILURE;
     }
   }
@@ -61,6 +67,9 @@ int main(int argc, char const *argv[]) {
       if(!ioHandler->writeOmegaSemigroupToStdout(B)) {
         std::cerr << "Error: failed to write omega semigroup to stdout";
         std::cerr << std::endl;
+        delete optParser;
+        delete ioHandler;
+        delete A;
         return EXIT_FAILURE;
       }
     }
@@ -69,6 +78,9 @@ int main(int argc, char const *argv[]) {
     if(!ioHandler->writeOmegaSemigroupToFile(B, outputFile)) {
         std::cerr << "Error: failed to write omega semigroup to file " << outputFile;
         std::cerr << std::endl;
+        delete optParser;
+        delete ioHandler;
+        delete A;
         return EXIT_FAILURE;
       }
   }

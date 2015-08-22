@@ -2,6 +2,7 @@
 #define OMALG_IO_HANDLER
 
 #include <string>
+#include <vector>
 #include <iostream>
 
 #include "OmegaAutomaton.h"
