@@ -2,8 +2,12 @@
 
 namespace omalg {
   
-  OmegaSemigroup* BuechiAutomaton::toOmegaSemigroup() {
-    return 0; //TODO
+  OmegaSemigroup BuechiAutomaton::toOmegaSemigroup() {
+    return OmegaSemigroup(); //TODO
+  }
+  
+  BuechiAutomaton::~BuechiAutomaton() {
+    //TODO
   }
   
 }

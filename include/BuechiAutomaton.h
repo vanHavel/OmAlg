@@ -6,14 +6,14 @@
 
 namespace omalg {
 
-  class BuechiAutomaton: OmegaAutomaton {
+  class BuechiAutomaton: public OmegaAutomaton {
   protected:
     bool coBuechi;
     std::vector<int> finalStates;
 
   public:
-      OmegaSemigroup* toOmegaSemigroup();
-  
+      OmegaSemigroup toOmegaSemigroup();
+      ~BuechiAutomaton();
   };
 }
 

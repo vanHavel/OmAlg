@@ -3,11 +3,14 @@
 
 #include <vector>
 #include <string>
+
 #include "TransitionRelation.h"
+#include "OmegaSemigroup.h"
 
 namespace omalg {
 
   class OmegaAutomaton {
+      
   protected:
     int numberOfStates;
     std::vector<std::string> stateNames;
@@ -19,6 +22,9 @@ namespace omalg {
     
     TransitionRelation transitionRelation;
     
+  public:
+      virtual OmegaSemigroup toOmegaSemigroup() = 0;
+      virtual ~OmegaAutomaton() { };
   };
 }
 

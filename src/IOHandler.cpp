@@ -2,28 +2,28 @@
 
 namespace omalg {
   
-  bool IOHandler::readBuechiAutomatonFromStream(BuechiAutomaton *A, std::istream &in) {
-    return true; //TODO
+  OmegaAutomaton* IOHandler::readAutomatonFromStream(std::istream &in) {
+    return 0; //TODO
   }
   
-  bool IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup* S, std::ostream& out) {
-    return true; //TODO
+  void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
+    return; //TODO
   }
   
-  bool IOHandler::readBuechiAutomatonFromFile(BuechiAutomaton* A, std::string inputFileName) {
-    return true; //TODO
+  OmegaAutomaton* IOHandler::readAutomatonFromFile(std::string inputFileName) {
+    return 0; //TODO
   }
   
-  bool IOHandler::readBuechiAutomatonFromStdin(BuechiAutomaton* A) {
-    return true; //TODO
+  OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
+    return 0; //TODO
   }
   
-  bool IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup* S, std::string outputFileName) {
-    return true; //TODO
+  void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string outputFileName) {
+    return; //TODO
   }
   
-  bool IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup* S) {
-    return true; //TODO
+  void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
+    return; //TODO
   }
 
 }
