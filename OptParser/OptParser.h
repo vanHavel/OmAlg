@@ -21,13 +21,6 @@
 #include <algorithm>
 
 namespace Kanedo{
-	using std::cout;
-	using std::endl;
-	using std::vector;
-	using std::unordered_map;
-	using std::max;
-	using std::string;
-	using std::ostream;
 
 	/**
 	 * Class OptParser
@@ -37,48 +30,48 @@ namespace Kanedo{
 	class OptParser {
 	protected:
 		struct Option{
-			string name;
-			string short_opt;
-			string long_opt;
-			string descr;
+			std::string name;
+			std::string short_opt;
+			std::string long_opt;
+			std::string descr;
 			bool required;
-			string default_val;
+			std::string default_val;
 			bool use_default;
 			bool flag;
 		};
-		unordered_map<string, string> values;
-		unordered_map<string, bool> flag_values;
-		vector<string> required;
-		unordered_map<string, Option> options;
-		unordered_map<string, string> defaults;
-		string help;
-		string binary_name;
+		std::unordered_map<std::string, std::string> values;
+		std::unordered_map<std::string, bool> flag_values;
+		std::vector<std::string> required;
+		std::unordered_map<std::string, Option> options;
+		std::unordered_map<std::string, std::string> defaults;
+		std::string help;
+		std::string binary_name;
 
 		size_t max_name;
 		size_t max_long;
 		size_t max_short;
 
-		void	setOption(string name, string short_opt, string long_opt, string descr, bool required, string default_val, bool use_default);
+		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr, bool required, std::string default_val, bool use_default);
 		
 		bool strict;
-		string getUsageText();
-		ostream *output;
+		std::string getUsageText();
+		std::ostream *output;
 		
-		unordered_map<string, Option>::iterator findOption(string argv);
+		std::unordered_map<std::string, Option>::iterator findOption(std::string argv);
 	public:
 		OptParser();
 		/**
 		 * constructor
 		 * @param ostream& output define output stream for usage text. default std::cout
 		 */
-		OptParser(ostream &output);
+		OptParser(std::ostream &output);
 		
 		/**
 		 * define intro text.
 		 * usually a short description of what the application does
 		 * @param text the intro text
 		 */
-		void	setHelpText(string text);
+		void	setHelpText(std::string text);
 		/**
 		 * define an option
 		 * @param string name      the name of the option used in @see OptParser::getValue	
@@ -86,7 +79,7 @@ namespace Kanedo{
 		 * @param string long_opt  the long variant of this option (w/o --)
 		 * @param string descr     a description of what this options is used for
 		 */
-		void	setOption(string name, string short_opt, string long_opt, string descr);
+		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr);
 
 		/**
 		 * define an option
@@ -96,7 +89,7 @@ namespace Kanedo{
 		 * @param string descr     a description of what this options is used for
 		 * @param bool   required  set to true if this option is required
 		 */
-		void	setOption(string name, string short_opt, string long_opt, string descr, bool required);
+		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr, bool required);
 		/**
 		 * [setOption description]
 		 * @param string name        the name of the option used in @see OptParser::getValue
@@ -106,14 +99,14 @@ namespace Kanedo{
 		 * @param bool   required    set to true if this option is required
 		 * @param string default_val define a default value for this option (only makes sense if required is set to false)
 		 */
-		void	setOption(string name, string short_opt, string long_opt, string descr, bool required, string default_val);
+		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr, bool required, std::string default_val);
 
 		/**
 		 * define default value for option later
 		 * @param string name  the name of the option
 		 * @param string value the default value
 		 */
-		void	setDefaultValue(string name, string value);
+		void	setDefaultValue(std::string name, std::string value);
 
 		/**
 		 * add a simple flag parameter without values. just set or not-set
@@ -122,7 +115,7 @@ namespace Kanedo{
 		 * @param  long_opt    the long variant of this flag (w/o --)
 		 * @param  description a description of what this options is used for
 		 */
-		void 	addFlag(string name, string short_opt, string long_opt, string descr);
+		void 	addFlag(std::string name, std::string short_opt, std::string long_opt, std::string descr);
 
 		/**
 		 * returns the value of given option. 
@@ -131,20 +124,20 @@ namespace Kanedo{
 		 * @param  string name name of the option
 		 * @return string
 		 */
-		string	getValue(string name);
+		std::string	getValue(std::string name);
 
 		/**
 		 * returns true if Flag is set @see OptParser::addFlag
 		 * @param  name [description]
 		 * @return      [description]
 		 */
-		bool	isSet(string name);
+		bool	isSet(std::string name);
 		
 		/**
 		 * return the Help text
 		 * @return string
 		 */
-		string	getHelpText();
+		std::string	getHelpText();
 
 		/**
 		 * show the usage text to stream defined in @see OptParser::OptParser 

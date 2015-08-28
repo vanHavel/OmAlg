@@ -1,4 +1,5 @@
-This software uses the library Kanedo/OptParser - see OptParser/LICENSE
+This software uses a modified version of the Kanedo/OptParser class -
+see OptParser/LICENSE
 
 The MIT License (MIT)
 
