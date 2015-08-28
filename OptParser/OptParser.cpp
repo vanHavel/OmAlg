@@ -184,20 +184,13 @@ namespace Kanedo{
 		return this->options.end();
 	}
 
-	bool OptParser::parseOptions(int argc, const char* argv[]){
+	void OptParser::parseOptions(int argc, const char* argv[]){
 		if(argc > 0){
 			this->binary_name = string(argv[0]);
 		}
-		if((argc-1)/2 < this->required.size()){
-			*this->output << "error: not enough options given" << endl;
-			this->showUsage();
-			return false;
-		}
 		
 		if(this->strict && (argc-1)/2 > this->options.size()){
-			*this->output << "error: strict usage on - too many options " << endl;
-			this->showUsage();
-			return false;
+            throw TooManyOptionsException();
 		}
 		vector<string> required = this->required;
 		unordered_map<string, string> defaults = this->defaults;
@@ -222,23 +215,15 @@ namespace Kanedo{
 				}
 			}
             else {
-              *this->output << "Warning: I don't know the option " << arg_name;
-              *this->output << " and I'm going to ignore it. (Type ";
-              *this->output << this->binary_name << " -h for help)" << endl;
+              throw UnknownOptionException(arg_name);
             }
 		}
 		if(required.size() > 0){
-			*this->output << "error: missing required options " << endl;
-			for(vector<string>::iterator req = required.begin(); req != required.end(); ++req){
-				*this->output << "\t" << *req << endl;
-			}
-			this->showUsage();
-			return false;
+            throw MissingOptionsException(required);
 		}
 		for(unordered_map<string, string>::iterator opt = defaults.begin(); opt != defaults.end(); ++opt){
 			this->values.insert(*opt);
 		}
-		return true;
 	}
 
 

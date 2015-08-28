@@ -13,11 +13,11 @@ SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 OBJ_FILES+=$(BUILD)OptParser.o
 
-all: A2OS
+all: a2os
 	
 
-A2OS: $(BUILD) $(BIN) $(BUILD)AutomatonToOmegaSemigroup.o
-	$(CXX) -o $(BIN)A2OS $(OBJ_FILES) $(BUILD)AutomatonToOmegaSemigroup.o $(LFLAGS)
+a2os: $(BUILD) $(BIN) $(BUILD)AutomatonToOmegaSemigroup.o
+	$(CXX) -o $(BIN)a2os $(OBJ_FILES) $(BUILD)AutomatonToOmegaSemigroup.o $(LFLAGS)
 	
 $(BUILD)AutomatonToOmegaSemigroup.o: AutomatonToOmegaSemigroup.cpp $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

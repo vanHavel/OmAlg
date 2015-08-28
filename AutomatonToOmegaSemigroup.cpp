@@ -14,9 +14,14 @@ int main(int argc, char const *argv[]) {
   optParser.setOption("input_file", "i", "input-file", "Path to input file for automaton");
   optParser.setOption("output_file", "o", "output-file", "Path to output file for omega-semigroup");
   optParser.addFlag("help", "h", "help", "Print usage text");
-  optParser.addFlag("suppress_output", "s", "suppress-output", "Suppress output of warnings by b2os");
+  optParser.addFlag("suppress_output", "s", "suppress-output", "Suppress output of warnings by a2os");
   
-  if(!optParser.parseOptions(argc, argv)) {
+  try {
+    optParser.parseOptions(argc, argv);
+  }
+  catch(const Kanedo::UnknownOptionException &E) {
+    std::cerr << "Error: Unknown option: " << E.getOptionName() << std::endl;;
+    std::cerr << "Type a2os -h for help" << std::endl;
     return EXIT_FAILURE;
   }
   
@@ -35,7 +40,7 @@ int main(int argc, char const *argv[]) {
   std::string inputFile = optParser.getValue("input_file");
   if(inputFile.empty()) {
     if(!suppressWarnings) {
-      std::cerr << "Warning: No input file specified. Reading from stdin. (Type b2os -h for help)";
+      std::cerr << "Warning: No input file specified. Reading from stdin. (Type a2os -h for help)";
       std::cerr << std::endl;
     }
     try {
@@ -64,7 +69,7 @@ int main(int argc, char const *argv[]) {
   std::string outputFile = optParser.getValue("output_file");
   if(outputFile.empty()) {
     if(!suppressWarnings) {
-      std::cerr << "Warning: No output file specified. Writing to stdout. (Type b2os -h for help)";
+      std::cerr << "Warning: No output file specified. Writing to stdout. (Type a2os -h for help)";
       std::cerr << std::endl;
       try {
         ioHandler.writeOmegaSemigroupToStdout(B);

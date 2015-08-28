@@ -20,6 +20,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "OptParserExceptions.h"
+
 namespace Kanedo{
 
 	/**
@@ -149,9 +151,10 @@ namespace Kanedo{
 		 * parse the options (usually parameters of main()).
 		 * @param  int    argc the size of argv
 		 * @param  char** argv parameters array
-		 * @return bool        true if parsing went well, false otherwise. Usage is shown automatically
 		 */
-		bool	parseOptions(int argc, const char* argv[]);
+		void	parseOptions(int argc, const char* argv[]);
 		
-	};}
+	};
+
+}
 #endif
