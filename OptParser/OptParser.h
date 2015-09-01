@@ -1,5 +1,6 @@
 /**
- * OptParser class.
+ * @file OptParser.h
+ * @brief OptParser class.
  *
  * A Class to parse CLI Options in a readable and easy way.
  * inspired by Rubys OptionParser
@@ -25,9 +26,11 @@
 namespace Kanedo{
 
 	/**
-	 * Class OptParser
-	 * use this class to parse CLI Options.
-	 * inspired by Rubys OptionParser class
+	 * @brief Class to parse command line options.
+	 *
+	 * Class OptParser.
+	 * Use this class to parse CLI Options.
+	 * Inspired by Rubys OptionParser class.
 	 */
 	class OptParser {
 	protected:
@@ -63,97 +66,103 @@ namespace Kanedo{
 	public:
 		OptParser();
 		/**
-		 * constructor
-		 * @param ostream& output define output stream for usage text. default std::cout
+		 * Constructor.
+		 * @param output The output stream for usage text. Default: std::cout.
 		 */
 		OptParser(std::ostream &output);
 		
 		/**
-		 * define intro text.
-		 * usually a short description of what the application does
-		 * @param text the intro text
+		 * Defines the intro text.
+		 * This is usually a short description of what the application does.
+		 * @param text The intro text.
 		 */
 		void	setHelpText(std::string text);
 		/**
-		 * define an option
-		 * @param string name      the name of the option used in @see OptParser::getValue	
-		 * @param string short_opt the short variant of this option (w/o -)
-		 * @param string long_opt  the long variant of this option (w/o --)
-		 * @param string descr     a description of what this options is used for
+		 * Defines an option.
+		 * @param name      The name of the option used in getValue.
+		 * @see OptParser::getValue
+		 * @param short_opt The short variant of this option (w/o -).
+		 * @param long_opt  The long variant of this option (w/o --).
+		 * @param descr     A description of what this options is used for.
 		 */
 		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr);
 
 		/**
-		 * define an option
-		 * @param string name      the name of the option used in @see OptParser::getValue	
-		 * @param string short_opt the short variant of this option (w/o -)
-		 * @param string long_opt  the long variant of this option (w/o --)
-		 * @param string descr     a description of what this options is used for
-		 * @param bool   required  set to true if this option is required
+		 * Defines an option.
+		 * @param name      The name of the option used in getValue.
+		 * @see OptParser::getValue
+		 * @param short_opt The short variant of this option (w/o -).
+		 * @param long_opt  The long variant of this option (w/o --).
+		 * @param descr     A description of what this options is used for.
+		 * @param required  Set to true if this option is required.
 		 */
 		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr, bool required);
 		/**
-		 * [setOption description]
-		 * @param string name        the name of the option used in @see OptParser::getValue
-		 * @param string short_opt   the short variant of this option (w/o -)
-		 * @param string long_opt    the long variant of this option (w/o --)
-		 * @param string descr       a description of what this options is used for
-		 * @param bool   required    set to true if this option is required
-		 * @param string default_val define a default value for this option (only makes sense if required is set to false)
+		 * Defines an option.
+		 * @param name        The name of the option used in getValue.
+		 * @see OptParser::getValue
+		 * @param short_opt   The short variant of this option (w/o -).
+		 * @param long_opt    The long variant of this option (w/o --).
+		 * @param descr       A description of what this options is used for.
+		 * @param required    Set to true if this option is required.
+		 * @param default_val Define a default value for this option (only makes sense if required is set to false).
 		 */
 		void	setOption(std::string name, std::string short_opt, std::string long_opt, std::string descr, bool required, std::string default_val);
 
 		/**
-		 * define default value for option later
-		 * @param string name  the name of the option
-		 * @param string value the default value
+		 * Defines default value for option later.
+		 * @param name  The name of the option.
+		 * @param value The default value.
 		 */
 		void	setDefaultValue(std::string name, std::string value);
 
 		/**
-		 * add a simple flag parameter without values. just set or not-set
-		 * @param  name        the name of the flag used in @see OptParser::isSet
-		 * @param  short_opt   the short variant of this flag (w/o -)
-		 * @param  long_opt    the long variant of this flag (w/o --)
-		 * @param  description a description of what this options is used for
+		 * Add a simple flag parameter without values. Just set or not-set.
+		 * @param  name        The name of the flag used in isSet.
+		 * @see OptParser::isSet
+		 * @param  short_opt   The short variant of this flag (w/o -).
+		 * @param  long_opt    The long variant of this flag (w/o --).
+		 * @param  description A description of what this options is used for.
 		 */
 		void 	addFlag(std::string name, std::string short_opt, std::string long_opt, std::string descr);
 
 		/**
-		 * returns the value of given option. 
-		 * If option does not exists it'll return an empty string
-		 * If option is not set an has a default value the default is used
-		 * @param  string name name of the option
-		 * @return string
+		 * Returns the value of given option.
+		 * If option does not exists it'll return an empty string.
+		 * If option is not set and has a default value the default is used.
+		 * @param  name Name of the option.
+		 * @return Value of given option.
 		 */
 		std::string	getValue(std::string name);
 
 		/**
-		 * returns true if Flag is set @see OptParser::addFlag
-		 * @param  name [description]
-		 * @return      [description]
+		 * Returns true if Flag is set.
+		 * @see OptParser::addFlag
+		 * @param  name Name of the flag.
+		 * @return true if the flag is set.
 		 */
 		bool	isSet(std::string name);
 		
 		/**
-		 * return the Help text
-		 * @return string
+		 * Returns the Help text.
+		 * @return The help text.
 		 */
 		std::string	getHelpText();
 
 		/**
-		 * show the usage text to stream defined in @see OptParser::OptParser 
-		 * default is std::cout
+		 * Shows the usage text to stream defined in constructor.
+		 * Default is std::cout.
+		 * @see OptParser::OptParser
 		 */
 		void	showUsage();
 
 		/**
-		 * parse the options (usually parameters of main()).
-		 * throws UnknownOptionException if an option that was not set is encountered
-		 * throws TooManyOptionsException if too many options are given in strict mode
-		 * throws MissingOptionsException if required options are missing
-		 * @param  int    argc the size of argv
-		 * @param  char** argv parameters array
+		 * Parses the options (usually parameters of main()).
+		 * @throws UnknownOptionException if an option that was not set is encountered.
+		 * @throws TooManyOptionsException if too many options are given in strict mode.
+		 * @throws MissingOptionsException if required options are missing.
+		 * @param argc The size of argv.
+		 * @param argv Parameters array.
 		 */
 		void	parseOptions(int argc, const char* argv[]);
 		

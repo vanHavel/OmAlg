@@ -8,7 +8,7 @@
 int main(int argc, char const *argv[]) {
   
   class E {}; //TODO
-  
+
   Kanedo::OptParser optParser = Kanedo::OptParser();
   optParser.setHelpText("Translation from omega automata to omega-semigroups");
   optParser.setOption("input_file", "i", "input-file", "Path to input file for automaton");

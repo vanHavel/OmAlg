@@ -25,6 +25,10 @@ namespace Kanedo{
 
 	OptParser::OptParser(ostream &output){
 		this->output	= &output;
+		this->strict 	= false;
+		this->max_name		= 0;
+		this->max_long		= 0;
+		this->max_short		= 0;
 	}
 
 	void OptParser::setHelpText(string text){
