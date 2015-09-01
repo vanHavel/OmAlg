@@ -149,6 +149,9 @@ namespace Kanedo{
 
 		/**
 		 * parse the options (usually parameters of main()).
+		 * throws UnknownOptionException if an option that was not set is encountered
+		 * throws TooManyOptionsException if too many options are given in strict mode
+		 * throws MissingOptionsException if required options are missing
 		 * @param  int    argc the size of argv
 		 * @param  char** argv parameters array
 		 */

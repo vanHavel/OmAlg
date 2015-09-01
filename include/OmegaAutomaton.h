@@ -11,7 +11,7 @@ namespace omalg {
 
   class OmegaAutomaton {
       
-  protected:
+  private:
     int numberOfStates;
     std::vector<std::string> stateNames;
     
@@ -20,10 +20,8 @@ namespace omalg {
     
     int initialState;
     
-    TransitionRelation transitionRelation;
-    
   public:
-      virtual OmegaSemigroup toOmegaSemigroup() = 0;
+      virtual OmegaSemigroup* toOmegaSemigroup() = 0;
       virtual ~OmegaAutomaton() { };
   };
 }

@@ -1,14 +1,16 @@
 #include "OptParser.h"
+
+using std::cout;
+using std::vector;
+using std::string;
+using std::vector;
+using std::ostream;
+using std::cerr;
+using std::unordered_map;
+using std::max;
+using std::endl;
+
 namespace Kanedo{
-  using std::cout;
-  using std::vector;
-  using std::string;
-  using std::vector;
-  using std::ostream;
-  using std::cerr;
-  using std::unordered_map;
-  using std::max;
-  using std::endl;
   
 	OptParser::OptParser(){
 		this->output		= &cout;

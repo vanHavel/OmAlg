@@ -1,18 +1,17 @@
 #ifndef OMALG_BUECHI_AUTOMATON
 #define OMALG_BUECHI_AUTOMATON
 
+#include <vector>
+
 #include "OmegaAutomaton.h"
-#include "OmegaSemigroup.h"
 
 namespace omalg {
 
-  class BuechiAutomaton: public OmegaAutomaton {
-  protected:
-    bool coBuechi;
+  class BuechiAutomaton: public virtual OmegaAutomaton {
+  private:
     std::vector<int> finalStates;
 
   public:
-      OmegaSemigroup toOmegaSemigroup();
       ~BuechiAutomaton();
   };
 }

@@ -15,7 +15,7 @@ namespace omalg {
   }
   
   OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
-    return 0; //TODO
+    return this->readAutomatonFromStream(std::cin);
   }
   
   void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string outputFileName) {
@@ -23,7 +23,7 @@ namespace omalg {
   }
   
   void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
-    return; //TODO
+    this->writeOmegaSemigroupToStream(S, std::cout);
   }
 
 }

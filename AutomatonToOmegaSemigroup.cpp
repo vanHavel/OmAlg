@@ -63,7 +63,7 @@ int main(int argc, char const *argv[]) {
     }
   }
   
-  omalg::OmegaSemigroup B = A->toOmegaSemigroup();
+  omalg::OmegaSemigroup* B = A->toOmegaSemigroup();
   delete A;
   
   std::string outputFile = optParser.getValue("output_file");
@@ -71,26 +71,29 @@ int main(int argc, char const *argv[]) {
     if(!suppressWarnings) {
       std::cerr << "Warning: No output file specified. Writing to stdout. (Type a2os -h for help)";
       std::cerr << std::endl;
-      try {
-        ioHandler.writeOmegaSemigroupToStdout(B);
-      }
-      catch(E) { //TODO
-        std::cerr << "Error: failed to write omega semigroup to stdout";
-        std::cerr << std::endl;
-        return EXIT_FAILURE;
-      }
+    }
+    try {
+      ioHandler.writeOmegaSemigroupToStdout(*B);
+    }
+    catch(E) { //TODO
+      std::cerr << "Error: failed to write omega semigroup to stdout";
+      std::cerr << std::endl;	
+	  delete B;
+      return EXIT_FAILURE;
     }
   }
   else {
     try {
-      ioHandler.writeOmegaSemigroupToFile(B, outputFile);
+      ioHandler.writeOmegaSemigroupToFile(*B, outputFile);
     }
     catch(E) { //TODO
       std::cerr << "Error: failed to write omega semigroup to file " << outputFile;
       std::cerr << std::endl;
+	  delete B;
       return EXIT_FAILURE;
-      }
+    }
   }
-
+	
+  delete B;
   return 0;
 }
