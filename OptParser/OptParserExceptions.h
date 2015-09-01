@@ -32,8 +32,8 @@ namespace Kanedo {
 		 * overrides standard what method, returns C string with unknown option
 		 * @return char* "Unknown Option: <optionName>"
 		 */
-		const char* what const throw () {
-			message = "Unkown Option: " + this->optionName;
+		const char* what() const throw() {
+			std::string message = "Unkown Option: " + this->optionName;
 			return message.c_str();
 		}
 
@@ -62,7 +62,7 @@ namespace Kanedo {
          * constructor
          * @param required vector<string> vector of required options not given
          */
-        MissingOptionsException(std::vector<std::string> leftRequired) {
+        MissingOptionsException(std::vector<std::string> leftRequired)
             : missing(leftRequired) {}
         
         /**
@@ -77,9 +77,9 @@ namespace Kanedo {
 	 	* overrides standard what method, returns C string with unknown option
 	 	* @return char* "Unknown Option: <optionName>"
 	 	*/
-		const char* what const throw () {
-			message = "The following required options where not specified: ";
-			for(std::vector<string>::iterator i = this->missing.begin(); i != this->missing.end(); ++i) {
+		const char* what() const throw () {
+			std::string message = "The following required options where not specified: ";
+			for(std::vector<std::string>::const_iterator i = this->missing.begin(); i != this->missing.end(); ++i) {
 				message += *i + " ";
 			}
 			message += ".";
@@ -90,7 +90,7 @@ namespace Kanedo {
          * destructor declared to throw no exceptions as demanded by virtual 
          * destructor of std::exception
          */
-        ~MissingOptionsException() throw() { };
+        ~MissingOptionsException() throw() { }
     };
 }
 #endif	

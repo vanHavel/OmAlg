@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "TransitionRelation.h"
 #include "OmegaSemigroup.h"
 
 namespace omalg {
