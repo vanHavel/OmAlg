@@ -4,10 +4,9 @@
 #include "OmegaAutomaton.h"
 #include "OptParser.h"
 #include "IOHandler.h"
+#include "IOHandlerExceptions.h"
 
 int main(int argc, char const *argv[]) {
-  
-  class E {}; //TODO
 
   Kanedo::OptParser optParser = Kanedo::OptParser();
   optParser.setHelpText("Translation from omega automata to omega-semigroups");
@@ -34,7 +33,6 @@ int main(int argc, char const *argv[]) {
   
   bool suppressWarnings = optParser.isSet("suppress_output");
   
-  omalg::IOHandler ioHandler = omalg::IOHandler();
   omalg::OmegaAutomaton *A;
   
   std::string inputFile = optParser.getValue("input_file");
@@ -44,20 +42,24 @@ int main(int argc, char const *argv[]) {
       std::cerr << std::endl;
     }
     try {
-      A = ioHandler.readAutomatonFromStdin();
+      A = omalg::IOHandler::getInstance().readAutomatonFromStdin();
     }
-    catch(E) { //TODO
+    catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to read automaton from stdin";
+      std::cerr << std::endl;
+      std::cerr << e.what();
       std::cerr << std::endl;
       return EXIT_FAILURE;
     }
   }
   else {
     try {
-      A = ioHandler.readAutomatonFromFile(inputFile);
+      A = omalg::IOHandler::getInstance().readAutomatonFromFile(inputFile);
     }
-    catch(E) { //TODO
+    catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to read automaton from file " << inputFile;
+      std::cerr << std::endl;
+      std::cerr << e.what();
       std::cerr << std::endl;
       return EXIT_FAILURE;
     }
@@ -73,23 +75,27 @@ int main(int argc, char const *argv[]) {
       std::cerr << std::endl;
     }
     try {
-      ioHandler.writeOmegaSemigroupToStdout(*B);
+      omalg::IOHandler::getInstance().writeOmegaSemigroupToStdout(*B);
     }
-    catch(E) { //TODO
+    catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to write omega semigroup to stdout";
       std::cerr << std::endl;	
-	  delete B;
+      std::cerr << e.what();
+      std::cerr << std::endl;
+	    delete B;
       return EXIT_FAILURE;
     }
   }
   else {
     try {
-      ioHandler.writeOmegaSemigroupToFile(*B, outputFile);
+      omalg::IOHandler::getInstance().writeOmegaSemigroupToFile(*B, outputFile);
     }
-    catch(E) { //TODO
+    catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to write omega semigroup to file " << outputFile;
       std::cerr << std::endl;
-	  delete B;
+      std::cerr << e.what();
+      std::cerr << std::endl;
+	    delete B;
       return EXIT_FAILURE;
     }
   }
