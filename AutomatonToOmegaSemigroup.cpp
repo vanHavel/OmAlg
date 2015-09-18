@@ -1,4 +1,5 @@
 #include <string>
+#include <memory>
 
 #include "OmegaSemigroup.h"
 #include "OmegaAutomaton.h"
@@ -32,8 +33,7 @@ int main(int argc, char const *argv[]) {
   }
   
   bool suppressWarnings = optParser.isSet("suppress_output");
-  
-  omalg::OmegaAutomaton *A;
+  std::unique_ptr<omalg::OmegaAutomaton> A;
   
   std::string inputFile = optParser.getValue("input_file");
   if(inputFile.empty()) {
@@ -42,7 +42,8 @@ int main(int argc, char const *argv[]) {
       std::cerr << std::endl;
     }
     try {
-      A = omalg::IOHandler::getInstance().readAutomatonFromStdin();
+      std::unique_ptr<omalg::OmegaAutomaton> temp(omalg::IOHandler::getInstance().readAutomatonFromStdin());
+      A = std::move(temp);
     }
     catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to read automaton from stdin";
@@ -54,7 +55,8 @@ int main(int argc, char const *argv[]) {
   }
   else {
     try {
-      A = omalg::IOHandler::getInstance().readAutomatonFromFile(inputFile);
+      std::unique_ptr<omalg::OmegaAutomaton> temp(omalg::IOHandler::getInstance().readAutomatonFromFile(inputFile));
+      A = std::move(temp);
     }
     catch(omalg::IOException const &e) {
       std::cerr << "Error: failed to read automaton from file " << inputFile;
@@ -65,8 +67,7 @@ int main(int argc, char const *argv[]) {
     }
   }
   
-  omalg::OmegaSemigroup* B = A->toOmegaSemigroup();
-  delete A;
+  std::unique_ptr<omalg::OmegaSemigroup> B(A->toOmegaSemigroup());
   
   std::string outputFile = optParser.getValue("output_file");
   if(outputFile.empty()) {
@@ -82,7 +83,6 @@ int main(int argc, char const *argv[]) {
       std::cerr << std::endl;	
       std::cerr << e.what();
       std::cerr << std::endl;
-	    delete B;
       return EXIT_FAILURE;
     }
   }
@@ -95,11 +95,9 @@ int main(int argc, char const *argv[]) {
       std::cerr << std::endl;
       std::cerr << e.what();
       std::cerr << std::endl;
-	    delete B;
       return EXIT_FAILURE;
     }
   }
 	
-  delete B;
   return 0;
 }
