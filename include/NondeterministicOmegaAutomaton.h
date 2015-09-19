@@ -11,7 +11,8 @@ namespace omalg {
   class NondeterministicOmegaAutomaton: public virtual OmegaAutomaton {
 	private:
 		std::vector<std::set<int> >transitionRelation;
-		  
+	protected:
+		NondeterministicOmegaAutomaton(std::vector<std::set<int> > theTransitionRelation);
   };
 }
 

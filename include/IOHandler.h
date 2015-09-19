@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <list>
+#include <set>
 #include <iostream>
 
 #include "OmegaAutomaton.h"
@@ -23,16 +25,44 @@ namespace omalg {
 
 	  OmegaAutomaton* readAutomatonFromStream(std::istream &in);
 	  void writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream &out);
-	  void safeGetLine(std::istream &in, std::string &str);
+	  std::istream& safeGetLine(std::istream &in, std::string &str);
+	  void checkReadTillEnd(int lineNo, int lines);
+	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, int lineNo);
+	  std::vector<std::set<int> > buildTransitionRelation(std::list<std::string> const &lines,
+	                                                                 std::vector<std::string> const &stateVector,
+	                                                                 std::vector<std::string> const &letterVector);
+	  std::vector<std::vector<int> > buildTransitionTable(std::list<std::string> const &lines,
+	                                                                 std::vector<std::string> const &stateVector,
+	                                                                 std::vector<std::string> const &letterVector);
 		  
   public: 
 
+	  /**
+	   * Getter for the singleton instance of IOHandler.
+	   * @return The unique IOHandler instance.
+	   */
 	  static IOHandler& getInstance() {
 	    static IOHandler instance;
 	    return instance;
 	  }
 
+	  /**
+	   * Reads omega automaton from a text file in the omalg format.
+	   * @param inputFileName The name of the input file.
+	   * @return A pointer to the read automaton.
+	   * @throws OpenFailedException if opening the file fails.
+	   * @throws CloseFailedException if closing the file fails, but no exception occurred before while reading.
+	   * @throws SyntaxException if a syntax error is encountered while reading the file.
+	   * @throws ReadFailedException if an error occurs while reading a line from the file.
+	   */
 	  OmegaAutomaton* readAutomatonFromFile(std::string inputFileName);
+
+	  /**
+     * Reads omega automaton from stdin in the omalg format.
+     * @return A pointer to the read automaton.
+     * @throws SyntaxException if a syntax error is encountered while reading the file.
+     * @throws ReadFailedException if an error occurs while reading a line from the file.
+     */
 	  OmegaAutomaton* readAutomatonFromStdin();
 
 	  void writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string outputFileName);

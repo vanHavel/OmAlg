@@ -9,10 +9,11 @@ namespace omalg {
 
   class BuechiAutomaton: public virtual OmegaAutomaton {
   private:
-    std::vector<int> finalStates;
+    std::vector<bool> finalStates;
 
-  public:
-      ~BuechiAutomaton();
+  protected:
+    BuechiAutomaton(std::vector<bool> theFinalStates);
+
   };
 }
 

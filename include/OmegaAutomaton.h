@@ -19,9 +19,14 @@ namespace omalg {
     
     int initialState;
     
+  protected:
+    OmegaAutomaton(int theNumberOfStates, std::vector<std::string> theStateNames,
+                   int theAlphabetSize,   std::vector<std::string> theAlphabet,
+                   int theInitialState);
+
   public:
-      virtual OmegaSemigroup* toOmegaSemigroup() = 0;
-      virtual ~OmegaAutomaton() { };
+      virtual OmegaSemigroup* toOmegaSemigroup() const = 0;
+      virtual ~OmegaAutomaton() {};
   };
 }
 
