@@ -50,6 +50,14 @@ namespace omalg {
     }
   };
 
+  class WriteFailedException: public IOException {
+    public:
+      const char* what() const noexcept override {
+        std::string message = "Error while writing to output stream.";
+        return message.c_str();
+      }
+    };
+
   class SyntaxException: public IOException {
   private:
     int lineNo;

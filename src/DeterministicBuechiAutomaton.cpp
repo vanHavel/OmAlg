@@ -15,4 +15,13 @@ namespace omalg {
     return 0;
   }
 
+  std::string DeterministicBuechiAutomaton::description() const {
+    std::string description = "Buechi\n";
+    description += "Deterministic\n";
+    description += OmegaAutomaton::description() + "\n";
+    description += DeterministicOmegaAutomaton::description() + "\n";
+    description += BuechiAutomaton::description();
+    return description;
+  }
+
 }

@@ -13,7 +13,8 @@ namespace omalg {
 
   protected:
     BuechiAutomaton(std::vector<bool> theFinalStates);
-
+  public:
+    virtual std::string description() const override;
   };
 }
 

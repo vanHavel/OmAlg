@@ -24,10 +24,14 @@ namespace omalg {
     void operator=(IOHandler const &) = delete;
 
 	  OmegaAutomaton* readAutomatonFromStream(std::istream &in);
+	  void writeAutomatonToStream(OmegaAutomaton const &A, std::ostream &out);
+
 	  void writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream &out);
+
 	  std::istream& safeGetLine(std::istream &in, std::string &str);
 	  void checkReadTillEnd(int lineNo, int lines);
 	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, int lineNo);
+
 	  std::vector<std::vector<std::set<int> > > buildTransitionRelation(std::list<std::string> const &transitions,
 	                                                                 std::vector<std::string> const &stateVector,
 	                                                                 std::vector<std::string> const &letterVector,
@@ -66,6 +70,9 @@ namespace omalg {
      * @throws ReadFailedException if an error occurs while reading a line from the file.
      */
 	  OmegaAutomaton* readAutomatonFromStdin();
+
+	  void writeAutomatonToStdout(OmegaAutomaton const &A);
+	  void writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName);
 
 	  void writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string outputFileName);
 	  void writeOmegaSemigroupToStdout(OmegaSemigroup const &S);

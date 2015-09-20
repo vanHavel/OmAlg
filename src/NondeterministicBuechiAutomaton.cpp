@@ -10,7 +10,17 @@ namespace omalg {
     : OmegaAutomaton(theStateNames, theAlphabet, theInitialState),
       NondeterministicOmegaAutomaton(theTransitionRelation),
       BuechiAutomaton(theFinalStates) {}
+
   OmegaSemigroup* NondeterministicBuechiAutomaton::toOmegaSemigroup() const {
     return 0; //TODO
+  }
+
+  std::string NondeterministicBuechiAutomaton::description() const {
+    std::string description = "Buechi\n";
+    description += "Nondeterministic\n";
+    description += OmegaAutomaton::description() + "\n";
+    description += NondeterministicOmegaAutomaton::description() + "\n";
+    description += BuechiAutomaton::description();
+    return description;
   }
 }

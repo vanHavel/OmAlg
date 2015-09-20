@@ -150,6 +150,15 @@ namespace omalg {
     }
   }
   
+  void IOHandler::writeAutomatonToStream(OmegaAutomaton const &A, std::ostream& out) {
+    try {
+      out << A.description();
+    }
+    catch(std::ostream::failure const &) {
+      throw WriteFailedException();
+    }
+  }
+
   void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
     return; //TODO
   }
@@ -348,15 +357,77 @@ namespace omalg {
   }
   
   OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
-    return this->readAutomatonFromStream(std::cin);
+    //Safe exception state of stdin and normalize it later
+    std::ios_base::iostate temp = std::cin.exceptions();
+    std::cin.exceptions(std::ios::failbit | std::ios::badbit);
+    OmegaAutomaton* A;
+    try {
+      A = this->readAutomatonFromStream(std::cin);
+    }
+    catch(IOException const &) {
+      std::cin.exceptions(temp);
+      throw;
+    }
+    std::cin.exceptions(temp);
+    return A;
   }
   
+  void IOHandler::writeAutomatonToStdout(OmegaAutomaton const &A) {
+    //Safe exception state of stdout and normalize it later
+    std::ios_base::iostate temp = std::cout.exceptions();
+    std::cout.exceptions(std::ios::failbit | std::ios::badbit);
+    try {
+      this->writeAutomatonToStream(A, std::cout);
+    }
+    catch(WriteFailedException const &) {
+      std::cout.exceptions(temp);
+      throw;
+    }
+    std::cout.exceptions(temp);
+  }
+  void IOHandler::writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName) {
+    //Throw exceptions if an error occurs while writing.
+    std::ofstream out;
+    out.exceptions(std::ios::failbit | std::ios::badbit);
+    //Open the output file.
+    try {
+      out.open(outputFileName, std::ios::out);
+    }
+    catch(std::ofstream::failure const &) {
+      throw OpenFailedException(outputFileName);
+    }
+    //Write automaton to file.
+    try {
+      this->writeAutomatonToStream(A, out);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while writing to file.
+      //Attempt to close the file.
+      try {
+        out.close();
+      }
+      catch(std::ofstream::failure const &) {
+        //If closing the stream causes a second exception it is not reported.
+        //The original exception that occurred while writing is thrown.
+      }
+      throw ex;
+    }
+    //Close the input file.
+    try {
+      out.close();
+    }
+    catch(std::ofstream::failure const &) {
+      throw CloseFailedException(outputFileName);
+    }
+  }
+
   void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string const outputFileName) {
     return; //TODO
   }
   
   void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
-    this->writeOmegaSemigroupToStream(S, std::cout);
+    this->writeOmegaSemigroupToStream(S, std::cout); //TODO
   }
+
 
 }
