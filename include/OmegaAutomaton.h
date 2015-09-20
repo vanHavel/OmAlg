@@ -11,22 +11,34 @@ namespace omalg {
   class OmegaAutomaton {
       
   private:
-    int numberOfStates;
     std::vector<std::string> stateNames;
     
-    int alphabetSize;
     std::vector<std::string> alphabet;
     
     int initialState;
     
   protected:
-    OmegaAutomaton(int theNumberOfStates, std::vector<std::string> theStateNames,
-                   int theAlphabetSize,   std::vector<std::string> theAlphabet,
+    OmegaAutomaton(std::vector<std::string> theStateNames,
+                   std::vector<std::string> theAlphabet,
                    int theInitialState);
+    std::vector<std::string> getStateNames() const;
+    std::vector<std::string> getAlphabet() const;
 
   public:
-      virtual OmegaSemigroup* toOmegaSemigroup() const = 0;
-      virtual ~OmegaAutomaton() {};
+    /**
+     * Returns a textual description of the automaton in the OmAlg format
+     * @return A string containing the description.
+     */
+    virtual std::string description() const;
+    /**
+     * Constructs an equivalent omega semigroup for the automaton.
+     * @return The omega semigroup.
+     */
+    virtual OmegaSemigroup* toOmegaSemigroup() const = 0;
+    /**
+     * Virtual destructor.
+     */
+    virtual ~OmegaAutomaton() {};
   };
 }
 

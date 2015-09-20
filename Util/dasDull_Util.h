@@ -9,7 +9,7 @@
 
 namespace dasdull {
   std::list<std::string> stringSplit(std::string str, char split, bool strip);
-  template<class T> int vectorPos(std::vector<T> const &vec, T const &val);
+  template<typename T> int vectorPos(std::vector<T> const &vec, T const &val);
 }
 
 #endif

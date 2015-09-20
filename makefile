@@ -3,16 +3,20 @@ BUILD=build/
 HEADER=include/
 OPTPARSER=OptParser/
 BIN=bin/
+UTIL=util/
 
 CXXFLAGS+=-I$(HEADER)
 CXXFLAGS+=-I$(OPTPARSER)
+CXXFLAGS+=-I$(UTIL)
 CXXFLAGS+="-std=c++11"
 LFLAGS+=-I$(HEADER)
 LFLAGS+=-I$(OPTPARSER)
+LFLAGS+=-I$(UTIL)
 
 SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 OBJ_FILES+=$(BUILD)OptParser.o
+OBJ_FILES+=$(BUILD)dasDull_Util.o
 
 all: a2os
 
@@ -27,6 +31,9 @@ $(BUILD)%.o: $(SOURCES)%.cpp
 	
 $(BUILD)OptParser.o: $(OPTPARSER)OptParser.cpp
 	$(CXX) $(CXXFLAGS) -c -o $(BUILD)OptParser.o $<
+	
+$(BUILD)dasDull_Util.o: $(UTIL)dasDull_Util.cpp
+	$(CXX) $(CXXFLAGS) -c -o $(BUILD)dasDull_Util.o $<
 	
 $(BUILD):
 	mkdir $(BUILD)

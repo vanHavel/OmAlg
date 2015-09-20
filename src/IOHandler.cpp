@@ -103,6 +103,7 @@ namespace omalg {
 
     //Read transitions
     ++lineNo;
+    int transNo = lineNo;
     std::list<std::string> transitionTriplets = this->readNamesIntoList(lines, lineNo);
 
     //Build state/letter vectors and get initial number
@@ -127,17 +128,19 @@ namespace omalg {
       }
       //Build automaton
       if (deterministic) {
-        std::vector<std::vector<int> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector);
-        return new DeterministicBuechiAutomaton(stateVector.size(),  stateVector,
-                                               letterVector.size(), letterVector,
-                                               initialState,        transitionTable,
+        std::vector<std::vector<int> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        return new DeterministicBuechiAutomaton(stateVector,
+                                               letterVector,
+                                               initialState,
+                                               transitionTable,
                                                finalStates);
       }
       else {
-        std::vector<std::set<int> > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector);
-        return new NondeterministicBuechiAutomaton(stateVector.size(),  stateVector,
-                                                   letterVector.size(), letterVector,
-                                                   initialState,        transitionRelation,
+        std::vector<std::vector<std::set<int> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        return new NondeterministicBuechiAutomaton(stateVector,
+                                                   letterVector,
+                                                   initialState,
+                                                   transitionRelation,
                                                    finalStates);
       }
     }
@@ -185,21 +188,126 @@ namespace omalg {
     return result;
   }
 
-  std::vector<std::set<int> > IOHandler::buildTransitionRelation(std::list<std::string> const &lines,
+  std::vector<std::vector<std::set<int> > > IOHandler::buildTransitionRelation(std::list<std::string> const &transitions,
                                                                  std::vector<std::string> const &stateVector,
-                                                                 std::vector<std::string> const &letterVector) {
-    std::vector<std::set<int> > result(stateVector.size());
-    //TODO
+                                                                 std::vector<std::string> const &letterVector,
+                                                                 int transNo) {
+    std::vector<std::vector<std::set<int> > > result(stateVector.size(), std::vector<std::set<int> >(letterVector.size()));
+    std::list<std::string>::const_iterator iter;
+    for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
+      std::string transition = *iter;
+      //Remove brackets
+      if (transition.front() == '(') {
+        transition.erase(0,1);
+        if (transition.back() == ')') {
+          transition.pop_back();
+          //Get components
+          std::list<std::string> components = dasdull::stringSplit(transition, ',', true);
+          if (components.size() == 3) {
+            std::string origin = components.front();
+            components.pop_front();
+            std::string letter = components.front();
+            std::string target = components.back();
+            int originPos = dasdull::vectorPos(stateVector, origin);
+            int letterPos = dasdull::vectorPos(letterVector, letter);
+            int targetPos = dasdull::vectorPos(stateVector, target);
+            //Check components
+            if (originPos == -1) {
+              throw SyntaxException(transNo, "Origin state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+            }
+            else if (letterPos == -1) {
+              throw SyntaxException(transNo, "Letter of transition (" + transition + ") not in alphabet." + "\n" + "(Might be in a later line.)");
+            }
+            else if (targetPos == -1) {
+              throw SyntaxException(transNo, "Target state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+            }
+            else {
+              //Add to transition relation
+              result[originPos][letterPos].insert(targetPos);
+            }
+          }
+          else {
+            throw SyntaxException(transNo, "Transition ("+ transition + ") does not have three components." + "\n" + "(Might be in a later line.)");
+          }
+        }
+        else {
+          throw SyntaxException(transNo, "Expected ')' in transition (" + transition + "\n" + "(Might be in a later line.)");
+        }
+      }
+      else {
+        throw SyntaxException(transNo, "Expected '(' in transition " + transition + "\n" + "(Might be in a later line.)");
+      }
+    }
     return result;
   }
 
-  std::vector<std::vector<int> > IOHandler::buildTransitionTable(std::list<std::string> const &lines,
+  std::vector<std::vector<int> > IOHandler::buildTransitionTable(std::list<std::string> const &transitions,
                                                                    std::vector<std::string> const &stateVector,
-                                                                   std::vector<std::string> const &letterVector) {
-      std::vector<std::vector<int> > result(stateVector.size(), std::vector<int>(letterVector.size()));
-      //TODO
-      return result;
+                                                                   std::vector<std::string> const &letterVector,
+                                                                   int transNo) {
+    //initialize with -1
+    std::vector<std::vector<int> > result(stateVector.size(), std::vector<int>(letterVector.size(), -1));
+    std::list<std::string>::const_iterator iter;
+    for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
+      std::string transition = *iter;
+      //Remove brackets
+      if (transition.front() == '(') {
+        transition.erase(0,1);
+        if (transition.back() == ')') {
+          transition.pop_back();
+          //Get components
+          std::list<std::string> components = dasdull::stringSplit(transition, ',', true);
+          if (components.size() == 3) {
+            std::string origin = components.front();
+            components.pop_front();
+            std::string letter = components.front();
+            std::string target = components.back();
+            int originPos = dasdull::vectorPos(stateVector, origin);
+            int letterPos = dasdull::vectorPos(letterVector, letter);
+            int targetPos = dasdull::vectorPos(stateVector, target);
+            //Check components
+            if (originPos == -1) {
+              throw SyntaxException(transNo, "Origin state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+            }
+            else if (letterPos == -1) {
+              throw SyntaxException(transNo, "Letter of transition (" + transition + ") not in alphabet." + "\n" + "(Might be in a later line.)");
+            }
+            else if (targetPos == -1) {
+              throw SyntaxException(transNo, "Target state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+            }
+            else {
+              //Add to transition relation
+              if(result[originPos][letterPos] == -1) {
+                result[originPos][letterPos] = targetPos;
+              }
+              else {
+                throw SyntaxException(transNo, "Several transitions for state " + origin + " and letter " + letter + ".\n" + "(Might be in a later line.)");
+              }
+            }
+          }
+          else {
+            throw SyntaxException(transNo, "Transition ("+ transition + ") does not have three components." + "\n" + "(Might be in a later line.)");
+          }
+        }
+        else {
+          throw SyntaxException(transNo, "Expected ')' in transition (" + transition + "\n" + "(Might be in a later line.)");
+        }
+      }
+      else {
+        throw SyntaxException(transNo, "Expected '(' in transition " + transition + "\n" + "(Might be in a later line.)");
+      }
     }
+    //Check for undefined transitions
+    std::vector<std::vector<int> >::const_iterator resIter;
+    for (resIter = result.begin(); resIter != result.end(); ++resIter) {
+      for (std::vector<int>::const_iterator innerIter = resIter->begin(); innerIter != resIter->end(); ++innerIter) {
+        if (*innerIter == -1) {
+          throw SyntaxException(transNo, "There were undefined transitions.\n(Might be in a later line.)");
+        }
+      }
+    }
+    return result;
+  }
 
   OmegaAutomaton* IOHandler::readAutomatonFromFile(std::string const inputFileName) {
     //Throw exceptions if an error occurs while reading.

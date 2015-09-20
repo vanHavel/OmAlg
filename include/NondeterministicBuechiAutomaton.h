@@ -11,9 +11,10 @@ namespace omalg {
 
   class NondeterministicBuechiAutomaton: public BuechiAutomaton, public NondeterministicOmegaAutomaton {
   public:
-    NondeterministicBuechiAutomaton (int theNumberOfStates, std::vector<std::string> theStateNames,
-                                     int theAlphabetSize,   std::vector<std::string> theAlphabet,
-                                     int theInitialState,   std::vector<std::set<int> > theTransitionRelation,
+    NondeterministicBuechiAutomaton (std::vector<std::string> theStateNames,
+                                     std::vector<std::string> theAlphabet,
+                                     int theInitialState,
+                                     std::vector<std::vector<std::set<int> > > theTransitionRelation,
                                      std::vector<bool>  theFinalStates);
     OmegaSemigroup* toOmegaSemigroup() const override;
   };

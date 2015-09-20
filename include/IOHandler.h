@@ -28,12 +28,14 @@ namespace omalg {
 	  std::istream& safeGetLine(std::istream &in, std::string &str);
 	  void checkReadTillEnd(int lineNo, int lines);
 	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, int lineNo);
-	  std::vector<std::set<int> > buildTransitionRelation(std::list<std::string> const &lines,
+	  std::vector<std::vector<std::set<int> > > buildTransitionRelation(std::list<std::string> const &transitions,
 	                                                                 std::vector<std::string> const &stateVector,
-	                                                                 std::vector<std::string> const &letterVector);
-	  std::vector<std::vector<int> > buildTransitionTable(std::list<std::string> const &lines,
+	                                                                 std::vector<std::string> const &letterVector,
+	                                                                 int transNo);
+	  std::vector<std::vector<int> > buildTransitionTable(std::list<std::string> const &transitions,
 	                                                                 std::vector<std::string> const &stateVector,
-	                                                                 std::vector<std::string> const &letterVector);
+	                                                                 std::vector<std::string> const &letterVector,
+	                                                                 int transNo);
 		  
   public: 
 

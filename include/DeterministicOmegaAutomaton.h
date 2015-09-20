@@ -13,6 +13,9 @@ namespace omalg {
 		  
 	protected:
 		DeterministicOmegaAutomaton(std::vector<std::vector<int> > theTransitionTable);
+
+	public:
+		virtual std::string description() const override;
   };
 }
 
