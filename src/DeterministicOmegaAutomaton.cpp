@@ -1,12 +1,12 @@
 #include "DeterministicOmegaAutomaton.h"
 
 namespace omalg {
-  DeterministicOmegaAutomaton::DeterministicOmegaAutomaton(std::vector<std::vector<int> > theTransitionTable)
+  DeterministicOmegaAutomaton::DeterministicOmegaAutomaton(std::vector<std::vector<size_t> > theTransitionTable)
     : transitionTable(theTransitionTable) {}
 
   std::string DeterministicOmegaAutomaton::description() const {
     std::string transitionList = "";
-    std::vector<std::vector<int> >::const_iterator outerIter;
+    std::vector<std::vector<size_t> >::const_iterator outerIter;
     std::vector<std::string> states = this->getStateNames();
     std::vector<std::string> letters = this->getAlphabet();
     for (outerIter = this->transitionTable.begin(); outerIter != this->transitionTable.end(); ++outerIter) {
@@ -14,7 +14,7 @@ namespace omalg {
       if (outerIter != this->transitionTable.begin()) {
         transitionList += "\n";
       }
-      std::vector<int>::const_iterator innerIter;
+      std::vector<size_t>::const_iterator innerIter;
       for (innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         //Add separator but not at beginning
         if (!transitionList.empty()) {

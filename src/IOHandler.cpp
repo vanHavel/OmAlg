@@ -128,7 +128,7 @@ namespace omalg {
       }
       //Build automaton
       if (deterministic) {
-        std::vector<std::vector<int> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
         return new DeterministicBuechiAutomaton(stateVector,
                                                letterVector,
                                                initialState,
@@ -136,7 +136,7 @@ namespace omalg {
                                                finalStates);
       }
       else {
-        std::vector<std::vector<std::set<int> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
         return new NondeterministicBuechiAutomaton(stateVector,
                                                    letterVector,
                                                    initialState,
@@ -173,14 +173,14 @@ namespace omalg {
     }
   }
 
-  void IOHandler::checkReadTillEnd(int lineNo, int lines) {
+  void IOHandler::checkReadTillEnd(size_t lineNo, size_t lines) {
     if (lineNo >= lines) {
       //We Read till end of file
       throw SyntaxException(lineNo, "Reached end of file while parsing.");
     }
   }
 
-  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, int lineNo) {
+  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t lineNo) {
     std::list<std::string> result;
     std::list<std::string> newNames;
     while(lineNo < lines.size() && lines[lineNo].back() != ';') {
@@ -197,11 +197,11 @@ namespace omalg {
     return result;
   }
 
-  std::vector<std::vector<std::set<int> > > IOHandler::buildTransitionRelation(std::list<std::string> const &transitions,
+  std::vector<std::vector<std::set<size_t> > > IOHandler::buildTransitionRelation(std::list<std::string> const &transitions,
                                                                  std::vector<std::string> const &stateVector,
                                                                  std::vector<std::string> const &letterVector,
-                                                                 int transNo) {
-    std::vector<std::vector<std::set<int> > > result(stateVector.size(), std::vector<std::set<int> >(letterVector.size()));
+                                                                 size_t transNo) {
+    std::vector<std::vector<std::set<size_t> > > result(stateVector.size(), std::vector<std::set<size_t> >(letterVector.size()));
     std::list<std::string>::const_iterator iter;
     for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
       std::string transition = *iter;
@@ -250,12 +250,14 @@ namespace omalg {
     return result;
   }
 
-  std::vector<std::vector<int> > IOHandler::buildTransitionTable(std::list<std::string> const &transitions,
+  std::vector<std::vector<size_t> > IOHandler::buildTransitionTable(std::list<std::string> const &transitions,
                                                                    std::vector<std::string> const &stateVector,
                                                                    std::vector<std::string> const &letterVector,
-                                                                   int transNo) {
-    //initialize with -1
-    std::vector<std::vector<int> > result(stateVector.size(), std::vector<int>(letterVector.size(), -1));
+                                                                   size_t transNo) {
+    //initialize with 0
+    std::vector<std::vector<size_t> > result(stateVector.size(), std::vector<size_t>(letterVector.size()));
+    //vector of defined transitions
+    std::vector<std::vector<bool> > isDefined(stateVector.size(), std::vector<bool>(letterVector.size(), false));
     std::list<std::string>::const_iterator iter;
     for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
       std::string transition = *iter;
@@ -286,8 +288,9 @@ namespace omalg {
             }
             else {
               //Add to transition relation
-              if(result[originPos][letterPos] == -1) {
+              if (!isDefined[originPos][letterPos]) {
                 result[originPos][letterPos] = targetPos;
+                isDefined[originPos][letterPos] = true;
               }
               else {
                 throw SyntaxException(transNo, "Several transitions for state " + origin + " and letter " + letter + ".\n" + "(Might be in a later line.)");
@@ -307,10 +310,10 @@ namespace omalg {
       }
     }
     //Check for undefined transitions
-    std::vector<std::vector<int> >::const_iterator resIter;
-    for (resIter = result.begin(); resIter != result.end(); ++resIter) {
-      for (std::vector<int>::const_iterator innerIter = resIter->begin(); innerIter != resIter->end(); ++innerIter) {
-        if (*innerIter == -1) {
+    std::vector<std::vector<bool> >::const_iterator outerIter;
+    for (outerIter = isDefined.begin(); outerIter != isDefined.end(); ++outerIter) {
+      for (std::vector<bool>::const_iterator innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
+        if (*innerIter == false) {
           throw SyntaxException(transNo, "There were undefined transitions.\n(Might be in a later line.)");
         }
       }

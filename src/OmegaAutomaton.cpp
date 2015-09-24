@@ -4,7 +4,7 @@ namespace omalg {
 
   OmegaAutomaton::OmegaAutomaton(std::vector<std::string> theStateNames,
                                  std::vector<std::string> theAlphabet,
-                                 int theInitialState)
+                                 size_t theInitialState)
     : stateNames(theStateNames), alphabet(theAlphabet), initialState(theInitialState) {}
 
   std::string OmegaAutomaton::description() const {

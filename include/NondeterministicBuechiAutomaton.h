@@ -13,8 +13,8 @@ namespace omalg {
   public:
     NondeterministicBuechiAutomaton (std::vector<std::string> theStateNames,
                                      std::vector<std::string> theAlphabet,
-                                     int theInitialState,
-                                     std::vector<std::vector<std::set<int> > > theTransitionRelation,
+                                     size_t theInitialState,
+                                     std::vector<std::vector<std::set<size_t> > > theTransitionRelation,
                                      std::vector<bool>  theFinalStates);
 
     OmegaSemigroup* toOmegaSemigroup() const override;

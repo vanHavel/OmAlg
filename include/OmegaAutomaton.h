@@ -20,7 +20,7 @@ namespace omalg {
   protected:
     OmegaAutomaton(std::vector<std::string> theStateNames,
                    std::vector<std::string> theAlphabet,
-                   int theInitialState);
+                   size_t theInitialState);
     std::vector<std::string> getStateNames() const;
     std::vector<std::string> getAlphabet() const;
 

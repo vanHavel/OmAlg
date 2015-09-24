@@ -4,12 +4,12 @@ namespace omalg {
   DeterministicBuechiAutomaton::DeterministicBuechiAutomaton
   (std::vector<std::string> theStateNames,
    std::vector<std::string> theAlphabet,
-   int theInitialState,
-   std::vector<std::vector<int> > theTransitionTable,
+   size_t theInitialState,
+   std::vector<std::vector<size_t> > theTransitionTable,
    std::vector<bool>  theFinalStates)
     : OmegaAutomaton(theStateNames, theAlphabet, theInitialState),
-      DeterministicOmegaAutomaton(theTransitionTable),
-      BuechiAutomaton(theFinalStates) {}
+      BuechiAutomaton(theFinalStates),
+      DeterministicOmegaAutomaton(theTransitionTable) {}
 
   OmegaSemigroup* DeterministicBuechiAutomaton::toOmegaSemigroup() const {
     return 0;
