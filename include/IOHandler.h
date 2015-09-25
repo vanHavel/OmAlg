@@ -29,7 +29,7 @@ namespace omalg {
 	  void writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream &out);
 
 	  void checkReadTillEnd(size_t lineNo, size_t lines);
-	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, size_t lineNo, bool transistionMode = false);
+	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, bool transistionMode = false);
 
 	  std::vector<std::vector<std::set<size_t> > > buildTransitionRelation(std::list<std::string> const &transitions,
 	                                                                 std::vector<std::string> const &stateVector,

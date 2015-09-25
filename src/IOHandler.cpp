@@ -19,7 +19,7 @@ namespace omalg {
   OmegaAutomaton* IOHandler::readAutomatonFromStream(std::istream &in) {
     std::vector<std::string> lines;
     std::string temp;
-    const int minLines = 7;
+    const size_t minLines = 7;
 
     //Read complete file
     while (std::getline(in, temp)) {
@@ -37,7 +37,7 @@ namespace omalg {
     }
 
     //Read automaton acceptance mode.
-    int lineNo = 0;
+    size_t lineNo = 0;
     std::string acceptanceMode = lines[lineNo];
     //Check that last symbol is ';' and erase it.
     if(acceptanceMode.back() == ';') {
@@ -179,7 +179,7 @@ namespace omalg {
     }
   }
 
-  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t lineNo, bool transitionMode) {
+  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, bool transitionMode) {
     std::list<std::string> result;
     std::list<std::string> newNames;
     while(lineNo < lines.size() && lines[lineNo].back() != ';') {
@@ -199,7 +199,7 @@ namespace omalg {
     }
     else {
       if (result.size() % 3 != 0) {
-        throw SyntaxException(lineNo + 1, "Invalid transition format(Might be at a later line");
+        throw SyntaxException(lineNo + 1, "Invalid transition format(Might be at a prior line).");
       }
       std::list<std::string> compressedResult;
       std::list<std::string>::const_iterator iter;
@@ -240,13 +240,13 @@ namespace omalg {
             int targetPos = dasdull::vectorPos(stateVector, target);
             //Check components
             if (originPos == -1) {
-              throw SyntaxException(transNo, "Origin state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+              throw SyntaxException(transNo + 1, "Origin state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
             }
             else if (letterPos == -1) {
-              throw SyntaxException(transNo, "Letter of transition (" + transition + ") not in alphabet." + "\n" + "(Might be in a later line.)");
+              throw SyntaxException(transNo + 1, "Letter of transition (" + transition + ") not in alphabet." + "\n" + "(Might be in a later line.)");
             }
             else if (targetPos == -1) {
-              throw SyntaxException(transNo, "Target state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
+              throw SyntaxException(transNo + 1, "Target state of transition (" + transition + ") not in state set." + "\n" + "(Might be in a later line.)");
             }
             else {
               //Add to transition relation
@@ -254,15 +254,15 @@ namespace omalg {
             }
           }
           else {
-            throw SyntaxException(transNo, "Transition ("+ transition + ") does not have three components." + "\n" + "(Might be in a later line.)");
+            throw SyntaxException(transNo + 1, "Transition ("+ transition + ") does not have three components." + "\n" + "(Might be in a later line.)");
           }
         }
         else {
-          throw SyntaxException(transNo, "Expected ')' in transition (" + transition + "\n" + "(Might be in a later line.)");
+          throw SyntaxException(transNo + 1, "Expected ')' in transition (" + transition + "\n" + "(Might be in a later line.)");
         }
       }
       else {
-        throw SyntaxException(transNo, "Expected '(' in transition " + transition + "\n" + "(Might be in a later line.)");
+        throw SyntaxException(transNo + 1, "Expected '(' in transition " + transition + "\n" + "(Might be in a later line.)");
       }
     }
     return result;

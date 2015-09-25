@@ -32,6 +32,11 @@ namespace omalg {
         }
       }
     }
+    //Remove possible trailing newline and ','
+    if (transitionList.back() == '\n') {
+      transitionList.pop_back();
+      transitionList.pop_back();
+    }
     transitionList += ";";
     return transitionList;
   }
