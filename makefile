@@ -3,22 +3,22 @@ BUILD=build/
 HEADER=include/
 OPTPARSER=OptParser/
 BIN=bin/
-UTIL=util/
+HAVEL=vanHavel/
 
 CXXFLAGS+=-I$(HEADER)
 CXXFLAGS+=-I$(OPTPARSER)
-CXXFLAGS+=-I$(UTIL)
+CXXFLAGS+=-I$(HAVEL)
 CXXFLAGS+="-std=c++11"
-CXXFLAGS+=-Wall
-CXXFLAGS+=-g
+CXXFLAGS+=-Wall #debug
+CXXFLAGS+=-g #debug
 LFLAGS+=-I$(HEADER)
 LFLAGS+=-I$(OPTPARSER)
-LFLAGS+=-I$(UTIL)
+LFLAGS+=-I$(HAVEL)
 
 SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
 OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 OBJ_FILES+=$(BUILD)OptParser.o
-OBJ_FILES+=$(BUILD)dasDull_Util.o
+OBJ_FILES+=$(BUILD)vanHavel_Util.o
 
 all: a2os
 
@@ -34,8 +34,8 @@ $(BUILD)%.o: $(SOURCES)%.cpp
 $(BUILD)OptParser.o: $(OPTPARSER)OptParser.cpp
 	$(CXX) $(CXXFLAGS) -c -o $(BUILD)OptParser.o $<
 	
-$(BUILD)dasDull_Util.o: $(UTIL)dasDull_Util.cpp
-	$(CXX) $(CXXFLAGS) -c -o $(BUILD)dasDull_Util.o $<
+$(BUILD)vanHavel_Util.o: $(HAVEL)vanHavel_Util.cpp
+	$(CXX) $(CXXFLAGS) -c -o $(BUILD)vanHavel_Util.o $<
 	
 $(BUILD):
 	mkdir $(BUILD)
