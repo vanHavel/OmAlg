@@ -8,5 +8,17 @@ namespace omalg {
           mixedProductTable(theMixedProductTable), omegaIterationTable(theOmegaIterationTable),
           P(theP), phi(thePhi) { }
 
+  inline size_t OmegaSemigroup::product(size_t lhs, size_t rhs) const {
+    return this->sPlus.product(lhs, rhs);
+  }
+
+  inline size_t OmegaSemigroup::mixedProduct(size_t plusElement, size_t omegaElement) const {
+    return this->mixedProductTable[plusElement][omegaElement];
+  }
+
+  inline size_t OmegaSemigroup::omegaIteration(size_t element) const {
+    return this->omegaIterationTable[element];
+  }
+
 
 }

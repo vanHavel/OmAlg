@@ -85,6 +85,44 @@ int main(int argc, char const *argv[]) {
     }
   }
   
+  //test version
+  std::string outputFile = optParser.getValue("output_file");
+
+  if(outputFile.empty()) {
+    //No output file specified
+    if(!suppressWarnings) {
+      std::cerr << "Warning: No output file specified. Writing to stdout. (Type a2os -h for help)";
+      std::cerr << std::endl;
+    }
+    //Writing to stdout
+    try {
+      omalg::IOHandler::getInstance().writeAutomatonToStdout(*A);
+    }
+    catch(omalg::IOException const &e) {
+      //An error occurred while writing
+      std::cerr << "Error: failed to write omega semigroup to stdout";
+      std::cerr << std::endl;
+      std::cerr << e.what();
+      std::cerr << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+  else {
+    //Output file was specified
+    try {
+      omalg::IOHandler::getInstance().writeAutomatonToFile(*A, outputFile);
+    }
+    catch(omalg::IOException const &e) {
+      //An error occurred while writing
+      std::cerr << "Error: failed to write omega semigroup to file " << outputFile;
+      std::cerr << std::endl;
+      std::cerr << e.what();
+      std::cerr << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
+  return 0;/*
   //Transform to omega semigroup
   std::unique_ptr<omalg::OmegaSemigroup> B(A->toOmegaSemigroup());
   
@@ -126,5 +164,5 @@ int main(int argc, char const *argv[]) {
   }
 	
   //Successful termination
-  return 0;
+  return 0;*/
 }

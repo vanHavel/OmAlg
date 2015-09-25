@@ -12,12 +12,12 @@ namespace omalg {
     for (outerIter = this->transitionTable.begin(); outerIter != this->transitionTable.end(); ++outerIter) {
       //Add newline after each origin state
       if (outerIter != this->transitionTable.begin()) {
-        transitionList += "\n";
+        transitionList += ",\n";
       }
       std::vector<size_t>::const_iterator innerIter;
       for (innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
-        //Add separator but not at beginning
-        if (!transitionList.empty()) {
+        //Add separator but not at beginning of line
+        if (innerIter != outerIter->begin()) {
           transitionList += ",";
         }
         //Construct transition string

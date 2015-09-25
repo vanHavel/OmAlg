@@ -16,8 +16,8 @@ namespace omalg {
   }
 
   std::string NondeterministicBuechiAutomaton::description() const {
-    std::string description = "Buechi\n";
-    description += "Nondeterministic\n";
+    std::string description = "Buechi;\n";
+    description += "Nondeterministic;\n";
     description += OmegaAutomaton::description() + "\n";
     description += NondeterministicOmegaAutomaton::description() + "\n";
     description += BuechiAutomaton::description();

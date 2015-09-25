@@ -12,7 +12,7 @@ namespace omalg {
     for (outerIter = this->transitionRelation.begin(); outerIter != this->transitionRelation.end(); ++outerIter) {
       //Add newline after each origin state, but don't add empty lines
       if (outerIter != this->transitionRelation.begin() && !transitionList.empty() && transitionList.back() != '\n') {
-        transitionList += "\n";
+        transitionList += ",\n";
       }
       std::vector<std::set<size_t> >::const_iterator middleIter;
       for (middleIter = outerIter->begin(); middleIter != outerIter->end(); ++middleIter) {

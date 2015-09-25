@@ -22,9 +22,15 @@ namespace omalg {
     const int minLines = 7;
 
     //Read complete file
-    while (this->safeGetLine(in, temp)) {
+    while (std::getline(in, temp)) {
       lines.push_back(temp);
     }
+    //Check whether fail occurred for other reason but eof
+    if (!in.eof()) {
+      throw ReadFailedException();
+    }
+    //Clear fail and bad bits
+    in.clear();
     //Check minimum number of lines
     if (lines.size() < minLines) {
       throw SyntaxException(lines.size(), "File must have at least " + std::to_string(minLines) + " lines.");
@@ -41,9 +47,9 @@ namespace omalg {
       throw SyntaxException(lineNo, "Expected ';'.");
     }
     //Transform to lower case.
-    std::transform(acceptanceMode.begin(), acceptanceMode.end(), acceptanceMode.end(), ::tolower);
+    std::transform(acceptanceMode.begin(), acceptanceMode.end(), acceptanceMode.begin(), ::tolower);
     //Check if mode is supported, throw syntax exception otherwise.
-    if (find(this->possibleModes.begin(), this->possibleModes.end(), acceptanceMode) == this->possibleModes.end()) {
+    if (std::find(this->possibleModes.begin(), this->possibleModes.end(), acceptanceMode) == this->possibleModes.end()) {
       std::string errorText = "Expected one of the following acceptance modes:";
       std::vector<std::string>::const_iterator it;
       for(it = this->possibleModes.begin(); it != this->possibleModes.end(); ++it) {
@@ -65,7 +71,7 @@ namespace omalg {
     else {
       throw SyntaxException(lineNo + 1, "Expected ';'.");
     }
-    std::transform(temp.begin(), temp.end(), temp.end(), ::tolower);
+    std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
     if (temp.compare("deterministic") == 0) {
       deterministic = true;
     }
@@ -80,18 +86,17 @@ namespace omalg {
     //Read list of states
     lineNo++;
     std::list<std::string> stateNames = this->readNamesIntoList(lines, lineNo);
-
     //Read initial state
     ++lineNo;
     this->checkReadTillEnd(lineNo, lines.size());
     //Check that last symbol is ';' and erase it.
-    if(temp.back() == ';') {
-      temp.pop_back();
+    std::string initialName = lines[lineNo];
+    if(initialName.back() == ';') {
+      initialName.pop_back();
     }
     else {
       throw SyntaxException(lineNo + 1, "Expected ';'.");
     }
-    std::string initialName = lines[lineNo];
     //Check that initial state is in state list
     if (std::find(stateNames.begin(), stateNames.end(), initialName) == stateNames.end()) {
       throw SyntaxException(lineNo + 1, "Initial state " + initialName + " not in state set.");
@@ -104,7 +109,7 @@ namespace omalg {
     //Read transitions
     ++lineNo;
     int transNo = lineNo;
-    std::list<std::string> transitionTriplets = this->readNamesIntoList(lines, lineNo);
+    std::list<std::string> transitionTriplets = this->readNamesIntoList(lines, lineNo, true);
 
     //Build state/letter vectors and get initial number
     std::vector<std::string> stateVector(stateNames.begin(), stateNames.end());
@@ -124,6 +129,10 @@ namespace omalg {
         int pos = dasdull::vectorPos(stateVector, *iter);
         if (pos != -1) {
           finalStates[pos] = true;
+        }
+        else {
+          //Final state not in state set
+          throw SyntaxException(lineNo + 1, "Final state " + *iter + " not in state set.");
         }
       }
       //Build automaton
@@ -162,16 +171,6 @@ namespace omalg {
   void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
     return; //TODO
   }
-  
-  std::istream& IOHandler::safeGetLine(std::istream &in, std::string &str) {
-    //Try to read line, throw exception on failure.
-    try {
-      return std::getline(in, str);
-    }
-    catch (std::istream::failure const &) {
-      throw ReadFailedException();
-    }
-  }
 
   void IOHandler::checkReadTillEnd(size_t lineNo, size_t lines) {
     if (lineNo >= lines) {
@@ -180,7 +179,7 @@ namespace omalg {
     }
   }
 
-  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t lineNo) {
+  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t lineNo, bool transitionMode) {
     std::list<std::string> result;
     std::list<std::string> newNames;
     while(lineNo < lines.size() && lines[lineNo].back() != ';') {
@@ -194,7 +193,26 @@ namespace omalg {
     temp.pop_back();
     newNames = dasdull::stringSplit(temp, ',', true);
     result.insert(result.end(), newNames.begin(), newNames.end());
-    return result;
+    //Special case: put together transitions
+    if (!transitionMode) {
+      return result;
+    }
+    else {
+      if (result.size() % 3 != 0) {
+        throw SyntaxException(lineNo + 1, "Invalid transition format(Might be at a later line");
+      }
+      std::list<std::string> compressedResult;
+      std::list<std::string>::const_iterator iter;
+      for(iter = result.begin(); iter != result.end(); ++iter) {
+        std::string transition = *iter;
+        iter++;
+        transition += "," + *iter;
+        iter++;
+        transition += "," + *iter;
+        compressedResult.insert(compressedResult.end(), transition);
+      }
+      return compressedResult;
+    }
   }
 
   std::vector<std::vector<std::set<size_t> > > IOHandler::buildTransitionRelation(std::list<std::string> const &transitions,
@@ -322,14 +340,9 @@ namespace omalg {
   }
 
   OmegaAutomaton* IOHandler::readAutomatonFromFile(std::string const inputFileName) {
-    //Throw exceptions if an error occurs while reading.
     std::ifstream in;
-    in.exceptions(std::ios::failbit | std::ios::badbit);
-    //Open the input file.
-    try {
-      in.open(inputFileName, std::ios::in);
-    }
-    catch(std::ifstream::failure const &) {
+    in.open(inputFileName, std::ios::in);
+    if (!in.good()) {
       throw OpenFailedException(inputFileName);
     }
     //Read automaton from file.
@@ -340,63 +353,33 @@ namespace omalg {
     catch(IOException const &ex) {
       //An exception was thrown while reading from file.
       //Attempt to close the file.
-      try {
-        in.close();
-      }
-      catch(std::ifstream::failure const &) {
-        //If closing the stream causes a second exception it is not reported.
-        //The original exception that occurred while reading is thrown.
-      }
-      throw ex;
+      in.close();
+      throw;
     }
     //Close the input file.
-    try {
-      in.close();
-    }
-    catch(std::ifstream::failure const &) {
+    in.close();
+    if (in.fail()) {
     	throw CloseFailedException(inputFileName);
     }
     return result;
   }
   
   OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
-    //Safe exception state of stdin and normalize it later
-    std::ios_base::iostate temp = std::cin.exceptions();
-    std::cin.exceptions(std::ios::failbit | std::ios::badbit);
     OmegaAutomaton* A;
-    try {
-      A = this->readAutomatonFromStream(std::cin);
-    }
-    catch(IOException const &) {
-      std::cin.exceptions(temp);
-      throw;
-    }
-    std::cin.exceptions(temp);
+    A = this->readAutomatonFromStream(std::cin);
     return A;
   }
   
   void IOHandler::writeAutomatonToStdout(OmegaAutomaton const &A) {
-    //Safe exception state of stdout and normalize it later
-    std::ios_base::iostate temp = std::cout.exceptions();
-    std::cout.exceptions(std::ios::failbit | std::ios::badbit);
-    try {
-      this->writeAutomatonToStream(A, std::cout);
+    this->writeAutomatonToStream(A, std::cout);
+    if(std::cout.fail()) {
+      throw WriteFailedException();
     }
-    catch(WriteFailedException const &) {
-      std::cout.exceptions(temp);
-      throw;
-    }
-    std::cout.exceptions(temp);
   }
   void IOHandler::writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName) {
-    //Throw exceptions if an error occurs while writing.
     std::ofstream out;
-    out.exceptions(std::ios::failbit | std::ios::badbit);
-    //Open the output file.
-    try {
-      out.open(outputFileName, std::ios::out);
-    }
-    catch(std::ofstream::failure const &) {
+    out.open(outputFileName, std::ios::out);
+    if (!out.good()) {
       throw OpenFailedException(outputFileName);
     }
     //Write automaton to file.
@@ -406,20 +389,12 @@ namespace omalg {
     catch(IOException const &ex) {
       //An exception was thrown while writing to file.
       //Attempt to close the file.
-      try {
-        out.close();
-      }
-      catch(std::ofstream::failure const &) {
-        //If closing the stream causes a second exception it is not reported.
-        //The original exception that occurred while writing is thrown.
-      }
+      out.close();
       throw ex;
     }
     //Close the input file.
-    try {
-      out.close();
-    }
-    catch(std::ofstream::failure const &) {
+    out.close();
+    if (out.fail()) {
       throw CloseFailedException(outputFileName);
     }
   }

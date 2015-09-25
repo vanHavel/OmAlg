@@ -67,7 +67,7 @@ namespace omalg {
       : lineNo(theLineNo), hintText(theHintText) {}
 
     const char* what() const noexcept override {
-      std::string message = "Syntax error in line " + std::to_string(this->lineNo);
+      std::string message = "Syntax error in line " + std::to_string(this->lineNo) + ".";
       message += '\n';
       message += this->hintText;
       return message.c_str();
