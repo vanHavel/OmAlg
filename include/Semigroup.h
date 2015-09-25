@@ -39,6 +39,11 @@ namespace omalg {
      * Calculates the complete <=_J-order.
      */
     void calculateJOrder() const;
+    /**
+     * Returns textual description of semigroup in OmAlg format.
+     * @return The description as a string.
+     */
+    std::string description() const;
   };
 
 }

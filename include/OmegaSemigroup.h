@@ -48,7 +48,11 @@ namespace omalg {
   	 * @return Index of iteration result.
   	 */
   	size_t omegaIteration(size_t element) const;
-
+    /**
+     * Returns textual description of omega semigroup in OmAlg format.
+     * @return The description as a string.
+     */
+    std::string description() const;
   };
 
 

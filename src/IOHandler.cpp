@@ -160,16 +160,17 @@ namespace omalg {
   }
   
   void IOHandler::writeAutomatonToStream(OmegaAutomaton const &A, std::ostream& out) {
-    try {
-      out << A.description();
-    }
-    catch(std::ostream::failure const &) {
+    out << A.description();  
+    if (out.fail()) {
       throw WriteFailedException();
     }
   }
 
   void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
-    return; //TODO
+    out << S.description();  
+    if (out.fail()) {
+      throw WriteFailedException();
+    }
   }
 
   void IOHandler::checkReadTillEnd(size_t lineNo, size_t lines) {
@@ -376,6 +377,7 @@ namespace omalg {
       throw WriteFailedException();
     }
   }
+  
   void IOHandler::writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName) {
     std::ofstream out;
     out.open(outputFileName, std::ios::out);
@@ -390,7 +392,7 @@ namespace omalg {
       //An exception was thrown while writing to file.
       //Attempt to close the file.
       out.close();
-      throw ex;
+      throw;
     }
     //Close the input file.
     out.close();
@@ -400,11 +402,33 @@ namespace omalg {
   }
 
   void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string const outputFileName) {
-    return; //TODO
+    std::ofstream out;
+    out.open(outputFileName, std::ios::out);
+    if (!out.good()) {
+      throw OpenFailedException(outputFileName);
+    }
+    //Write automaton to file.
+    try {
+      this->writeOmegaSemigroupToStream(S, out);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while writing to file.
+      //Attempt to close the file.
+      out.close();
+      throw;
+    }
+    //Close the input file.
+    out.close();
+    if (out.fail()) {
+      throw CloseFailedException(outputFileName);
+    }
   }
   
   void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
-    this->writeOmegaSemigroupToStream(S, std::cout); //TODO
+    this->writeOmegaSemigroupToStream(S, std::cout);
+    if(std::cout.fail()) {
+      throw WriteFailedException();
+    }
   }
 
 
