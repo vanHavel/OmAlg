@@ -39,7 +39,7 @@ namespace omalg {
       std::vector<size_t>::const_iterator innerIter;
       for(innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         //Add ',', but not at beginnning
-        if (!table.empty() && !table.back() == '\n') {
+        if (!table.empty() && table.back() != '\n') {
           table += ",";
         }
         table += this->elementNames[*innerIter];

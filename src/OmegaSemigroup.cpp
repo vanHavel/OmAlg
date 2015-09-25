@@ -47,7 +47,7 @@ namespace omalg {
       std::vector<size_t>::const_iterator innerIter;
       for(innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         //Add ',', but not at beginnning
-        if (!mixedTable.empty() && !mixedTable.back() == '\n') {
+        if (!mixedTable.empty() && mixedTable.back() != '\n') {
           mixedTable += ",";
         }
         mixedTable += this->omegaElementNames[*innerIter];
