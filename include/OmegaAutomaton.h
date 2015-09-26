@@ -5,6 +5,8 @@
 #include <string>
 
 #include "OmegaSemigroup.h"
+#include "TransitionProfile.h"
+#include "TransformToOmegaSemigroup.tcc"
 
 namespace omalg {
 
@@ -26,6 +28,11 @@ namespace omalg {
 
   public:
     /**
+     * Returns number of states.
+     * @return The number of states.
+     */
+    size_t numberOfStates() const;
+    /**
      * Returns a textual description of the automaton in the OmAlg format
      * @return A string containing the description.
      */
@@ -36,7 +43,9 @@ namespace omalg {
      */
     virtual OmegaSemigroup* toOmegaSemigroup() const = 0;
     /**
-     * Virtual destructor.
+     * Returns transition profile associated with given letter.
+     * @param letter The letter index.
+     * @return The associated transition profile.
      */
     virtual ~OmegaAutomaton() {};
   };

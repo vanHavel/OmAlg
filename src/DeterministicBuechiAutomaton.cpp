@@ -11,10 +11,6 @@ namespace omalg {
       BuechiAutomaton(theFinalStates),
       DeterministicOmegaAutomaton(theTransitionTable) {}
 
-  OmegaSemigroup* DeterministicBuechiAutomaton::toOmegaSemigroup() const {
-    return 0;
-  }
-
   std::string DeterministicBuechiAutomaton::description() const {
     std::string description = "Buechi;\n";
     description += "Deterministic;\n";
@@ -23,5 +19,18 @@ namespace omalg {
     description += BuechiAutomaton::description();
     return description;
   }
+  
+  OmegaSemigroup* DeterministicBuechiAutomaton::toOmegaSemigroup() const {
+    return TransformToOmegaSemigroup(*this);
+  }
 
+  TransitionProfile<DeterministicBuechiAutomaton>* DeterministicBuechiAutomaton::getTransitionProfileForLetter(size_t letter) {
+    std::vector<std::pair<size_t,bool> > newRepresentation;
+    for (size_t state = 0; state < this->numberOfStates(); ++state) {
+      size_t target = this->getTarget(state, letter);
+      bool finalVisited = this->isFinal(state) || this->isFinal(target);
+      newRepresentation[state] = std::make_pair(target, finalVisited);
+    }
+    return new TransitionProfile<DeterministicBuechiAutomaton>(newRepresentation);
+  }
 }

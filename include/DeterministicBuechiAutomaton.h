@@ -16,9 +16,14 @@ namespace omalg {
                                   size_t theInitialState,
                                   std::vector<std::vector<size_t> > theTransitionTable,
                                   std::vector<bool>  theFinalStates);
-    OmegaSemigroup* toOmegaSemigroup() const override;
     std::string description() const override;
+    
+    OmegaSemigroup* toOmegaSemigroup() const override;
+    
+    TransitionProfile<DeterministicBuechiAutomaton>* getTransitionProfileForLetter(size_t index);
   };
 }
+
+#include "DBTransitionProfile.h"
 
 #endif

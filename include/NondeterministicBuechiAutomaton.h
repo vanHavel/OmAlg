@@ -17,9 +17,8 @@ namespace omalg {
                                      std::vector<std::vector<std::set<size_t> > > theTransitionRelation,
                                      std::vector<bool>  theFinalStates);
 
-    OmegaSemigroup* toOmegaSemigroup() const override;
-
     std::string description() const override;
+    OmegaSemigroup* toOmegaSemigroup() const override;
   };
 }
 

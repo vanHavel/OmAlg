@@ -11,10 +11,6 @@ namespace omalg {
       BuechiAutomaton(theFinalStates),
       NondeterministicOmegaAutomaton(theTransitionRelation) {}
 
-  OmegaSemigroup* NondeterministicBuechiAutomaton::toOmegaSemigroup() const {
-    return 0; //TODO
-  }
-
   std::string NondeterministicBuechiAutomaton::description() const {
     std::string description = "Buechi;\n";
     description += "Nondeterministic;\n";
@@ -22,5 +18,9 @@ namespace omalg {
     description += NondeterministicOmegaAutomaton::description() + "\n";
     description += BuechiAutomaton::description();
     return description;
+  }
+  
+  OmegaSemigroup* NondeterministicBuechiAutomaton::toOmegaSemigroup() const {
+    return TransformToOmegaSemigroup(*this);
   }
 }

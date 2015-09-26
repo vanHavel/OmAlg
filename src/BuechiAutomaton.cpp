@@ -21,4 +21,8 @@ namespace omalg {
     finalList += ";";
     return finalList;
   }
+  
+  bool BuechiAutomaton::isFinal(size_t state) const {
+    return this->finalStates[state];
+  }
 }

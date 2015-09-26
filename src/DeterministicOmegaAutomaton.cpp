@@ -31,4 +31,8 @@ namespace omalg {
     }
     return transitionList;
   }
+  
+  size_t DeterministicOmegaAutomaton::getTarget(size_t state, size_t transition) const{
+    return this->transitionTable[state][transition];
+  }
 }
