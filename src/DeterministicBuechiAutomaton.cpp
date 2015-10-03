@@ -24,13 +24,13 @@ namespace omalg {
     return TransformToOmegaSemigroup(*this);
   }
 
-  TransitionProfile<DeterministicBuechiAutomaton>* DeterministicBuechiAutomaton::getTransitionProfileForLetter(size_t letter) {
-    std::vector<std::pair<size_t,bool> > newRepresentation;
-    for (size_t state = 0; state < this->numberOfStates(); ++state) {
+  TransitionProfile<DeterministicBuechiAutomaton> DeterministicBuechiAutomaton::getTransitionProfileForLetter(size_t letter) const {
+    std::vector<std::pair<size_t,bool> > newRepresentation(this->numberOfStates());
+    for (size_t state = 0; state < newRepresentation.size(); ++state) {
       size_t target = this->getTarget(state, letter);
       bool finalVisited = this->isFinal(state) || this->isFinal(target);
       newRepresentation[state] = std::make_pair(target, finalVisited);
     }
-    return new TransitionProfile<DeterministicBuechiAutomaton>(newRepresentation);
+    return TransitionProfile<DeterministicBuechiAutomaton>(newRepresentation);
   }
 }

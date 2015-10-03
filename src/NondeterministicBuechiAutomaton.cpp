@@ -23,4 +23,8 @@ namespace omalg {
   OmegaSemigroup* NondeterministicBuechiAutomaton::toOmegaSemigroup() const {
     return TransformToOmegaSemigroup(*this);
   }
+  
+  TransitionProfile<NondeterministicBuechiAutomaton> NondeterministicBuechiAutomaton::getTransitionProfileForLetter(size_t letter) const {
+    return TransitionProfile<NondeterministicBuechiAutomaton>();
+  }
 }

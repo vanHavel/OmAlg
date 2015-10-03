@@ -20,7 +20,7 @@ namespace omalg {
     
     OmegaSemigroup* toOmegaSemigroup() const override;
     
-    TransitionProfile<DeterministicBuechiAutomaton>* getTransitionProfileForLetter(size_t index);
+    TransitionProfile<DeterministicBuechiAutomaton> getTransitionProfileForLetter(size_t index) const;
   };
 }
 
