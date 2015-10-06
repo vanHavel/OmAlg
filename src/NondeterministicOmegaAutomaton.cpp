@@ -3,6 +3,10 @@
 namespace omalg {
   NondeterministicOmegaAutomaton::NondeterministicOmegaAutomaton(std::vector<std::vector<std::set<size_t> > > theTransitionRelation)
     : transitionRelation(theTransitionRelation) {}
+  
+  std::set<size_t> NondeterministicOmegaAutomaton::getTargets(size_t state, size_t letter) const {
+    return this->transitionRelation[state][letter];
+  }
 
   std::string NondeterministicOmegaAutomaton::description() const {
     std::string transitionList = "";

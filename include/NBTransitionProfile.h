@@ -10,8 +10,8 @@
 namespace omalg {
   
   //Node struct for Tarjan's SCC algorithm
-  struct Node {
-    Node() : index(-1), lowlink(-1), onStack(false), originalIndex(0) {}
+  struct TarjanNode {
+    TarjanNode() : index(-1), lowlink(-1), onStack(false), originalIndex(0) {}
     int index;
     int lowlink;
     bool onStack;
@@ -24,9 +24,9 @@ namespace omalg {
     
     std::set<std::set<size_t> > getStronglyConnectedComponents() const {
       //Tarjan's SCC algorithm
-      std::vector<Node> nodes(this->representation.size());
+      std::vector<TarjanNode> nodes(this->representation.size());
       size_t index = 0;
-      std::stack<Node> nodeStack;
+      std::stack<TarjanNode> nodeStack;
       std::set<std::set<size_t> > components;
       for (size_t state = 0; state < this->representation.size(); ++state) {
         if (nodes[state].index == -1) {
@@ -36,8 +36,8 @@ namespace omalg {
       return components;
     }
     
-    void strongConnect(size_t state, size_t index, std::vector<Node>& nodes, 
-                       std::stack<Node>& nodeStack, std::set<std::set<size_t> >& components) const {
+    void strongConnect(size_t state, size_t index, std::vector<TarjanNode>& nodes, 
+                       std::stack<TarjanNode>& nodeStack, std::set<std::set<size_t> >& components) const {
       nodes[state].index = index;
       nodes[state].lowlink = index;
       nodes[state].originalIndex = state;
@@ -53,7 +53,7 @@ namespace omalg {
       }
       if (nodes[state].lowlink == nodes[state].index) {
         std::set<size_t> newComponent;
-        Node w;
+        TarjanNode w;
         do {
           w = nodeStack.top();
           nodeStack.pop();

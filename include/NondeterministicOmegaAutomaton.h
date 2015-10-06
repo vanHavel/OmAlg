@@ -15,6 +15,7 @@ namespace omalg {
 		NondeterministicOmegaAutomaton(std::vector<std::vector<std::set<size_t> > > theTransitionRelation);
   public:
     virtual std::string description() const override;
+    std::set<size_t> getTargets(size_t state, size_t letter) const;
   };
 }
 
