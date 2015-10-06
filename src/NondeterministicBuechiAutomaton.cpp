@@ -25,6 +25,7 @@ namespace omalg {
   }
   
   TransitionProfile<NondeterministicBuechiAutomaton> NondeterministicBuechiAutomaton::getTransitionProfileForLetter(size_t letter) const {
-    return TransitionProfile<NondeterministicBuechiAutomaton>();
+    return TransitionProfile<NondeterministicBuechiAutomaton>(std::vector<std::set<std::pair<size_t, bool> > >());
+    //TODO
   }
 }
