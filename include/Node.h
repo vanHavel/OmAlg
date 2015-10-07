@@ -24,8 +24,15 @@ namespace omalg {
      * @param theValue Value of the node.
      * @param numberOfSuccessors The number of successors of the node.
      */
-    Node(T theValue, size_t numberOfSucccessors)
-      : value(theValue), successors(std::vector<Node*, bool>(numberOfSuccessors)) {}
+    Node(T theValue, size_t numberOfSuccessors)
+      : successors(numberOfSuccessors), value(theValue) {}
+    /**
+     * Compares a variable of type T with the value stored by the node.
+     * @return true iff the two values are equal.
+     */
+    T equalToValue(T const& candidate) const {
+      return this->value == candidate;
+    }
     /**
      * Returns number of successors of a node.
      * @return the number of successors.
@@ -62,7 +69,7 @@ namespace omalg {
         this->successors[index] = std::make_pair(successor, novel);
       }
       else {
-        throw std::out_of_range();
+        throw std::out_of_range("Node: Successor index out of range.");
       }
     }
     /**

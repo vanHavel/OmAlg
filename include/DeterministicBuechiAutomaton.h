@@ -21,6 +21,7 @@ namespace omalg {
     OmegaSemigroup* toOmegaSemigroup() const override;
     
     TransitionProfile<DeterministicBuechiAutomaton> getTransitionProfileForLetter(size_t index) const;
+    TransitionProfile<DeterministicBuechiAutomaton> getEpsilonProfile() const;
   };
 }
 

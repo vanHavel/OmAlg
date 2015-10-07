@@ -33,4 +33,12 @@ namespace omalg {
     }
     return TransitionProfile<DeterministicBuechiAutomaton>(newRepresentation);
   }
+  
+  TransitionProfile<DeterministicBuechiAutomaton> DeterministicBuechiAutomaton::getEpsilonProfile() const {
+    std::vector<std::pair<size_t,bool> > newRepresentation(this->numberOfStates());
+    for (size_t state = 0; state < newRepresentation.size(); ++state) {
+      newRepresentation[state] = std::make_pair(state, this->isFinal(state));
+    }
+    return TransitionProfile<DeterministicBuechiAutomaton>(newRepresentation);
+  }
 }

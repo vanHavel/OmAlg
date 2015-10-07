@@ -35,6 +35,7 @@ namespace omalg {
   std::vector<std::string> OmegaAutomaton::getStateNames() const {
     return this->stateNames;
   }
+  
 
   std::vector<std::string> OmegaAutomaton::getAlphabet() const {
     return this->alphabet;
@@ -42,6 +43,10 @@ namespace omalg {
   
   size_t OmegaAutomaton::numberOfStates() const {
     return this->stateNames.size();
+  }
+  
+  size_t OmegaAutomaton::alphabetSize() const {
+    return this->alphabet.size();
   }
 }
 

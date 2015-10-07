@@ -20,6 +20,7 @@ namespace omalg {
     std::string description() const override;
     OmegaSemigroup* toOmegaSemigroup() const override;
     TransitionProfile<NondeterministicBuechiAutomaton> getTransitionProfileForLetter(size_t index) const;
+    TransitionProfile<NondeterministicBuechiAutomaton> getEpsilonProfile() const;
   };
   
 }

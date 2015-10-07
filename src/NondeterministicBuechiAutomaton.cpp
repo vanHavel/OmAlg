@@ -38,4 +38,12 @@ namespace omalg {
     }
     return TransitionProfile<NondeterministicBuechiAutomaton>(newProfile);
   }
+  
+  TransitionProfile<NondeterministicBuechiAutomaton> NondeterministicBuechiAutomaton::getEpsilonProfile() const {
+    std::vector<std::set<std::pair<size_t,bool> > > newProfile(this->numberOfStates());
+    for (size_t state = 0; state < this->numberOfStates(); ++state) {
+      newProfile[state].insert(std::make_pair(state, this->isFinal(state)));
+    }
+    return newProfile;
+  }
 }

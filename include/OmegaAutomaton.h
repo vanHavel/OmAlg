@@ -33,6 +33,11 @@ namespace omalg {
      */
     size_t numberOfStates() const;
     /**
+     * Returns size of alphabet.
+     * @return The alphabet size.
+     */
+    size_t alphabetSize() const;
+    /**
      * Returns a textual description of the automaton in the OmAlg format
      * @return A string containing the description.
      */
