@@ -155,6 +155,7 @@ namespace omalg {
           std::vector<bool> reachableStates(this->representation.size(), false);
           std::stack<size_t> toCheck;
           toCheck.push(state);
+          reachableStates[state] = true;
           while (!toCheck.empty() && !done) {
             size_t current = toCheck.top();
             toCheck.pop();
@@ -165,19 +166,19 @@ namespace omalg {
             }
             else {
               //Continue search
-              reachableStates[current] = true;
               std::set<std::pair<size_t,bool> >::const_iterator iter;
               for (iter = this->representation[current].begin(); iter != this->representation[current].end(); ++iter) {
                 //Add states not yet visited to stack
                 if (reachableStates[iter->first] == false) {
                   toCheck.push(iter->first);
+                  reachableStates[iter->first] = true;
                 }
               }
             }
           } 
         }
       } 
-      return result;
+      return OmegaProfile(result);
     }
     
     std::set<std::pair<size_t,bool> > operator[](size_t index) const {

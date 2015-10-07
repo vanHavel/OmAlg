@@ -5,27 +5,30 @@ OPTPARSER=OptParser/
 BIN=bin/
 HAVEL=vanHavel/
 
-CXXFLAGS+=-I$(HEADER)
-CXXFLAGS+=-I$(OPTPARSER)
-CXXFLAGS+=-I$(HAVEL)
-CXXFLAGS+="-std=c++11"
+INCLUDE=-I$(HEADER) -I$(addprefix $(HEADER),Automata) -I$(addprefix $(HEADER),TransitionProfiles) -I$(HAVEL) -I$(OPTPARSER)
+
+CXXFLAGS+=$(INCLUDE)
+CXXFLAGS+=-std=c++11
 CXXFLAGS+=-Wall #debug
 CXXFLAGS+=-g #debug
-LFLAGS+=-I$(HEADER)
-LFLAGS+=-I$(OPTPARSER)
-LFLAGS+=-I$(HAVEL)
+LFLAGS+=$(INCLUDE)
 
-SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp)
-OBJ_FILES := $(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
+SOURCE_FILES=$(wildcard $(SOURCES)/*.cpp) 
+SOURCE_FILES+=$(wildcard $(SOURCES)/Automata/*.cpp)
+
+OBJ_FILES=$(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 OBJ_FILES+=$(BUILD)OptParser.o
 OBJ_FILES+=$(BUILD)vanHavel_Util.o
 
 all: a2os
-
+	
 a2os: $(BUILD) $(BIN) $(BUILD)AutomatonToOmegaSemigroup.o
-	$(CXX) -o $(BIN)a2os $(OBJ_FILES) $(BUILD)AutomatonToOmegaSemigroup.o $(LFLAGS)
+	$(CXX) $(CXXFLAGS) -o $(BIN)a2os $(OBJ_FILES) $(BUILD)AutomatonToOmegaSemigroup.o $(LFLAGS)
 	
 $(BUILD)AutomatonToOmegaSemigroup.o: AutomatonToOmegaSemigroup.cpp $(OBJ_FILES)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BUILD)%Automaton.o: $(SOURCES)Automata/%Automaton.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD)%.o: $(SOURCES)%.cpp
