@@ -24,7 +24,6 @@ namespace omalg {
                    std::vector<std::string> theAlphabet,
                    size_t theInitialState);
     std::vector<std::string> getStateNames() const;
-    std::vector<std::string> getAlphabet() const;
 
   public:
     /**
@@ -37,6 +36,11 @@ namespace omalg {
      * @return The alphabet size.
      */
     size_t alphabetSize() const;
+    /**
+     * Returns the alphabet of the automaton.
+     * @return the alphabet.
+     */
+    std::vector<std::string> getAlphabet() const;
     /**
      * Returns a textual description of the automaton in the OmAlg format
      * @return A string containing the description.

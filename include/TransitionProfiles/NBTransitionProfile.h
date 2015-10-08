@@ -185,7 +185,14 @@ namespace omalg {
       return this->representation[index];
     }
     
+    friend bool operator==(TransitionProfile const& lhs,
+                           TransitionProfile const& rhs);
+    
   };
   
+  inline bool operator==(TransitionProfile<NondeterministicBuechiAutomaton> const& lhs,
+                  TransitionProfile<NondeterministicBuechiAutomaton> const& rhs) {
+    return lhs.representation == rhs.representation;
+  }
 }
 #endif	

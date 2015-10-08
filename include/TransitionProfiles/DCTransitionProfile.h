@@ -56,7 +56,14 @@ namespace omalg {
     std::pair<size_t,bool> operator[](size_t index) const {
       return this->representation[index];
     }
+    
+    friend bool operator==(TransitionProfile const& lhs,
+                           TransitionProfile const& rhs);
   };
   
+  inline bool operator==(TransitionProfile<DeterministicCoBuechiAutomaton> const& lhs,
+                  TransitionProfile<DeterministicCoBuechiAutomaton> const& rhs) {
+    return lhs.representation == rhs.representation;
+  }
 }
 #endif	
