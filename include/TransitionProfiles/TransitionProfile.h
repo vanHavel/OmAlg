@@ -5,10 +5,14 @@
 
 namespace omalg {
   
+  //Forward declaration.
+  struct OmegaProfileHash;
+  
   /**
    * Class used as S_Omega element in the transition profile construction.
    */
   class OmegaProfile { 
+  friend OmegaProfileHash;
   private:
     std::vector<bool> values; 
   public:
@@ -34,6 +38,23 @@ namespace omalg {
      */
     bool operator[](size_t index) const{
       return this->values[index];
+    }
+    /**
+     * Comparison operator.
+     * @param lhs The left hand side.
+     * @param rhs the right hand side.
+     * @return true iff the two profiles are equal.
+     */
+    friend bool operator==(OmegaProfile const& lhs, OmegaProfile const& rhs);
+  };
+  
+  inline bool operator==(OmegaProfile const& lhs, OmegaProfile const& rhs) {
+    return lhs.values == rhs.values;
+  }
+  
+  struct OmegaProfileHash {
+    size_t operator()(OmegaProfile const& profile) const {
+      return std::hash<std::vector<bool> >()(profile.values);
     }
   };
 

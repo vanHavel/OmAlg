@@ -37,6 +37,11 @@ namespace omalg {
      */
     size_t alphabetSize() const;
     /**
+     * Returns index of the initial state.
+     * @return the initial state.
+     */
+    size_t getInitialState() const;
+    /**
      * Returns the alphabet of the automaton.
      * @return the alphabet.
      */
