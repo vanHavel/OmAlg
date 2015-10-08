@@ -18,7 +18,7 @@ SOURCE_FILES+=$(wildcard $(SOURCES)/Automata/*.cpp)
 
 OBJ_FILES=$(addprefix $(BUILD),$(notdir $(SOURCE_FILES:.cpp=.o)))
 OBJ_FILES+=$(BUILD)OptParser.o
-OBJ_FILES+=$(BUILD)vanHavel_Util.o
+OBJ_FILES+=$(BUILD)vanHavel_Util.o $(BUILD)UnionFind.o
 
 all: a2os
 	
@@ -39,6 +39,9 @@ $(BUILD)OptParser.o: $(OPTPARSER)OptParser.cpp
 	
 $(BUILD)vanHavel_Util.o: $(HAVEL)vanHavel_Util.cpp
 	$(CXX) $(CXXFLAGS) -c -o $(BUILD)vanHavel_Util.o $<
+	
+$(BUILD)UnionFind.o: $(HAVEL)UnionFind.cpp
+	$(CXX) $(CXXFLAGS) -c -o $(BUILD)UnionFind.o $<
 	
 $(BUILD):
 	mkdir $(BUILD)
