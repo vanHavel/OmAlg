@@ -12,10 +12,10 @@ namespace omalg {
   private:
     std::vector<std::string> elementNames;
     std::vector<std::vector<size_t> > multiplicationTable;
-    UnionFind* rClasses;
-    UnionFind* lClasses;
-    UnionFind* jClasses;
-    UnionFind* hClasses;
+    vanHavel::UnionFind* rClasses;
+    vanHavel::UnionFind* lClasses;
+    vanHavel::UnionFind* jClasses;
+    vanHavel::UnionFind* hClasses;
     std::vector<std::vector<bool> >* jOrder;
   public:
     /**

@@ -226,6 +226,11 @@ namespace omalg {
     
     //Create omega semigroup.
     OmegaSemigroup* result = new OmegaSemigroup(Splus, nameVector, mixedTable, omegaTable, P, phi);
+    
+    //Cleanup
+    for (listIter = nodeList.begin(); listIter != nodeList.end(); ++listIter) {
+      delete *listIter;
+    }
     return result;
   }
  

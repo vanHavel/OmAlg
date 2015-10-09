@@ -101,7 +101,7 @@ namespace omalg {
           }
         }
       }
-      return result;
+      return OmegaProfile(result);
     }
     
     OmegaProfile omegaIteration() const {

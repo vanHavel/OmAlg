@@ -1,6 +1,8 @@
 #ifndef VANHAVEL_UNION_FIND
 #define	VANHAVEL_UNION_FIND
 
+#include <vector>
+
 namespace vanHavel {
   
   class UnionFind {
