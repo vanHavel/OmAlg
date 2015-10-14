@@ -47,9 +47,8 @@ namespace omalg {
       for (size_t letter = 0; letter < Automaton.alphabetSize(); ++letter) {
         TransitionProfile<T> letterSuccessor = current.concat(letterProfiles[letter]);
         //Check if this successor is new and add link.
-        typename std::list<Node<TransitionProfile<T> >*>::const_iterator listIter;
         bool found = false;
-        for (listIter = nodeList.begin(); listIter != nodeList.end() && !found; ++listIter) {
+        for (auto listIter = nodeList.begin(); listIter != nodeList.end() && !found; ++listIter) {
           if ((*listIter)->equalToValue(letterSuccessor)) {
             //"Old" successor. 
             (*nextToProcess)->setSuccessor(letter, *listIter, false);
@@ -119,19 +118,16 @@ namespace omalg {
         columnIndex = currentNode->getIndex() - rowBegin;
         //Get element name
         std::string newName = "tp(";
-        std::list<size_t>::const_iterator pathIter;
         elementNames[columnIndex] = newName;
-        for(pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
+        for(auto pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
           newName += alphabet[*pathIter];
         }
         newName += ")";
         //Update table
         size_t rowIndex = rowBegin;
-        typename std::list<Node<TransitionProfile<T> >*>::const_iterator listIter;
-        for (listIter = listBegin; listIter != nodeList.end(); ++listIter) {
+        for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
           Node<TransitionProfile<T> >* targetNode = *listIter;
-          std::list<size_t>::const_iterator pathIter;
-          for(pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
+          for(auto pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
             targetNode = (*targetNode)[*pathIter].first;
           }
           productTable[rowIndex][columnIndex] = targetNode->getIndex();
@@ -146,8 +142,7 @@ namespace omalg {
     //Omega iteration of semigroup elements.
     std::vector<OmegaProfile> omegaIters(tableSize, std::vector<bool>(tableSize));
     size_t omegaIndex = 0;
-    typename std::list<Node<TransitionProfile<T> >*>::const_iterator listIter;
-    for (listIter = listBegin; listIter != nodeList.end(); ++listIter) {
+    for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
       omegaIters[omegaIndex] = (*listIter)->getValue().omegaIteration();
       ++omegaIndex;
     }
@@ -157,8 +152,7 @@ namespace omalg {
     std::list<std::string> omegaNames;
     //Fill the map with omega iterations.
     omegaIndex = 0;
-    std::vector<OmegaProfile>::const_iterator vecIter;
-    for (vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
+    for (auto vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
       if (omegaProfiles.find(*vecIter) != omegaProfiles.end()) {
         omegaProfiles[*vecIter] = omegaIndex;
         std::string newName = "(" + elementNames[vecIter - omegaIters.begin()] + ")^w";
@@ -169,8 +163,8 @@ namespace omalg {
     size_t boundary = omegaIndex;
     //Fill the map with all mixed products. Keep partial mixed product table.
     std::vector<std::vector<size_t> > partialMixedTable(tableSize, std::vector<size_t>(omegaProfiles.size()));
-    for (listIter = listBegin; listIter != nodeList.end(); ++listIter) {
-      for (vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
+    for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
+      for (auto vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
         OmegaProfile mixedProduct = (*listIter)->getValue().mixedProduct(*vecIter);
         if (omegaProfiles.find(mixedProduct) != omegaProfiles.end()) {
           omegaProfiles[mixedProduct] = omegaIndex;
@@ -190,10 +184,9 @@ namespace omalg {
       }
     }
     //Fill rest of mixed table.
-    std::unordered_map<OmegaProfile, size_t, OmegaProfileHash>::const_iterator mapIter;
-    for (mapIter = omegaProfiles.begin(); mapIter != omegaProfiles.end(); ++mapIter) {
+    for (auto mapIter = omegaProfiles.begin(); mapIter != omegaProfiles.end(); ++mapIter) {
       if (mapIter->second >= boundary) {
-        for (listIter = listBegin; listIter != nodeList.end(); ++listIter) {
+        for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
           OmegaProfile mixedProduct = (*listIter)->getValue().mixedProduct(mapIter->first);
           mixedTable[(*listIter)->getIndex()][mapIter->second] = omegaProfiles[mixedProduct];
         }
@@ -208,7 +201,7 @@ namespace omalg {
     //Create set P.
     std::vector<bool> P(omegaProfiles.size(), false);
     size_t initial = Automaton.getInitialState();
-    for (mapIter = omegaProfiles.begin(); mapIter != omegaProfiles.end(); ++mapIter) {
+    for (auto mapIter = omegaProfiles.begin(); mapIter != omegaProfiles.end(); ++mapIter) {
       if (mapIter->first[initial]) {
         P[mapIter->second] = true;
       }
@@ -228,7 +221,7 @@ namespace omalg {
     OmegaSemigroup* result = new OmegaSemigroup(Splus, nameVector, mixedTable, omegaTable, P, phi);
     
     //Cleanup
-    for (listIter = nodeList.begin(); listIter != nodeList.end(); ++listIter) {
+    for (auto listIter = nodeList.begin(); listIter != nodeList.end(); ++listIter) {
       delete *listIter;
     }
     return result;

@@ -86,8 +86,6 @@ int main(int argc, char const *argv[]) {
   }
 
   //Transform to omega semigroup
-  A->toOmegaSemigroup();
-  return 0;
   std::unique_ptr<omalg::OmegaSemigroup> B(A->toOmegaSemigroup());
   
   //Get output file
