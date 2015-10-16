@@ -1,11 +1,13 @@
 # OmAlg
-Toolkit for the algebraic theory of omega-automata
+Toolkit for the algebraic theory of omega-automata.
 # Implemented features
-None yet!
+* transform automata into equivalent omega semigroups. Supported types: 
+    * Deterministic:    Buechi, coBuechi, parity
+    * Nondeterministic: Buechi, coBuechi
 # Currently working on
-- translation from Büchi automata to omega-semigroups
-
+* fixing bugs, translation from more kinds of automata to omega-semigroups.
 # Planned features
+- user manual
 - omega-semigroups to parity automata
 - decide a language L's position in the Landweber hierarchy given an omega-semigroup for L
 - omega-semigroups to weak Büchi automata
