@@ -6,16 +6,14 @@ namespace omalg {
 
   std::string DeterministicOmegaAutomaton::description() const {
     std::string transitionList = "";
-    std::vector<std::vector<size_t> >::const_iterator outerIter;
     std::vector<std::string> states = this->getStateNames();
     std::vector<std::string> letters = this->getAlphabet();
-    for (outerIter = this->transitionTable.begin(); outerIter != this->transitionTable.end(); ++outerIter) {
+    for (auto outerIter = this->transitionTable.begin(); outerIter != this->transitionTable.end(); ++outerIter) {
       //Add newline after each origin state
       if (outerIter != this->transitionTable.begin()) {
         transitionList += ",\n";
       }
-      std::vector<size_t>::const_iterator innerIter;
-      for (innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
+      for (auto innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         //Add separator but not at beginning of line
         if (innerIter != outerIter->begin()) {
           transitionList += ",";

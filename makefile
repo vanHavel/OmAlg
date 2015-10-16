@@ -28,7 +28,7 @@ a2os: $(BUILD) $(BIN) $(BUILD)AutomatonToOmegaSemigroup.o
 $(BUILD)AutomatonToOmegaSemigroup.o: AutomatonToOmegaSemigroup.cpp $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BUILD)%Automaton.o: $(SOURCES)Automata/%Automaton.cpp
+$(BUILD)%Automaton.o: $(SOURCES)Automata/%Automaton.cpp $(HEADER)TransformToOmegaSemigroup.tcc
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BUILD)%.o: $(SOURCES)%.cpp

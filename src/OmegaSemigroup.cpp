@@ -26,8 +26,7 @@ namespace omalg {
     
     //Omega element names
     std::string omegaElementList = "";
-    std::vector<std::string>::const_iterator iter;
-    for (iter = this->omegaElementNames.begin(); iter != this->omegaElementNames.end(); ++iter) {
+    for (auto iter = this->omegaElementNames.begin(); iter != this->omegaElementNames.end(); ++iter) {
       if (iter != this->omegaElementNames.begin()) {
         omegaElementList += ",";
       }
@@ -37,15 +36,13 @@ namespace omalg {
     
     //Mixed product table
     std::string mixedTable = "";
-    std::vector<std::vector<size_t> >::const_iterator outerIter;
-    for(outerIter = this->mixedProductTable.begin(); outerIter != this->mixedProductTable.end(); ++outerIter) {
+    for(auto outerIter = this->mixedProductTable.begin(); outerIter != this->mixedProductTable.end(); ++outerIter) {
       //Add newline, but not at beginning
       if (outerIter != this->mixedProductTable.begin()) {
         mixedTable += "\n";
       }
       //Write table line
-      std::vector<size_t>::const_iterator innerIter;
-      for(innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
+      for(auto innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         //Add ',', but not at beginnning
         if (!mixedTable.empty() && mixedTable.back() != '\n') {
           mixedTable += ",";
@@ -58,17 +55,44 @@ namespace omalg {
     
     //Omega iteration table
     std::string omegaTable = "";
-    std::vector<size_t>::const_iterator iter2;
-    for (iter2 = this->omegaIterationTable.begin(); iter2 != this->omegaIterationTable.end(); ++iter2) {
-      if (iter2 != this->omegaIterationTable.begin()) {
+    for (auto iter = this->omegaIterationTable.begin(); iter != this->omegaIterationTable.end(); ++iter) {
+      if (iter != this->omegaIterationTable.begin()) {
         omegaTable += ",";
       }
-      omegaTable += this->omegaElementNames[*iter2];
+      omegaTable += this->omegaElementNames[*iter];
     }
     omegaTable += ";";
     
+    //Alphabet and Morphism.
+    std::string alphabet = "";
+    std::string targetList = "";
+    for (size_t letter = 0; letter < this->phi.size(); ++letter) {
+      if (letter != 0) {
+        alphabet += ",";
+        targetList += ",";
+      }
+      alphabet += this->phi.letterName(letter);
+      targetList += this->sPlus.elementName(this->phi[letter]);
+    }
+    alphabet += ";";
+    targetList += ";";
+    
+    //Final set.
+    std::string PList = "";
+    for (auto iter = this->P.begin(); iter != this->P.end(); ++iter) {
+      if (*iter) {
+        PList += this->omegaElementNames[iter - P.begin()];
+        PList += ",";
+      }
+    }
+    //Remove final ',' and set ';' instead.
+    PList.pop_back();
+    PList += ";";
+    
     return sPlusDescription + "\n" + omegaElementList + "\n" + 
-           mixedTable +       "\n" + omegaTable;
+           mixedTable       + "\n" + omegaTable       + "\n" +
+           alphabet         + "\n" + targetList       + "\n" +
+           PList;
   }
 
 }

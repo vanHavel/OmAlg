@@ -6,8 +6,7 @@ namespace omalg {
 
   std::string ParityAutomaton::description() const {
     std::string parityList = "";
-    std::vector<size_t>::const_iterator iter;
-    for (iter = this->priorities.begin(); iter != this->priorities.end(); ++iter) {
+    for (auto iter = this->priorities.begin(); iter != this->priorities.end(); ++iter) {
       if (iter != this->priorities.begin()) {
         parityList += ",";
       }

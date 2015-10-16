@@ -6,14 +6,12 @@ namespace omalg {
 
   std::string MullerAutomaton::description() const {
     std::string tableList = "";
-    std::set<std::set<size_t> >::const_iterator outerIter;
-    for (outerIter = this->table.begin(); outerIter != this->table.end(); ++outerIter) {
+    for (auto outerIter = this->table.begin(); outerIter != this->table.end(); ++outerIter) {
       if (outerIter != this->table.begin()) {
         tableList += "\n";
       }
-      std::set<size_t>::const_iterator innerIter;
       tableList += "{";
-      for (innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
+      for (auto innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         if (innerIter != outerIter->begin()) {
           tableList += ",";
         }

@@ -7,12 +7,18 @@
 #include "vanHavel_Util.h"
 #include "DeterministicBuechiAutomaton.h"
 #include "NondeterministicBuechiAutomaton.h"
+#include "DeterministicCoBuechiAutomaton.h"
+#include "NondeterministicCoBuechiAutomaton.h"
+#include "DeterministicParityAutomaton.h"
+#include "NondeterministicParityAutomaton.h"
 
 namespace omalg {
 
   IOHandler::IOHandler() {
     std::vector<std::string> acceptanceModes;
     acceptanceModes.push_back("buechi");
+    acceptanceModes.push_back("cobuechi");
+    acceptanceModes.push_back("parity");
     this->possibleModes = acceptanceModes;
   }
   
@@ -120,12 +126,11 @@ namespace omalg {
     if (acceptanceMode == "buechi") {
       ++lineNo;
       this->checkReadTillEnd(lineNo, lines.size());
-      //Read final states
+      //Read final state names
       std::list<std::string> finalNames = this->readNamesIntoList(lines, lineNo);
       //Construct final state bit vector
       std::vector<bool> finalStates(stateNames.size(), false);
-      std::list<std::string>::iterator iter;
-      for (iter = finalNames.begin(); iter != finalNames.end(); ++iter) {
+      for (auto iter = finalNames.begin(); iter != finalNames.end(); ++iter) {
         int pos = dasdull::vectorPos(stateVector, *iter);
         if (pos != -1) {
           finalStates[pos] = true;
@@ -151,6 +156,81 @@ namespace omalg {
                                                    initialState,
                                                    transitionRelation,
                                                    finalStates);
+      }
+    }
+    else if (acceptanceMode == "cobuechi") {
+      ++lineNo;
+      this->checkReadTillEnd(lineNo, lines.size());
+      //Read final state names
+      std::list<std::string> finalNames = this->readNamesIntoList(lines, lineNo);
+      //Construct final state bit vector
+      std::vector<bool> finalStates(stateNames.size(), false);
+      for (auto iter = finalNames.begin(); iter != finalNames.end(); ++iter) {
+        int pos = dasdull::vectorPos(stateVector, *iter);
+        if (pos != -1) {
+          finalStates[pos] = true;
+        }
+        else {
+          //Final state not in state set
+          throw SyntaxException(lineNo + 1, "Final state " + *iter + " not in state set.");
+        }
+      }
+      //Build automaton
+      if (deterministic) {
+        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        return new DeterministicCoBuechiAutomaton(stateVector,
+                                                 letterVector,
+                                                 initialState,
+                                                 transitionTable,
+                                                 finalStates);
+      }
+      else {
+        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        return new NondeterministicCoBuechiAutomaton(stateVector,
+                                                     letterVector,
+                                                     initialState,
+                                                     transitionRelation,
+                                                     finalStates);
+      }
+    }
+    else if (acceptanceMode == "parity") {
+      ++lineNo;
+      this->checkReadTillEnd(lineNo, lines.size());
+      //Read priorities.
+      std::list<std::string> prioritiesAsStrings = this->readNamesIntoList(lines, lineNo);
+      if (prioritiesAsStrings.size() != stateNames.size()) {
+        throw SyntaxException(lineNo + 1, "Number of priorities given does not equal number of states.");
+      }
+      //Construct priority vector
+      std::vector<size_t> priorities(stateNames.size(), 0);
+      size_t priority;
+      auto iter = prioritiesAsStrings.begin();
+      for (size_t index = 0; index < prioritiesAsStrings.size(); ++index) {
+        try { 
+          priority = std::stoul(*iter);
+          ++iter;
+        }
+        catch (std::exception const& e) {
+          throw SyntaxException(lineNo + 1, "Priority " + (*iter) + " is not a non-negative integer.");
+        }
+        priorities[index] = priority;
+      }
+      //Build automaton
+      if (deterministic) {
+        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        return new DeterministicParityAutomaton(stateVector,
+                                                 letterVector,
+                                                 initialState,
+                                                 transitionTable,
+                                                 priorities);
+      }
+      else {
+        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        return new NondeterministicParityAutomaton(stateVector,
+                                                     letterVector,
+                                                     initialState,
+                                                     transitionRelation,
+                                                     priorities);
       }
     }
     else {
@@ -203,8 +283,7 @@ namespace omalg {
         throw SyntaxException(lineNo + 1, "Invalid transition format(Might be at a prior line).");
       }
       std::list<std::string> compressedResult;
-      std::list<std::string>::const_iterator iter;
-      for(iter = result.begin(); iter != result.end(); ++iter) {
+      for(auto iter = result.begin(); iter != result.end(); ++iter) {
         std::string transition = *iter;
         iter++;
         transition += "," + *iter;
@@ -221,8 +300,7 @@ namespace omalg {
                                                                  std::vector<std::string> const &letterVector,
                                                                  size_t transNo) {
     std::vector<std::vector<std::set<size_t> > > result(stateVector.size(), std::vector<std::set<size_t> >(letterVector.size()));
-    std::list<std::string>::const_iterator iter;
-    for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
+    for (auto iter = transitions.begin(); iter != transitions.end(); ++iter) {
       std::string transition = *iter;
       //Remove brackets
       if (transition.front() == '(') {
@@ -277,8 +355,7 @@ namespace omalg {
     std::vector<std::vector<size_t> > result(stateVector.size(), std::vector<size_t>(letterVector.size()));
     //vector of defined transitions
     std::vector<std::vector<bool> > isDefined(stateVector.size(), std::vector<bool>(letterVector.size(), false));
-    std::list<std::string>::const_iterator iter;
-    for (iter = transitions.begin(); iter != transitions.end(); ++iter) {
+    for (auto iter = transitions.begin(); iter != transitions.end(); ++iter) {
       std::string transition = *iter;
       //Remove brackets
       if (transition.front() == '(') {
@@ -329,9 +406,8 @@ namespace omalg {
       }
     }
     //Check for undefined transitions
-    std::vector<std::vector<bool> >::const_iterator outerIter;
-    for (outerIter = isDefined.begin(); outerIter != isDefined.end(); ++outerIter) {
-      for (std::vector<bool>::const_iterator innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
+    for (auto outerIter = isDefined.begin(); outerIter != isDefined.end(); ++outerIter) {
+      for (auto innerIter = outerIter->begin(); innerIter != outerIter->end(); ++innerIter) {
         if (*innerIter == false) {
           throw SyntaxException(transNo, "There were undefined transitions.\n(Might be in a later line.)");
         }

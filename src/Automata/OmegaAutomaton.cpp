@@ -10,8 +10,7 @@ namespace omalg {
   std::string OmegaAutomaton::description() const {
     //State names
     std::string stateList = "";
-    std::vector<std::string>::const_iterator iter;
-    for (iter = this->stateNames.begin(); iter != this->stateNames.end(); ++iter) {
+    for (auto iter = this->stateNames.begin(); iter != this->stateNames.end(); ++iter) {
       if (iter != this->stateNames.begin()) {
         stateList += ",";
       }
@@ -22,7 +21,7 @@ namespace omalg {
     std::string initialName = this->stateNames[this->initialState] + ";";
     //Alphabet
     std::string letterList = "";
-    for (iter = this->alphabet.begin(); iter != this->alphabet.end(); ++iter) {
+    for (auto iter = this->alphabet.begin(); iter != this->alphabet.end(); ++iter) {
       if (iter != this->alphabet.begin()) {
         letterList += ",";
       }

@@ -30,7 +30,13 @@ namespace omalg {
      * @param rhs Right factor.
      * @return The index of the product element.
      */
-    size_t product(const size_t lhs, const size_t rhs) const;
+    size_t product(size_t lhs, size_t rhs) const;
+    /**
+     * Returns name of element at index. Bounds are checked.
+     * @param index index of the element to consider.
+     * @return The elements name.
+     */
+    std::string elementName(size_t index) const;
     /**
      * Calculates the R, L, J and H-classes.
      */

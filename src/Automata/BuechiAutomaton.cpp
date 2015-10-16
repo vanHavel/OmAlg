@@ -7,8 +7,7 @@ namespace omalg {
   std::string BuechiAutomaton::description() const {
     std::string finalList = "";
     std::vector<std::string> states = this->getStateNames();
-    std::vector<bool>::const_iterator iter;
-    for (iter = this->finalStates.begin(); iter != this->finalStates.end(); ++iter) {
+    for (auto iter = this->finalStates.begin(); iter != this->finalStates.end(); ++iter) {
       if(*iter) {
         finalList += states[iter - this->finalStates.begin()];
         finalList += ",";

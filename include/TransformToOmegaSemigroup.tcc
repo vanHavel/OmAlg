@@ -3,6 +3,7 @@
 
 #include <list>
 #include <unordered_map>
+#include <iostream>
 #include "OmegaSemigroup.h"
 #include "Morphism.h"
 #include "Node.h"
@@ -78,7 +79,9 @@ namespace omalg {
     std::vector<std::vector<size_t> > productTable(tableSize, std::vector<size_t>(tableSize));
     std::vector<std::string> elementNames(tableSize);
     size_t columnIndex = 0;
+    //rowBegin is 0 if epsilon is not in the table. Otherwise rows start at index 1.
     size_t rowBegin = (epsilonInSemigroup ? 1 : 0);
+    size_t rowOffset = 1 - rowBegin;
     typename std::list<Node<TransitionProfile<T> >*>::const_iterator listBegin = nodeList.begin();
     if (!epsilonInSemigroup) {
       ++listBegin;
@@ -115,14 +118,15 @@ namespace omalg {
         currentNode = (*currentNode)[nextIndex].first;
         letterList.insert(letterList.end(), nextIndex);
         nextIndex = -1;
-        columnIndex = currentNode->getIndex() - rowBegin;
+        //Subtract one from column index if epsilon is not in semigroup.
+        columnIndex = currentNode->getIndex() - rowOffset;
         //Get element name
         std::string newName = "tp(";
-        elementNames[columnIndex] = newName;
         for(auto pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
           newName += alphabet[*pathIter];
         }
         newName += ")";
+        elementNames[columnIndex] = newName;
         //Update table
         size_t rowIndex = rowBegin;
         for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
@@ -130,16 +134,19 @@ namespace omalg {
           for(auto pathIter = letterList.begin(); pathIter != letterList.end(); ++pathIter) {
             targetNode = (*targetNode)[*pathIter].first;
           }
-          productTable[rowIndex][columnIndex] = targetNode->getIndex();
+          productTable[rowIndex][columnIndex] = targetNode->getIndex() - rowOffset;
           ++rowIndex;
         }
       }  
     }
     //Table now finished. Create semigroup.
     Semigroup Splus(elementNames, productTable);
-    
-    //TODO: This is a bit complicated and might not be the most efficient way.
+            
+    /*
+     * Building the omega part.
+     */
     //Omega iteration of semigroup elements.
+    //TODO: This is a bit complicated and might not be the most efficient way.
     std::vector<OmegaProfile> omegaIters(tableSize, std::vector<bool>(tableSize));
     size_t omegaIndex = 0;
     for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
@@ -153,7 +160,7 @@ namespace omalg {
     //Fill the map with omega iterations.
     omegaIndex = 0;
     for (auto vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
-      if (omegaProfiles.find(*vecIter) != omegaProfiles.end()) {
+      if (omegaProfiles.find(*vecIter) == omegaProfiles.end()) {
         omegaProfiles[*vecIter] = omegaIndex;
         std::string newName = "(" + elementNames[vecIter - omegaIters.begin()] + ")^w";
         omegaNames.insert(omegaNames.end(), newName);
@@ -166,13 +173,17 @@ namespace omalg {
     for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
       for (auto vecIter = omegaIters.begin(); vecIter != omegaIters.end(); ++vecIter) {
         OmegaProfile mixedProduct = (*listIter)->getValue().mixedProduct(*vecIter);
-        if (omegaProfiles.find(mixedProduct) != omegaProfiles.end()) {
+        if (omegaProfiles.find(mixedProduct) == omegaProfiles.end()) {
           omegaProfiles[mixedProduct] = omegaIndex;
           std::string newName = elementNames[(*listIter)->getIndex()] + "(" + elementNames[vecIter - omegaIters.begin()] + ")^w";
           omegaNames.insert(omegaNames.end(), newName);
           ++omegaIndex;
         }
-        partialMixedTable[(*listIter)->getIndex() - rowBegin][omegaProfiles[*vecIter]] = omegaProfiles[mixedProduct]; 
+        //Update mixed table
+        //Subtract 1 from finite index if epsilon is not in the table 
+        size_t finIndex = (*listIter)->getIndex() - rowOffset;
+        size_t omIndex = omegaProfiles[*vecIter];
+        partialMixedTable[finIndex][omIndex] = omegaProfiles[mixedProduct]; 
       }
     }
     //Create real mixed table.
@@ -198,6 +209,11 @@ namespace omalg {
     for (size_t splusIndex = 0; splusIndex < tableSize; ++splusIndex) {
       omegaTable[splusIndex] = omegaProfiles[omegaIters[splusIndex]];
     }
+    
+    /*
+     * Additional work: morphism and acceptance.
+     */
+    
     //Create set P.
     std::vector<bool> P(omegaProfiles.size(), false);
     size_t initial = Automaton.getInitialState();
@@ -208,9 +224,9 @@ namespace omalg {
     }
     
     //Create morphism phi.
-    std::vector<size_t> phiValues;
+    std::vector<size_t> phiValues(alphabet.size());
     for (size_t letter = 0; letter < alphabet.size(); ++letter) {
-      phiValues[letter] = (*epsilonNode)[letter].first->getIndex();
+      phiValues[letter] = (*epsilonNode)[letter].first->getIndex() - rowOffset;
     }
     Morphism phi(phiValues, alphabet);
     
@@ -220,7 +236,9 @@ namespace omalg {
     //Create omega semigroup.
     OmegaSemigroup* result = new OmegaSemigroup(Splus, nameVector, mixedTable, omegaTable, P, phi);
     
-    //Cleanup
+    /*
+     * Cleanup
+     */
     for (auto listIter = nodeList.begin(); listIter != nodeList.end(); ++listIter) {
       delete *listIter;
     }

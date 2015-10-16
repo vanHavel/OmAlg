@@ -18,6 +18,11 @@ namespace omalg {
      */
     Morphism(std::vector<size_t> theValues, std::vector<std::string> theAlphabet);
     /**
+     * Returns the size of the alphabet - the morphism's domain.
+     * @return alphabet size.
+     */
+    size_t size() const;
+    /**
      * Safe application of morphism to letter.
      * @param letter ID of the letter in the used alphabet.
      * @return ID of the image in the semigroup.
@@ -30,6 +35,13 @@ namespace omalg {
      * @return ID of the image in the semigroup.
      */
     size_t operator[](size_t letter) const;
+    /**
+     * Returns name of letter with given index. Bounds are checked.
+     * @param letter ID of the letter in the used alphabet.
+     * @return the name of the letter.
+     * @throw out_of_range if out of range.
+     */   
+    std::string letterName(size_t letter) const;
   };
 
 }
