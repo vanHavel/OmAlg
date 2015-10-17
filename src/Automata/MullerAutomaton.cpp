@@ -3,6 +3,10 @@
 namespace omalg {
   MullerAutomaton::MullerAutomaton(std::set<std::set<size_t> > theTable)
     : table(theTable) {}
+  
+  std::set<std::set<size_t> > const* MullerAutomaton::getTablePointer() const {
+    return &(this->table);
+  }
 
   std::string MullerAutomaton::description() const {
     std::string tableList = "";

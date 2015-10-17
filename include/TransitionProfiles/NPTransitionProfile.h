@@ -12,6 +12,8 @@ namespace omalg {
   
   template<> class TransitionProfile<NondeterministicParityAutomaton> {
   private:
+    //Chosen as a map so that the same type can be used to represent a SCC -
+    //for omega iteration purposes.
     std::map<size_t, std::set<std::pair<size_t,size_t> > > representation;
     
   public:

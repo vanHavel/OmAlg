@@ -10,6 +10,13 @@
 #include "TransitionProfiles/TransitionProfile.h"
 
 namespace omalg {
+  /**
+   * Transform given automaton into equivalent omega semigroup. The algorithm
+   * is parametrized by the automaton's acceptance condition, as a fitting
+   * transition profile structured is used according to the type.
+   * @param Automaton The automaton to transform.
+   * @return pointer to resulting omega semigroup.
+   */
   template<class T> OmegaSemigroup* TransformToOmegaSemigroup(T const& Automaton) {
     /**
      * Initialization of data structures.

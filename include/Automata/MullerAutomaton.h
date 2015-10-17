@@ -12,6 +12,7 @@ namespace omalg {
     std::set<std::set<size_t> > table;
   protected:
     MullerAutomaton(std::set<std::set<size_t> > theTable);
+    std::set<std::set<size_t> > const* getTablePointer() const;
   public:
     virtual std::string description() const override;
     /**
