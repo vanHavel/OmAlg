@@ -4,8 +4,10 @@ Toolkit for the algebraic theory of omega-automata.
 * transform automata into equivalent omega semigroups. Supported types: 
     * Deterministic:    Buechi, coBuechi, parity
     * Nondeterministic: Buechi, coBuechi
+
 # Currently working on
 * fixing bugs, translation from more kinds of automata to omega-semigroups.
+
 # Planned features
 - user manual
 - omega-semigroups to parity automata
