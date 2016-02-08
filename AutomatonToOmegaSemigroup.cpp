@@ -6,6 +6,7 @@
 #include "OptParser.h"
 #include "IOHandler.h"
 #include "IOHandlerExceptions.h"
+#include "GeneralException.h"
 
 /**
  * Reads an omega automaton from an input file, transforms it into an equivalent omega semigroup
@@ -85,8 +86,18 @@ int main(int argc, char const *argv[]) {
     }
   }
 
+  //Declare pointer for omega semigroup
+  std::unique_ptr<omalg::OmegaSemigroup> B;
   //Transform to omega semigroup
-  std::unique_ptr<omalg::OmegaSemigroup> B(A->toOmegaSemigroup());
+  try {
+    B = std::unique_ptr<omalg::OmegaSemigroup>(A->toOmegaSemigroup());
+  }
+  catch(omalg::NotYetSupportedException const&) {
+    std::cerr << "Error: Transformation to omega semigroup not yet implemented for given automaton type.";
+    std::cerr << std::endl;
+    return EXIT_FAILURE;
+  }
+
   
   //Get output file
   std::string outputFile = optParser.getValue("output_file");

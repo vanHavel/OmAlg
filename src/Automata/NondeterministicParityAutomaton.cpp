@@ -1,4 +1,5 @@
 #include "NondeterministicParityAutomaton.h"
+#include "GeneralException.h"
 
 namespace omalg {
   NondeterministicParityAutomaton::NondeterministicParityAutomaton
@@ -21,7 +22,7 @@ namespace omalg {
   }
   
   OmegaSemigroup* NondeterministicParityAutomaton::toOmegaSemigroup() const {
-    return TransformToOmegaSemigroup(*this);
+    throw NotYetSupportedException();
   }
   
   TransitionProfile<NondeterministicParityAutomaton> NondeterministicParityAutomaton::getTransitionProfileForLetter(size_t letter) const {
