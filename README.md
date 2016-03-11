@@ -1,7 +1,7 @@
 # OmAlg
 Toolkit for the algebraic theory of omega-automata.
 # Implemented features
-* transform automata into equivalent omega semigroups. Supported types: 
+* transform automata into equivalent omega semigroups (Büchi's construction). Supported types: 
     * Deterministic:    Buechi, coBuechi, parity
     * Nondeterministic: Buechi, coBuechi
 
