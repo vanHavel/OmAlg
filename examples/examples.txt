@@ -1,0 +1,2 @@
+To run the example, type
+a2os -i examples/A1.txt -o examples/output.txt 
