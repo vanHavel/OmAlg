@@ -4,11 +4,9 @@ namespace omalg {
 
   Semigroup::Semigroup(std::vector<std::string> theElementNames, std::vector<std::vector<size_t> > theMultiplicationTable)
     : elementNames(theElementNames), multiplicationTable(theMultiplicationTable) {
-    this->hClasses = 0;
-    this->rClasses = 0;
-    this->lClasses = 0;
-    this->jClasses = 0;
     this->jOrder = 0;
+    this->rOrder = 0;
+    this->lOrder = 0;
   }
 
   size_t Semigroup::product(size_t lhs, size_t rhs) const {
@@ -19,6 +17,42 @@ namespace omalg {
     return this->elementNames.at(index);
   }
   
+  void Semigroup::calculateGreenRelations() const {
+    //TODO
+  }
+
+  bool Semigroup::J(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::R(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::L(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::H(size_t lhs, size_t rhs) const {
+    return (this->R(lhs, rhs) && this->L(lhs, rhs));
+  }
+
+  bool Semigroup::j(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::r(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::l(size_t lhs, size_t rhs) const {
+    return true; //TODO
+  }
+
+  bool Semigroup::h(size_t lhs, size_t rhs) const {
+    return (this->r(lhs, rhs) && this->l(lhs, rhs));
+  }
+
   std::string Semigroup::description() const {
     //Element names
     std::string elementList = "";

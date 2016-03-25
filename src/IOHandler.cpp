@@ -131,7 +131,7 @@ namespace omalg {
       ++lineNo;
       this->checkReadTillEnd(lineNo, lines.size());
       //Read final state names
-      std::list<std::string> finalNames = this->readNamesIntoList(lines, lineNo);
+      auto finalNames = this->readNamesIntoList(lines, lineNo);
       //Construct final state bit vector
       std::vector<bool> finalStates(stateNames.size(), false);
       for (auto iter = finalNames.begin(); iter != finalNames.end(); ++iter) {
@@ -146,7 +146,7 @@ namespace omalg {
       }
       //Build automaton
       if (deterministic) {
-        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
         return new DeterministicBuechiAutomaton(stateVector,
                                                letterVector,
                                                initialState,
@@ -154,7 +154,7 @@ namespace omalg {
                                                finalStates);
       }
       else {
-        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
         return new NondeterministicBuechiAutomaton(stateVector,
                                                    letterVector,
                                                    initialState,
@@ -166,7 +166,7 @@ namespace omalg {
       ++lineNo;
       this->checkReadTillEnd(lineNo, lines.size());
       //Read final state names
-      std::list<std::string> finalNames = this->readNamesIntoList(lines, lineNo);
+      auto finalNames = this->readNamesIntoList(lines, lineNo);
       //Construct final state bit vector
       std::vector<bool> finalStates(stateNames.size(), false);
       for (auto iter = finalNames.begin(); iter != finalNames.end(); ++iter) {
@@ -181,7 +181,7 @@ namespace omalg {
       }
       //Build automaton
       if (deterministic) {
-        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
         return new DeterministicCoBuechiAutomaton(stateVector,
                                                  letterVector,
                                                  initialState,
@@ -189,7 +189,7 @@ namespace omalg {
                                                  finalStates);
       }
       else {
-        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
         return new NondeterministicCoBuechiAutomaton(stateVector,
                                                      letterVector,
                                                      initialState,
@@ -201,7 +201,7 @@ namespace omalg {
       ++lineNo;
       this->checkReadTillEnd(lineNo, lines.size());
       //Read priorities.
-      std::list<std::string> prioritiesAsStrings = this->readNamesIntoList(lines, lineNo);
+      auto prioritiesAsStrings = this->readNamesIntoList(lines, lineNo);
       if (prioritiesAsStrings.size() != stateNames.size()) {
         throw SyntaxException(lineNo + 1, "Number of priorities given does not equal number of states.");
       }
@@ -221,7 +221,7 @@ namespace omalg {
       }
       //Build automaton
       if (deterministic) {
-        std::vector<std::vector<size_t> > transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
         return new DeterministicParityAutomaton(stateVector,
                                                  letterVector,
                                                  initialState,
@@ -229,7 +229,7 @@ namespace omalg {
                                                  priorities);
       }
       else {
-        std::vector<std::vector<std::set<size_t> > > transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        auto transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
         return new NondeterministicParityAutomaton(stateVector,
                                                      letterVector,
                                                      initialState,

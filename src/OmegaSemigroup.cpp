@@ -20,6 +20,32 @@ namespace omalg {
     return this->omegaIterationTable[element];
   }
 
+  void OmegaSemigroup::invertP() {
+    for (auto iter = this->P.begin(); iter != this->P.end(); ++iter) {
+      *iter = !*iter;
+    }
+  }
+
+  bool OmegaSemigroup::isDBRecognizable() const {
+    return true; //TODO
+  }
+
+  bool OmegaSemigroup::isDCRecognizable() const {
+      return true; //TODO
+    }
+
+  bool OmegaSemigroup::isERecognizable() const {
+      return true; //TODO
+    }
+
+  bool OmegaSemigroup::isARecognizable() const {
+      return true; //TODO
+    }
+
+  bool OmegaSemigroup::isWBRecognizable() const {
+      return true; //TODO
+    }
+
   std::string OmegaSemigroup::description() const {
     //Finite part
     std::string sPlusDescription = this->sPlus.description();
