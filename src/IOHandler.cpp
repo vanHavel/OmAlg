@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <stdexcept>
 
 #include "IOHandler.h"
 #include "IOHandlerExceptions.h"
@@ -118,7 +119,7 @@ namespace omalg {
     //Read transitions
     ++lineNo;
     int transNo = lineNo;
-    std::list<std::string> transitionTriplets = this->readNamesIntoList(lines, lineNo, true);
+    std::list<std::string> transitionTriplets = this->readNamesIntoList(lines, lineNo, 1);
 
     //Build state/letter vectors and get initial number
     std::vector<std::string> stateVector(stateNames.begin(), stateNames.end());
@@ -240,7 +241,7 @@ namespace omalg {
       ++lineNo;
       this->checkReadTillEnd(lineNo, lines.size());
       //Read accepting sets
-      auto setsAsStrings = this->readNamesIntoList(lines, lineNo);
+      auto setsAsStrings = this->readNamesIntoList(lines, lineNo, 2);
       //Build Muller automaton table
       std::set<std::set<size_t> > table;
       for (auto outerIter = setsAsStrings.begin(); outerIter != setsAsStrings.end(); ++outerIter) {
@@ -265,7 +266,7 @@ namespace omalg {
             table.insert(table.end(), newSet);
           }
           else {
-            throw SyntaxException(lineNo + 1, "Expected '}' in state set {" + *outerIter + "\n" + "(Might be in a prior line.)");
+            throw SyntaxException(lineNo + 1, "Expected '}' in state set " + *outerIter + "\n" + "(Might be in a prior line.)");
           }
         }
         else {
@@ -316,7 +317,7 @@ namespace omalg {
     }
   }
 
-  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, bool transitionMode) {
+  std::list<std::string> IOHandler::readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, size_t mode) {
     std::list<std::string> result;
     std::list<std::string> newNames;
     while(lineNo < lines.size() && lines[lineNo].back() != ';') {
@@ -330,16 +331,17 @@ namespace omalg {
     temp.pop_back();
     newNames = dasdull::stringSplit(temp, ',', true);
     result.insert(result.end(), newNames.begin(), newNames.end());
-    //Special case: put together transitions
-    if (!transitionMode) {
+    //Default: return all strings separated by ';'
+    if (mode == 0) {
       return result;
     }
-    else {
+    //Special case: put together transitions
+    else if (mode == 1) {
       if (result.size() % 3 != 0) {
         throw SyntaxException(lineNo + 1, "Invalid transition format(Might be at a prior line).");
       }
       std::list<std::string> compressedResult;
-      for(auto iter = result.begin(); iter != result.end(); ++iter) {
+      for (auto iter = result.begin(); iter != result.end(); ++iter) {
         std::string transition = *iter;
         iter++;
         transition += "," + *iter;
@@ -348,6 +350,25 @@ namespace omalg {
         compressedResult.insert(compressedResult.end(), transition);
       }
       return compressedResult;
+    }
+    //Special case: put together state sets
+    else if (mode == 2) {
+      std::list<std::string> compressedResult;
+      for (auto iter = result.begin(); iter != result.end(); ++iter) {
+        std::string setString = "";
+        while (iter->back() != '}' && iter != result.end()) {
+          setString += *iter + ",";
+          ++iter;
+        }
+        if (iter != result.end()) {
+          setString += *iter;
+        }
+        compressedResult.insert(compressedResult.end(), setString);
+      }
+      return compressedResult;
+    }
+    else {
+      throw std::invalid_argument("Mode must be zero, one or two.");
     }
   }
 
@@ -562,6 +583,5 @@ namespace omalg {
       throw WriteFailedException();
     }
   }
-
 
 }

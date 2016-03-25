@@ -29,7 +29,15 @@ namespace omalg {
 	  void writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream &out);
 
 	  void checkReadTillEnd(size_t lineNo, size_t lines);
-	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, bool transistionMode = false);
+
+	  /**
+	   * Reads a sequence of lines terminated by a ';' into a list of strings, splitting after each object is finished.
+	   * @param lines Vector of lines
+	   * @param lineNo The index of the line to start reading at
+	   * @param mode Specifies when a split is performed. 0: split after each ',' (default). 1: split after each triplet. 2: split after each "},".
+	   * @return A list of strings, containing the objects read.
+	   */
+	  std::list<std::string> readNamesIntoList(std::vector<std::string> const &lines, size_t &lineNo, size_t mode = 0);
 
 	  std::vector<std::vector<std::set<size_t> > > buildTransitionRelation(std::list<std::string> const &transitions,
 	                                                                 std::vector<std::string> const &stateVector,
