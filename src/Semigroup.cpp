@@ -21,35 +21,61 @@ namespace omalg {
     //TODO
   }
 
-  bool Semigroup::J(size_t lhs, size_t rhs) const {
-    return true; //TODO
+  inline bool Semigroup::J(size_t lhs, size_t rhs) const {
+    return (this->j(lhs, rhs) && this->j(rhs, lhs));
   }
 
-  bool Semigroup::R(size_t lhs, size_t rhs) const {
-    return true; //TODO
+  inline bool Semigroup::R(size_t lhs, size_t rhs) const {
+    return (this->r(lhs, rhs) && this->r(rhs, lhs));
   }
 
-  bool Semigroup::L(size_t lhs, size_t rhs) const {
-    return true; //TODO
+  inline bool Semigroup::L(size_t lhs, size_t rhs) const {
+    return (this->l(lhs, rhs) && this->l(rhs, lhs));
   }
 
-  bool Semigroup::H(size_t lhs, size_t rhs) const {
+  inline bool Semigroup::H(size_t lhs, size_t rhs) const {
     return (this->R(lhs, rhs) && this->L(lhs, rhs));
   }
 
   bool Semigroup::j(size_t lhs, size_t rhs) const {
-    return true; //TODO
+    if (this->jOrder) {
+      return (*(this->jOrder))[lhs][rhs];
+    }
+    else {
+      for (size_t iter = 0; iter < this->elementNames.size(); ++iter) {
+        if (this->l(iter, rhs) && this->r(lhs, iter)) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
   bool Semigroup::r(size_t lhs, size_t rhs) const {
-    return true; //TODO
+    if (this->rOrder) {
+      return (*(this->rOrder))[lhs][rhs];
+    }
+    else {
+      return (std::find(this->multiplicationTable[rhs].begin(), this->multiplicationTable[rhs].end(), lhs)
+              != this->multiplicationTable[rhs].end());
+    }
   }
 
   bool Semigroup::l(size_t lhs, size_t rhs) const {
-    return true; //TODO
+    if (this->lOrder) {
+      return (*(this->lOrder))[lhs][rhs];
+    }
+    else {
+      for (size_t iter = 0; iter < this->elementNames.size(); ++iter) {
+        if (this->multiplicationTable[iter][rhs] == lhs) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
-  bool Semigroup::h(size_t lhs, size_t rhs) const {
+  inline bool Semigroup::h(size_t lhs, size_t rhs) const {
     return (this->r(lhs, rhs) && this->l(lhs, rhs));
   }
 
