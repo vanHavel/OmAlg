@@ -2,7 +2,7 @@
 Toolkit for the algebraic theory of omega-automata.
 # Implemented features
 * transform automata into equivalent omega semigroups (Büchi's construction). Supported types: 
-    * Deterministic:    Buechi, coBuechi, parity
+    * Deterministic:    Buechi, coBuechi, parity, Muller
     * Nondeterministic: Buechi, coBuechi
 
 # Currently working on

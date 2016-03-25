@@ -1,4 +1,5 @@
 #include "NondeterministicMullerAutomaton.h"
+#include "GeneralException.h"
 
 namespace omalg {
   NondeterministicMullerAutomaton::NondeterministicMullerAutomaton
@@ -21,7 +22,7 @@ namespace omalg {
   }
   
   OmegaSemigroup* NondeterministicMullerAutomaton::toOmegaSemigroup() const {
-    return TransformToOmegaSemigroup(*this);
+    throw NotYetSupportedException();
   }
   
   TransitionProfile<NondeterministicMullerAutomaton> NondeterministicMullerAutomaton::getTransitionProfileForLetter(size_t letter) const {

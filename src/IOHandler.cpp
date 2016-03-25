@@ -11,6 +11,8 @@
 #include "NondeterministicCoBuechiAutomaton.h"
 #include "DeterministicParityAutomaton.h"
 #include "NondeterministicParityAutomaton.h"
+#include "DeterministicMullerAutomaton.h"
+#include "NondeterministicMullerAutomaton.h"
 
 namespace omalg {
 
@@ -19,6 +21,7 @@ namespace omalg {
     acceptanceModes.push_back("buechi");
     acceptanceModes.push_back("cobuechi");
     acceptanceModes.push_back("parity");
+    acceptanceModes.push_back("muller");
     this->possibleModes = acceptanceModes;
   }
   
@@ -231,6 +234,59 @@ namespace omalg {
                                                      initialState,
                                                      transitionRelation,
                                                      priorities);
+      }
+    }
+    else if (acceptanceMode == "muller") {
+      ++lineNo;
+      this->checkReadTillEnd(lineNo, lines.size());
+      //Read accepting sets
+      auto setsAsStrings = this->readNamesIntoList(lines, lineNo);
+      //Build Muller automaton table
+      std::set<std::set<size_t> > table;
+      for (auto outerIter = setsAsStrings.begin(); outerIter != setsAsStrings.end(); ++outerIter) {
+        auto newSetAsString = dasdull::stringSplit(*outerIter, ',', true);
+        //check for opening and closing curly braces
+        if (newSetAsString.front().front() == '{') {
+          newSetAsString.front().erase(0,1);
+          if (newSetAsString.back().back() == '}') {
+            newSetAsString.back().pop_back();
+            //build new set for table
+            std::set<size_t> newSet;
+            for (auto innerIter = newSetAsString.begin(); innerIter != newSetAsString.end(); ++innerIter) {
+              int statePos = dasdull::vectorPos(stateVector, *innerIter);
+              if (statePos != -1) {
+                newSet.insert(newSet.end(), statePos);
+              }
+              else {
+                throw SyntaxException(lineNo + 1, "State " + *innerIter + " of set {" + *outerIter + "} not in state set." + "\n"
+                    + "(Might be in a prior line.)");
+              }
+            }
+            table.insert(table.end(), newSet);
+          }
+          else {
+            throw SyntaxException(lineNo + 1, "Expected '}' in state set {" + *outerIter + "\n" + "(Might be in a prior line.)");
+          }
+        }
+        else {
+          throw SyntaxException(lineNo + 1, "Expected '{' in state set " + *outerIter + "\n" + "(Might be in a prior line.)");
+        }
+      }
+      if (deterministic) {
+        auto transitionTable = this->buildTransitionTable(transitionTriplets, stateVector, letterVector, transNo);
+        return new DeterministicMullerAutomaton(stateVector,
+            letterVector,
+            initialState,
+            transitionTable,
+            table);
+      }
+      else {
+        auto transitionRelation = this->buildTransitionRelation(transitionTriplets, stateVector, letterVector, transNo);
+        return new NondeterministicMullerAutomaton(stateVector,
+            letterVector,
+            initialState,
+            transitionRelation,
+            table);
       }
     }
     else {
