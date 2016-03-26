@@ -3,11 +3,7 @@
 namespace omalg {
 
   Semigroup::Semigroup(std::vector<std::string> theElementNames, std::vector<std::vector<size_t> > theMultiplicationTable)
-    : elementNames(theElementNames), multiplicationTable(theMultiplicationTable) {
-    this->jOrder = 0;
-    this->rOrder = 0;
-    this->lOrder = 0;
-  }
+    : elementNames(theElementNames), multiplicationTable(theMultiplicationTable) { }
 
   size_t Semigroup::product(size_t lhs, size_t rhs) const {
     return this->multiplicationTable[lhs][rhs];
@@ -18,7 +14,11 @@ namespace omalg {
   }
   
   void Semigroup::calculateGreenRelations() const {
-    //TODO
+    //initialize
+    this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+    this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+    this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+
   }
 
   inline bool Semigroup::J(size_t lhs, size_t rhs) const {
@@ -113,4 +113,17 @@ namespace omalg {
     
     return elementList + "\n" + table;
   }
+
+  Semigroup::~Semigroup() {
+    if (this->jOrder) {
+      delete jOrder;
+    }
+    if (this->lOrder) {
+      delete lOrder;
+    }
+    if (this->rOrder) {
+      delete rOrder;
+    }
+  }
 }
+

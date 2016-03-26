@@ -31,20 +31,24 @@ namespace omalg {
   }
 
   bool OmegaSemigroup::isDCRecognizable() const {
-      return true; //TODO
-    }
+    OmegaSemigroup comp = *this;
+    comp.invertP();
+    return comp.isDBRecognizable();
+  }
 
   bool OmegaSemigroup::isERecognizable() const {
-      return true; //TODO
-    }
+    return true; //TODO
+  }
 
   bool OmegaSemigroup::isARecognizable() const {
-      return true; //TODO
-    }
+    OmegaSemigroup comp = *this;
+    comp.invertP();
+    return comp.isERecognizable();
+  }
 
   bool OmegaSemigroup::isWBRecognizable() const {
-      return true; //TODO
-    }
+    return (this->isDBRecognizable() && this->isDCRecognizable());
+  }
 
   std::string OmegaSemigroup::description() const {
     //Finite part

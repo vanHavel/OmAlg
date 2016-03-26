@@ -11,9 +11,11 @@ namespace omalg {
     std::vector<std::string> elementNames;
     std::vector<std::vector<size_t> > multiplicationTable;
 
-    std::vector<std::vector<bool> >* jOrder;
-    std::vector<std::vector<bool> >* rOrder;
-    std::vector<std::vector<bool> >* lOrder;
+    //Allow to store pre-computed green relations to increase efficiency in computations.
+    //This is achieved by calling calculateGreenRelations.
+    mutable std::vector<std::vector<bool> >* jOrder = 0;
+    mutable std::vector<std::vector<bool> >* rOrder = 0;
+    mutable std::vector<std::vector<bool> >* lOrder = 0;
   public:
     /**
      * Semigroup constructor.
@@ -60,6 +62,11 @@ namespace omalg {
      * @return The description as a string.
      */
     std::string description() const;
+
+    /**
+     * Destructor, removing matrices for green orders
+     */
+    ~Semigroup();
   };
 
 }
