@@ -27,7 +27,27 @@ namespace omalg {
   }
 
   bool OmegaSemigroup::isDBRecognizable() const {
-    return true; //TODO
+    auto linkedPairs = this->sPlus.linkedPairs();
+    //Check all linked pairs (s,e) and (s,f) for the condition. This makes use of the list of linked pairs being sorted.
+    for (auto iter1 = linkedPairs.begin(); iter1 != linkedPairs.end(); ++iter1) {
+      for (auto iter2 = iter1; iter2 != linkedPairs.end() && iter2->first == iter1->first ; ++iter2) {
+        if (iter2 == iter1) {
+          continue;
+        }
+        auto e = iter1->second;
+        auto f = iter2->second;
+        auto s = iter1->first;
+        //Check if e <=_r f, sf^w in P, se^w not in P. In this case the condition is violated.
+        if (this->sPlus.r(e, f) && this->P[this->mixedProductTable[s][f]] && !this->P[this->mixedProductTable[s][e]]) {
+          return false;
+        }
+        //Check the same for f and e switching roles.
+        if (this->sPlus.r(f, e) && this->P[this->mixedProductTable[s][e]] && !this->P[this->mixedProductTable[s][f]]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   bool OmegaSemigroup::isDCRecognizable() const {

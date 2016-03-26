@@ -66,15 +66,17 @@ namespace omalg {
 
     /**
      * Returns all linked pairs of the semigroup. A linked pair is a tuple (s,e) such that se = s and ee = e.
+     * The list is sorted by increasing element id of s. Where s is identical, it is sorted by increasing element id of e.
      * @return A list of all linked pairs.
      */
-    std::list<std::pair<size_t, size_t> > linkedPairs();
+    std::list<std::pair<size_t, size_t> > linkedPairs() const;
 
     /**
      * Returns a list of all idempotents in the semigroup.
+     * The list is sorted by increasing element id.
      * @return A list of all idempotents.
      */
-    std::list<size_t> idempotents();
+    std::list<size_t> idempotents() const;
 
 
     /**

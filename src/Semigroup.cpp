@@ -107,7 +107,7 @@ namespace omalg {
     return (this->r(lhs, rhs) && this->l(lhs, rhs));
   }
 
-  std::list<size_t> Semigroup::idempotents() {
+  std::list<size_t> Semigroup::idempotents() const {
     if (this->_idempotents.empty()) {
       for (size_t iter = 0; iter < this->elementNames.size(); ++iter) {
         if (this->multiplicationTable[iter][iter] == iter) {
@@ -118,10 +118,11 @@ namespace omalg {
     return this->_idempotents;
   }
 
-  std::list<std::pair<size_t, size_t> > Semigroup::linkedPairs() {
+  std::list<std::pair<size_t, size_t> > Semigroup::linkedPairs() const {
     if (this->_linkedPairs.empty()) {
+      auto idem = this->idempotents();
       for (size_t s = 0; s < this->elementNames.size(); ++s) {
-        for (auto iter = this->idempotents().begin(); iter != this->idempotents().end(); ++iter) {
+        for (auto iter = idem.begin(); iter != idem.end(); ++iter) {
           if (this->multiplicationTable[s][*iter] == s) {
             this->_linkedPairs.insert(this->_linkedPairs.end(), std::make_pair(s, *iter));
           }
