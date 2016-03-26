@@ -14,20 +14,16 @@ namespace omalg {
   }
   
   void Semigroup::calculateGreenRelations() const {
-    //initialize
+    //calculate rOrder
+    this->calculateROrder();
+
+    //initialize l and j order
     this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
-    this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
     this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
 
-    //calculate rOrder and lOrder
+    //calculate lOrder
     for (size_t i = 0; i < this->elementNames.size(); ++i) {
       for (size_t j = 0; j < this->elementNames.size(); ++j) {
-        //rOrder
-        if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
-            != this->multiplicationTable[j].end()) {
-          (*(this->rOrder))[i][j] = 1;
-        }
-        //lOrder
         for (size_t k = 0; k < this->elementNames.size(); ++k) {
           if (this->multiplicationTable[k][j] == i) {
             (*(this->lOrder))[i][j] = 1;
@@ -36,6 +32,7 @@ namespace omalg {
         }
       }
     }
+
     //calculate jOrder
     for (size_t i = 0; i < this->elementNames.size(); ++i) {
       for (size_t j = 0; j < this->elementNames.size(); ++j) {
@@ -44,6 +41,20 @@ namespace omalg {
             (*(this->jOrder))[i][j] = 1;
             break;
           }
+        }
+      }
+    }
+  }
+
+  void Semigroup::calculateROrder() const {
+    //initialize
+    this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+    //calculate rOrder
+    for (size_t i = 0; i < this->elementNames.size(); ++i) {
+      for (size_t j = 0; j < this->elementNames.size(); ++j) {
+        if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
+        != this->multiplicationTable[j].end()) {
+          (*(this->rOrder))[i][j] = 1;
         }
       }
     }

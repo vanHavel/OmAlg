@@ -43,10 +43,17 @@ namespace omalg {
      * @return The elements name.
      */
     std::string elementName(size_t index) const;
+
     /**
      * Calculates the R, L, J and orders.
      */
     void calculateGreenRelations() const;
+
+    /**
+     * Calculates only the R order.
+     */
+    void calculateROrder() const;
+
 
     /**
      * Functions for Green equivalence relations. Faster if calculateGreenRelations was executed beforehand.

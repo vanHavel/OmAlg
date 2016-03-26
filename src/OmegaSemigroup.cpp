@@ -27,6 +27,7 @@ namespace omalg {
   }
 
   bool OmegaSemigroup::isDBRecognizable() const {
+    this->sPlus.calculateROrder();
     auto linkedPairs = this->sPlus.linkedPairs();
     //Check all linked pairs (s,e) and (s,f) for the condition. This makes use of the list of linked pairs being sorted.
     for (auto iter1 = linkedPairs.begin(); iter1 != linkedPairs.end(); ++iter1) {
