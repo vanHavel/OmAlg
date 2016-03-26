@@ -328,15 +328,211 @@ namespace omalg {
   }
 
   OmegaSemigroup* IOHandler::readOmegaSemigroupFromStream(std::istream &in) {
-    return 0; //TODO
+    std::vector<std::string> lines;
+    std::string temp;
+    const size_t minLines = 8;
+
+    //Read complete file
+    while (std::getline(in, temp)) {
+      lines.push_back(temp);
+    }
+    //Check whether fail occurred for other reason but eof
+    if (!in.eof()) {
+      throw ReadFailedException();
+    }
+    //Clear fail and bad bits
+    in.clear();
+    //Check minimum number of lines
+    if (lines.size() < minLines) {
+      throw SyntaxException(lines.size(), "File must have at least " + std::to_string(minLines) + " lines.");
+    }
+
+    size_t lineNo = 0;
+
+    //read semigroup element names
+    auto sPlusNamesList = this->readNamesIntoList(lines, lineNo);
+    auto sPlusNames = std::vector<std::string>(sPlusNamesList.begin(), sPlusNamesList.end());
+    ++lineNo;
+    this->checkReadTillEnd(lineNo, lines.size());
+
+    //read semigroup product table
+    auto sPlusTable = std::vector<std::vector<size_t> >(sPlusNames.size(), std::vector<size_t>(sPlusNames.size(), 0));
+    for (size_t row = 0; row < sPlusNames.size(); ++row) {
+      //split row at commas
+      auto tableRow = dasdull::stringSplit(lines[lineNo], ',', true);
+      size_t col = 0;
+      //iterate over row
+      for (auto iter = tableRow.begin(); iter != tableRow.end(); ++iter) {
+        //check if row contains too many elements
+        if (col == sPlusNames.size()) {
+          throw SyntaxException(lineNo + 1, "Too many elements in row of product table");
+        }
+        //get index of element in the semigroup
+        int pos = dasdull::vectorPos(sPlusNames, *iter);
+        //check whether element occurs at all in semigroup
+        if (pos == -1) {
+          throw SyntaxException(lineNo + 1, "Element " + *iter + " of product table not in semigroup.");
+        }
+        //fill table and increase column counter
+        else {
+          sPlusTable[row][col] = pos;
+          ++col;
+        }
+      }
+      //check if there were too few elements in the row
+      if (col < sPlusNames.size()) {
+        throw SyntaxException(lineNo + 1, "Too few elements in row of product table.");
+      }
+      //increase line count
+      ++lineNo;
+      this->checkReadTillEnd(lineNo, lines.size());
+    }
+
+    //create semigroup
+    Semigroup sPlus = Semigroup(sPlusNames, sPlusTable);
+
+    //read omega element names
+    auto omegaNameList = this->readNamesIntoList(lines, lineNo);
+    auto omegaNames = std::vector<std::string>(omegaNameList.begin(), omegaNameList.end());
+    ++lineNo;
+    this->checkReadTillEnd(lineNo, lines.size());
+
+    //read mixed product table
+    auto mixedTable = std::vector<std::vector<size_t> >(sPlusNames.size(), std::vector<size_t>(omegaNames.size(), 0));
+    for (size_t row = 0; row < sPlusNames.size(); ++row) {
+      //split row at commas
+      auto tableRow = dasdull::stringSplit(lines[lineNo], ',', true);
+      size_t col = 0;
+      //iterate over row
+      for (auto iter = tableRow.begin(); iter != tableRow.end(); ++iter) {
+        //check if row contains too many elements
+        if (col == omegaNames.size()) {
+          throw SyntaxException(lineNo + 1, "Too many elements in row of mixed product table");
+        }
+        //get index of omega element in the omega semigroup
+        int pos = dasdull::vectorPos(omegaNames, *iter);
+        //check whether element occurs at all in omega semigroup
+        if (pos == -1) {
+          throw SyntaxException(lineNo + 1, "Element " + *iter + " of mixed product table not in omega semigroup.");
+        }
+        //fill table and increase column counter
+        else {
+          mixedTable[row][col] = pos;
+          ++col;
+        }
+      }
+      //check if there were too few elements in the row
+      if (col < omegaNames.size()) {
+        throw SyntaxException(lineNo + 1, "Too few elements in row of mixed product table.");
+      }
+      //increase line count
+      ++lineNo;
+      this->checkReadTillEnd(lineNo, lines.size());
+    }
+
+    //read omega iteration table
+    auto omegaTableList = this->readNamesIntoList(lines, lineNo);
+    //check correct size of omega table
+    if (omegaTableList.size() != sPlusNames.size()) {
+      throw SyntaxException(lineNo + 1, "Wrong number of elements in omega iteration table - does not match number of semigroup elements");
+    }
+    //transform to indices
+    auto omegaTable = std::vector<size_t>(omegaTableList.size(), 0);
+    size_t index = 0;
+    for (auto iter = omegaTableList.begin(); iter != omegaTableList.end(); ++iter) {
+      int pos = dasdull::vectorPos(omegaNames, *iter);
+      if (pos == -1) {
+        throw SyntaxException(lineNo + 1, "Omega iteration result " + *iter + " does not appear in omega semigroup.");
+      }
+      else {
+        //fill table and increase index
+        omegaTable[index] = pos;
+        ++index;
+      }
+    }
+    ++lineNo;
+    this->checkReadTillEnd(lineNo, lines.size());
+
+    //read alphabet
+    auto alphabetList = this->readNamesIntoList(lines, lineNo);
+    auto alphabet = std::vector<std::string>(alphabetList.begin(), alphabetList.end());
+    ++lineNo;
+    this->checkReadTillEnd(lineNo, lines.size());
+
+    //read morphism images
+    auto morphismList = this->readNamesIntoList(lines, lineNo);
+    //check correct size of image table
+    if (morphismList.size() != alphabet.size()) {
+      throw SyntaxException(lineNo + 1, "Wrong number of elements in morphism table - does not match number of alphabet elements");
+    }
+    //transform to indices
+    auto morphismValues = std::vector<size_t>(morphismList.size(),0);
+    index = 0;
+    for (auto iter = morphismList.begin(); iter != morphismList.end(); ++iter) {
+      int pos = dasdull::vectorPos(sPlusNames, *iter);
+      //check if image occurs in sPlus
+      if (pos == -1) {
+        throw SyntaxException(lineNo + 1, "Morphism target " + *iter + " does not appear in semigroup.");
+      }
+      else {
+        morphismValues[index] = pos;
+        ++index;
+      }
+    }
+
+    //create morphism
+    Morphism phi = Morphism(morphismValues, alphabet);
+    ++lineNo;
+    this->checkReadTillEnd(lineNo, lines.size());
+
+    //read P
+    auto PList = this->readNamesIntoList(lines, lineNo);
+    auto P = std::vector<bool>(omegaNames.size(), false);
+    for (auto iter = PList.begin(); iter != PList.end(); ++iter) {
+      int pos = dasdull::vectorPos(omegaNames, *iter);
+      //check if P member occurs in omegaNames
+      if (pos == -1) {
+        throw SyntaxException(lineNo + 1, "P element " + *iter + " does not appear in omega semigroup.");
+      }
+      else {
+        P[pos] = true;
+      }
+    }
+
+    //create omega semigroup
+    OmegaSemigroup* S = new OmegaSemigroup(sPlus, omegaNames, mixedTable, omegaTable, P, phi);
+    return S;
   }
 
   OmegaSemigroup* IOHandler::readOmegaSemigroupFromFile(std::string inputFileName) {
-    return 0; //TODO
+    std::ifstream in;
+    in.open(inputFileName, std::ios::in);
+    if (!in.good()) {
+      throw OpenFailedException(inputFileName);
+    }
+    //Read omega semigroup from file.
+    OmegaSemigroup* result;
+    try {
+      result = this->readOmegaSemigroupFromStream(in);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while reading from file.
+      //Attempt to close the file.
+      in.close();
+      throw;
+    }
+    //Close the input file.
+    in.close();
+    if (in.fail()) {
+      throw CloseFailedException(inputFileName);
+    }
+    return result;
   }
 
   OmegaSemigroup* IOHandler::readOmegaSemigroupFromStdin() {
-    return 0; //TODO
+    OmegaSemigroup* S;
+    S = this->readOmegaSemigroupFromStream(std::cin);
+    return S;
   }
 
   void IOHandler::writeAutomatonToStream(OmegaAutomaton const &A, std::ostream& out) {

@@ -27,6 +27,8 @@ namespace omalg {
   	 * @param theOmegaElementNames Names of the elements of S_omega.
   	 * @param theMixedProductTable Table for the mixed product.
   	 * @param theOmegaIterationTable Table for the omega iteration operation.
+  	 * @param theP Set of "accepting" elements P, represented by bit vector
+  	 * @param thePhi Morphism from a finite alphabet into the omega semigroup
   	 */
   	OmegaSemigroup(Semigroup theSemigroup,                                 std::vector<std::string> theOmegaElementNames,
   	               std::vector<std::vector<size_t> > theMixedProductTable, std::vector<size_t> theOmegaIterationTable,

@@ -239,7 +239,6 @@ namespace omalg {
     
     //Turn names from list into vector.
     std::vector<std::string> nameVector(omegaNames.begin(), omegaNames.end());
-    
     //Create omega semigroup.
     OmegaSemigroup* result = new OmegaSemigroup(Splus, nameVector, mixedTable, omegaTable, P, phi);
     
