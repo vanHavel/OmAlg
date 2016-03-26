@@ -24,8 +24,9 @@ namespace omalg {
     void operator=(IOHandler const &) = delete;
 
 	  OmegaAutomaton* readAutomatonFromStream(std::istream &in);
-	  void writeAutomatonToStream(OmegaAutomaton const &A, std::ostream &out);
+	  OmegaSemigroup* readOmegaSemigroupFromStream(std::istream &in);
 
+	  void writeAutomatonToStream(OmegaAutomaton const &A, std::ostream &out);
 	  void writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream &out);
 
 	  void checkReadTillEnd(size_t lineNo, size_t lines);
@@ -77,6 +78,25 @@ namespace omalg {
      * @throws ReadFailedException if an error occurs while reading a line from the file.
      */
 	  OmegaAutomaton* readAutomatonFromStdin();
+
+	  /**
+	   * Reads omega semigroup from a text file in the omalg format.
+	   * @param inputFileName The name of the input file.
+	   * @return A pointer to the read omega semigroup.
+	   * @throws OpenFailedException if opening the file fails.
+	   * @throws CloseFailedException if closing the file fails, but no exception occurred before while reading.
+	   * @throws SyntaxException if a syntax error is encountered while reading the file.
+	   * @throws ReadFailedException if an error occurs while reading a line from the file.
+	   */
+	  OmegaSemigroup* readOmegaSemigroupFromFile(std::string inputFileName);
+
+	  /**
+	   * Reads omega semigroup from stdin in the omalg format.
+	   * @return A pointer to the read omega semigroup.
+	   * @throws SyntaxException if a syntax error is encountered while reading the file.
+	   * @throws ReadFailedException if an error occurs while reading a line from the file.
+	   */
+	  OmegaSemigroup* readOmegaSemigroupFromStdin();
 
 	  void writeAutomatonToStdout(OmegaAutomaton const &A);
 	  void writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName);

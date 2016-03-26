@@ -296,6 +296,49 @@ namespace omalg {
     }
   }
   
+  OmegaAutomaton* IOHandler::readAutomatonFromFile(std::string const inputFileName) {
+    std::ifstream in;
+    in.open(inputFileName, std::ios::in);
+    if (!in.good()) {
+      throw OpenFailedException(inputFileName);
+    }
+    //Read automaton from file.
+    OmegaAutomaton* result;
+    try {
+      result = this->readAutomatonFromStream(in);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while reading from file.
+      //Attempt to close the file.
+      in.close();
+      throw;
+    }
+    //Close the input file.
+    in.close();
+    if (in.fail()) {
+      throw CloseFailedException(inputFileName);
+    }
+    return result;
+  }
+
+  OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
+    OmegaAutomaton* A;
+    A = this->readAutomatonFromStream(std::cin);
+    return A;
+  }
+
+  OmegaSemigroup* IOHandler::readOmegaSemigroupFromStream(std::istream &in) {
+    return 0; //TODO
+  }
+
+  OmegaSemigroup* IOHandler::readOmegaSemigroupFromFile(std::string inputFileName) {
+    return 0; //TODO
+  }
+
+  OmegaSemigroup* IOHandler::readOmegaSemigroupFromStdin() {
+    return 0; //TODO
+  }
+
   void IOHandler::writeAutomatonToStream(OmegaAutomaton const &A, std::ostream& out) {
     out << A.description();  
     if (out.fail()) {
@@ -303,9 +346,69 @@ namespace omalg {
     }
   }
 
+  void IOHandler::writeAutomatonToStdout(OmegaAutomaton const &A) {
+    this->writeAutomatonToStream(A, std::cout);
+    if(std::cout.fail()) {
+      throw WriteFailedException();
+    }
+  }
+
+  void IOHandler::writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName) {
+    std::ofstream out;
+    out.open(outputFileName, std::ios::out);
+    if (!out.good()) {
+      throw OpenFailedException(outputFileName);
+    }
+    //Write automaton to file.
+    try {
+      this->writeAutomatonToStream(A, out);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while writing to file.
+      //Attempt to close the file.
+      out.close();
+      throw;
+    }
+    //Close the input file.
+    out.close();
+    if (out.fail()) {
+      throw CloseFailedException(outputFileName);
+    }
+  }
+
   void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
     out << S.description();  
     if (out.fail()) {
+      throw WriteFailedException();
+    }
+  }
+
+  void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string const outputFileName) {
+    std::ofstream out;
+    out.open(outputFileName, std::ios::out);
+    if (!out.good()) {
+      throw OpenFailedException(outputFileName);
+    }
+    //Write automaton to file.
+    try {
+      this->writeOmegaSemigroupToStream(S, out);
+    }
+    catch(IOException const &ex) {
+      //An exception was thrown while writing to file.
+      //Attempt to close the file.
+      out.close();
+      throw;
+    }
+    //Close the input file.
+    out.close();
+    if (out.fail()) {
+      throw CloseFailedException(outputFileName);
+    }
+  }
+
+  void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
+    this->writeOmegaSemigroupToStream(S, std::cout);
+    if(std::cout.fail()) {
       throw WriteFailedException();
     }
   }
@@ -491,97 +594,6 @@ namespace omalg {
       }
     }
     return result;
-  }
-
-  OmegaAutomaton* IOHandler::readAutomatonFromFile(std::string const inputFileName) {
-    std::ifstream in;
-    in.open(inputFileName, std::ios::in);
-    if (!in.good()) {
-      throw OpenFailedException(inputFileName);
-    }
-    //Read automaton from file.
-    OmegaAutomaton* result;
-    try {
-      result = this->readAutomatonFromStream(in);
-    }
-    catch(IOException const &ex) {
-      //An exception was thrown while reading from file.
-      //Attempt to close the file.
-      in.close();
-      throw;
-    }
-    //Close the input file.
-    in.close();
-    if (in.fail()) {
-    	throw CloseFailedException(inputFileName);
-    }
-    return result;
-  }
-  
-  OmegaAutomaton* IOHandler::readAutomatonFromStdin() {
-    OmegaAutomaton* A;
-    A = this->readAutomatonFromStream(std::cin);
-    return A;
-  }
-  
-  void IOHandler::writeAutomatonToStdout(OmegaAutomaton const &A) {
-    this->writeAutomatonToStream(A, std::cout);
-    if(std::cout.fail()) {
-      throw WriteFailedException();
-    }
-  }
-  
-  void IOHandler::writeAutomatonToFile(OmegaAutomaton const &A, std::string outputFileName) {
-    std::ofstream out;
-    out.open(outputFileName, std::ios::out);
-    if (!out.good()) {
-      throw OpenFailedException(outputFileName);
-    }
-    //Write automaton to file.
-    try {
-      this->writeAutomatonToStream(A, out);
-    }
-    catch(IOException const &ex) {
-      //An exception was thrown while writing to file.
-      //Attempt to close the file.
-      out.close();
-      throw;
-    }
-    //Close the input file.
-    out.close();
-    if (out.fail()) {
-      throw CloseFailedException(outputFileName);
-    }
-  }
-
-  void IOHandler::writeOmegaSemigroupToFile(OmegaSemigroup const &S, std::string const outputFileName) {
-    std::ofstream out;
-    out.open(outputFileName, std::ios::out);
-    if (!out.good()) {
-      throw OpenFailedException(outputFileName);
-    }
-    //Write automaton to file.
-    try {
-      this->writeOmegaSemigroupToStream(S, out);
-    }
-    catch(IOException const &ex) {
-      //An exception was thrown while writing to file.
-      //Attempt to close the file.
-      out.close();
-      throw;
-    }
-    //Close the input file.
-    out.close();
-    if (out.fail()) {
-      throw CloseFailedException(outputFileName);
-    }
-  }
-  
-  void IOHandler::writeOmegaSemigroupToStdout(OmegaSemigroup const &S) {
-    this->writeOmegaSemigroupToStream(S, std::cout);
-    if(std::cout.fail()) {
-      throw WriteFailedException();
-    }
   }
 
 }
