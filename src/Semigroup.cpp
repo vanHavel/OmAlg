@@ -19,6 +19,34 @@ namespace omalg {
     this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
     this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
 
+    //calculate rOrder and lOrder
+    for (size_t i = 0; i < this->elementNames.size(); ++i) {
+      for (size_t j = 0; j < this->elementNames.size(); ++j) {
+        //rOrder
+        if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
+            != this->multiplicationTable[j].end()) {
+          (*(this->rOrder))[i][j] = 1;
+        }
+        //lOrder
+        for (size_t k = 0; k < this->elementNames.size(); ++k) {
+          if (this->multiplicationTable[k][j] == i) {
+            (*(this->lOrder))[i][j] = 1;
+            break;
+          }
+        }
+      }
+    }
+    //calculate jOrder
+    for (size_t i = 0; i < this->elementNames.size(); ++i) {
+      for (size_t j = 0; j < this->elementNames.size(); ++j) {
+        for (size_t k = 0; k < this->elementNames.size(); ++k) {
+          if ((*(this->lOrder))[k][j] && (*(this->rOrder))[i][k]) {
+            (*(this->jOrder))[i][j] = 1;
+            break;
+          }
+        }
+      }
+    }
   }
 
   inline bool Semigroup::J(size_t lhs, size_t rhs) const {
@@ -77,6 +105,30 @@ namespace omalg {
 
   inline bool Semigroup::h(size_t lhs, size_t rhs) const {
     return (this->r(lhs, rhs) && this->l(lhs, rhs));
+  }
+
+  std::list<size_t> Semigroup::idempotents() {
+    if (this->_idempotents.empty()) {
+      for (size_t iter = 0; iter < this->elementNames.size(); ++iter) {
+        if (this->multiplicationTable[iter][iter] == iter) {
+          this->_idempotents.insert(this->_idempotents.end(), iter);
+        }
+      }
+    }
+    return this->_idempotents;
+  }
+
+  std::list<std::pair<size_t, size_t> > Semigroup::linkedPairs() {
+    if (this->_linkedPairs.empty()) {
+      for (size_t s = 0; s < this->elementNames.size(); ++s) {
+        for (auto iter = this->idempotents().begin(); iter != this->idempotents().end(); ++iter) {
+          if (this->multiplicationTable[s][*iter] == s) {
+            this->_linkedPairs.insert(this->_linkedPairs.end(), std::make_pair(s, *iter));
+          }
+        }
+      }
+    }
+    return this->_linkedPairs;
   }
 
   std::string Semigroup::description() const {

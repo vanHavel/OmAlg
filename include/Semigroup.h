@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <list>
 
 namespace omalg {
 
@@ -16,6 +17,12 @@ namespace omalg {
     mutable std::vector<std::vector<bool> >* jOrder = 0;
     mutable std::vector<std::vector<bool> >* rOrder = 0;
     mutable std::vector<std::vector<bool> >* lOrder = 0;
+
+    //Lists of idempotents and linked pairs are cached once calculated.
+    //These can not be empty once calculated as every finite semigroup contains an idempotent.
+    mutable std::list<std::pair<size_t, size_t> > _linkedPairs = std::list<std::pair<size_t, size_t> >();
+    mutable std::list<size_t> _idempotents = std::list<size_t>();
+
   public:
     /**
      * Semigroup constructor.
@@ -56,6 +63,19 @@ namespace omalg {
     bool r(size_t lhs, size_t rhs) const;
     bool l(size_t lhs, size_t rhs) const;
     bool h(size_t lhs, size_t rhs) const;
+
+    /**
+     * Returns all linked pairs of the semigroup. A linked pair is a tuple (s,e) such that se = s and ee = e.
+     * @return A list of all linked pairs.
+     */
+    std::list<std::pair<size_t, size_t> > linkedPairs();
+
+    /**
+     * Returns a list of all idempotents in the semigroup.
+     * @return A list of all idempotents.
+     */
+    std::list<size_t> idempotents();
+
 
     /**
      * Returns textual description of semigroup in OmAlg format.
