@@ -14,32 +14,38 @@ namespace omalg {
   }
   
   void Semigroup::calculateGreenRelations() const {
-    //calculate rOrder
-    this->calculateROrder();
+    //calculate r order
+    if (!this->rOrder) {
+      this->calculateROrder();
+    }
+    if (!this->lOrder) {
+      //initialize l order
+      this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
 
-    //initialize l and j order
-    this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
-    this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
-
-    //calculate lOrder
-    for (size_t i = 0; i < this->elementNames.size(); ++i) {
-      for (size_t j = 0; j < this->elementNames.size(); ++j) {
-        for (size_t k = 0; k < this->elementNames.size(); ++k) {
-          if (this->multiplicationTable[k][j] == i) {
-            (*(this->lOrder))[i][j] = 1;
-            break;
+      //calculate l order
+      for (size_t i = 0; i < this->elementNames.size(); ++i) {
+        for (size_t j = 0; j < this->elementNames.size(); ++j) {
+          for (size_t k = 0; k < this->elementNames.size(); ++k) {
+            if (this->multiplicationTable[k][j] == i) {
+              (*(this->lOrder))[i][j] = 1;
+              break;
+            }
           }
         }
       }
     }
+    if(!this->jOrder) {
+      //initialize j order
+      this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
 
-    //calculate jOrder
-    for (size_t i = 0; i < this->elementNames.size(); ++i) {
-      for (size_t j = 0; j < this->elementNames.size(); ++j) {
-        for (size_t k = 0; k < this->elementNames.size(); ++k) {
-          if ((*(this->lOrder))[k][j] && (*(this->rOrder))[i][k]) {
-            (*(this->jOrder))[i][j] = 1;
-            break;
+      //calculate j order
+      for (size_t i = 0; i < this->elementNames.size(); ++i) {
+        for (size_t j = 0; j < this->elementNames.size(); ++j) {
+          for (size_t k = 0; k < this->elementNames.size(); ++k) {
+            if ((*(this->lOrder))[k][j] && (*(this->rOrder))[i][k]) {
+              (*(this->jOrder))[i][j] = 1;
+              break;
+            }
           }
         }
       }
@@ -47,14 +53,16 @@ namespace omalg {
   }
 
   void Semigroup::calculateROrder() const {
-    //initialize
-    this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
-    //calculate rOrder
-    for (size_t i = 0; i < this->elementNames.size(); ++i) {
-      for (size_t j = 0; j < this->elementNames.size(); ++j) {
-        if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
-        != this->multiplicationTable[j].end()) {
-          (*(this->rOrder))[i][j] = 1;
+    if (!this->rOrder) {
+      //initialize
+      this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+      //calculate rOrder
+      for (size_t i = 0; i < this->elementNames.size(); ++i) {
+        for (size_t j = 0; j < this->elementNames.size(); ++j) {
+          if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
+          != this->multiplicationTable[j].end()) {
+            (*(this->rOrder))[i][j] = 1;
+          }
         }
       }
     }

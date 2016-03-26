@@ -38,12 +38,14 @@ namespace omalg {
         auto e = iter1->second;
         auto f = iter2->second;
         auto s = iter1->first;
+        auto eOm = this->omegaIterationTable[e];
+        auto fOm = this->omegaIterationTable[f];
         //Check if e <=_r f, sf^w in P, se^w not in P. In this case the condition is violated.
-        if (this->sPlus.r(e, f) && this->P[this->mixedProductTable[s][f]] && !this->P[this->mixedProductTable[s][e]]) {
+        if (this->sPlus.r(e, f) && this->P[this->mixedProductTable[s][fOm]] && !this->P[this->mixedProductTable[s][eOm]]) {
           return false;
         }
         //Check the same for f and e switching roles.
-        if (this->sPlus.r(f, e) && this->P[this->mixedProductTable[s][e]] && !this->P[this->mixedProductTable[s][f]]) {
+        if (this->sPlus.r(f, e) && this->P[this->mixedProductTable[s][eOm]] && !this->P[this->mixedProductTable[s][fOm]]) {
           return false;
         }
       }
@@ -58,7 +60,27 @@ namespace omalg {
   }
 
   bool OmegaSemigroup::isERecognizable() const {
-    return true; //TODO
+    this->sPlus.calculateROrder();
+    auto linkedPairs = this->sPlus.linkedPairs();
+    //Check all linked pairs (s,e) and (t,f) for the condition.
+    for (auto iter1 = linkedPairs.begin(); iter1 != linkedPairs.end(); ++iter1) {
+      for (auto iter2 = linkedPairs.begin(); iter2 != linkedPairs.end(); ++iter2) {
+        if (iter2 == iter1) {
+          continue;
+        }
+        auto s = iter1->first;
+        auto t = iter2->first;
+        auto e = iter1->second;
+        auto f = iter2->second;
+        auto eOm = this->omegaIterationTable[e];
+        auto fOm = this->omegaIterationTable[f];
+        //check if s <=_r t, tf^w in P and se^w not in P. Then the condition is violated.
+        if (this->sPlus.r(s,t) && this->P[this->mixedProductTable[t][fOm]] && !this->P[this->mixedProductTable[s][eOm]]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   bool OmegaSemigroup::isARecognizable() const {
