@@ -72,14 +72,14 @@ namespace omalg {
     }
     if (!this->lOrder) {
       //initialize l order
-      this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+      this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), false));
 
       //calculate l order
       for (size_t i = 0; i < this->elementNames.size(); ++i) {
         for (size_t j = 0; j < this->elementNames.size(); ++j) {
           for (size_t k = 0; k < this->elementNames.size(); ++k) {
             if (this->multiplicationTable[k][j] == i) {
-              (*(this->lOrder))[i][j] = 1;
+              (*(this->lOrder))[i][j] = true;
               break;
             }
           }
@@ -88,14 +88,14 @@ namespace omalg {
     }
     if(!this->jOrder) {
       //initialize j order
-      this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+      this->jOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), false));
 
       //calculate j order
       for (size_t i = 0; i < this->elementNames.size(); ++i) {
         for (size_t j = 0; j < this->elementNames.size(); ++j) {
           for (size_t k = 0; k < this->elementNames.size(); ++k) {
             if ((*(this->lOrder))[k][j] && (*(this->rOrder))[i][k]) {
-              (*(this->jOrder))[i][j] = 1;
+              (*(this->jOrder))[i][j] = true;
               break;
             }
           }
@@ -107,13 +107,13 @@ namespace omalg {
   void Semigroup::calculateROrder() const {
     if (!this->rOrder) {
       //initialize
-      this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), true));
+      this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), false));
       //calculate rOrder
       for (size_t i = 0; i < this->elementNames.size(); ++i) {
         for (size_t j = 0; j < this->elementNames.size(); ++j) {
           if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
           != this->multiplicationTable[j].end()) {
-            (*(this->rOrder))[i][j] = 1;
+            (*(this->rOrder))[i][j] = true;
           }
         }
       }
