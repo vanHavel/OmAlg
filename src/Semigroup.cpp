@@ -5,6 +5,58 @@ namespace omalg {
   Semigroup::Semigroup(std::vector<std::string> theElementNames, std::vector<std::vector<size_t> > theMultiplicationTable)
     : elementNames(theElementNames), multiplicationTable(theMultiplicationTable) { }
 
+  Semigroup::Semigroup(Semigroup const& S)
+    : elementNames(S.elementNames), multiplicationTable(S.multiplicationTable) {
+    if (S.rOrder) {
+      rOrder = new std::vector<std::vector<bool> >();
+      *rOrder = *S.rOrder;
+    }
+    else {
+      rOrder = 0;
+    }
+    if (S.lOrder) {
+      lOrder = new std::vector<std::vector<bool> >();
+      *lOrder = *S.lOrder;
+    }
+    else {
+      lOrder = 0;
+    }
+    if (S.jOrder) {
+      jOrder = new std::vector<std::vector<bool> >();
+      *jOrder = *S.jOrder;
+    }
+    else {
+      jOrder = 0;
+    }
+  }
+
+  Semigroup& Semigroup::operator=(Semigroup const& S) {
+    this->elementNames = S.elementNames;
+    this->multiplicationTable = S.multiplicationTable;
+    if (S.rOrder) {
+      this->rOrder = new std::vector<std::vector<bool> >();
+      *(this->rOrder) = *S.rOrder;
+    }
+    else {
+      this->rOrder = 0;
+    }
+    if (S.lOrder) {
+      this->lOrder = new std::vector<std::vector<bool> >();
+      *(this->lOrder) = *S.lOrder;
+    }
+    else {
+      this->lOrder = 0;
+    }
+    if (S.jOrder) {
+      this->jOrder = new std::vector<std::vector<bool> >();
+      *(this->jOrder) = *S.jOrder;
+    }
+    else {
+      this->jOrder = 0;
+    }
+    return *this;
+  }
+
   size_t Semigroup::product(size_t lhs, size_t rhs) const {
     return this->multiplicationTable[lhs][rhs];
   }
@@ -128,9 +180,9 @@ namespace omalg {
 
   std::list<size_t> Semigroup::idempotents() const {
     if (this->_idempotents.empty()) {
-      for (size_t iter = 0; iter < this->elementNames.size(); ++iter) {
-        if (this->multiplicationTable[iter][iter] == iter) {
-          this->_idempotents.insert(this->_idempotents.end(), iter);
+      for (size_t e = 0; e < this->elementNames.size(); ++e) {
+        if (this->multiplicationTable[e][e] == e) {
+          this->_idempotents.insert(this->_idempotents.end(), e);
         }
       }
     }

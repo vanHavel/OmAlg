@@ -1,0 +1,14 @@
+tp(a),tp(b),tp(ab),tp(ba);
+tp(a),tp(ab),tp(ab),tp(ba)
+tp(ba),tp(b),tp(ab),tp(ba)
+tp(ba),tp(ab),tp(ab),tp(ba)
+tp(ba),tp(ab),tp(ab),tp(ba);
+(tp(a))^w,(tp(b))^w;
+(tp(a))^w,(tp(b))^w
+(tp(a))^w,(tp(b))^w
+(tp(a))^w,(tp(b))^w
+(tp(a))^w,(tp(b))^w;
+(tp(a))^w,(tp(b))^w,(tp(b))^w,(tp(b))^w;
+a,b;
+tp(a),tp(b);
+(tp(b))^w;

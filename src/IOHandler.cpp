@@ -358,6 +358,10 @@ namespace omalg {
     //read semigroup product table
     auto sPlusTable = std::vector<std::vector<size_t> >(sPlusNames.size(), std::vector<size_t>(sPlusNames.size(), 0));
     for (size_t row = 0; row < sPlusNames.size(); ++row) {
+      //remove final ';'
+      if (row == sPlusNames.size() - 1) {
+        lines[lineNo].pop_back();
+      }
       //split row at commas
       auto tableRow = dasdull::stringSplit(lines[lineNo], ',', true);
       size_t col = 0;
@@ -400,6 +404,10 @@ namespace omalg {
     //read mixed product table
     auto mixedTable = std::vector<std::vector<size_t> >(sPlusNames.size(), std::vector<size_t>(omegaNames.size(), 0));
     for (size_t row = 0; row < sPlusNames.size(); ++row) {
+      //remove final ';'
+      if (row == sPlusNames.size() - 1) {
+        lines[lineNo].pop_back();
+      }
       //split row at commas
       auto tableRow = dasdull::stringSplit(lines[lineNo], ',', true);
       size_t col = 0;
@@ -536,7 +544,8 @@ namespace omalg {
   }
 
   void IOHandler::writeAutomatonToStream(OmegaAutomaton const &A, std::ostream& out) {
-    out << A.description();  
+    out << A.description();
+    out << std::endl;
     if (out.fail()) {
       throw WriteFailedException();
     }
@@ -574,6 +583,7 @@ namespace omalg {
 
   void IOHandler::writeOmegaSemigroupToStream(OmegaSemigroup const &S, std::ostream& out) {
     out << S.description();  
+    out << std::endl;
     if (out.fail()) {
       throw WriteFailedException();
     }

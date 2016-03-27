@@ -30,6 +30,20 @@ namespace omalg {
      * @param multiplicationTable Semigroup product table.
      */
     Semigroup(std::vector<std::string> theElementNames, std::vector<std::vector<size_t> > theMultiplicationTable);
+
+    /**
+     * Copy constructor
+     * @param S Semigroup to be copied
+     */
+    Semigroup(Semigroup const& S);
+
+    /**
+     * Copy assignment operator
+     * @param S Semigroup to be copied
+     * @return A copy of the semigroup
+     */
+    Semigroup& operator=(Semigroup const& S);
+
     /**
      * Calculates the semigroup product, given two element indices(No check of bounds).
      * @param lhs Left factor.
