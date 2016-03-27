@@ -31,30 +31,33 @@ namespace omalg {
   }
 
   Semigroup& Semigroup::operator=(Semigroup const& S) {
-    this->elementNames = S.elementNames;
-    this->multiplicationTable = S.multiplicationTable;
-    if (S.rOrder) {
-      this->rOrder = new std::vector<std::vector<bool> >();
-      *(this->rOrder) = *S.rOrder;
-    }
-    else {
-      this->rOrder = 0;
-    }
-    if (S.lOrder) {
-      this->lOrder = new std::vector<std::vector<bool> >();
-      *(this->lOrder) = *S.lOrder;
-    }
-    else {
-      this->lOrder = 0;
-    }
-    if (S.jOrder) {
-      this->jOrder = new std::vector<std::vector<bool> >();
-      *(this->jOrder) = *S.jOrder;
-    }
-    else {
-      this->jOrder = 0;
+    if (&S != this) {
+      this->elementNames = S.elementNames;
+      this->multiplicationTable = S.multiplicationTable;
+      if (S.rOrder) {
+        this->rOrder = new std::vector<std::vector<bool> >();
+        *(this->rOrder) = *S.rOrder;
+      }
+      else {
+        this->rOrder = 0;
+      }
+      if (S.lOrder) {
+        this->lOrder = new std::vector<std::vector<bool> >();
+        *(this->lOrder) = *S.lOrder;
+      }
+      else {
+        this->lOrder = 0;
+      }
+      if (S.jOrder) {
+        this->jOrder = new std::vector<std::vector<bool> >();
+        *(this->jOrder) = *S.jOrder;
+      }
+      else {
+        this->jOrder = 0;
+      }
     }
     return *this;
+
   }
 
   size_t Semigroup::product(size_t lhs, size_t rhs) const {
