@@ -1,2 +1,7 @@
-To run the example, type
-a2os -i examples/A1.txt -o examples/output.txt 
+An example automaton is given in A1.txt. 
+To turn it into an omega semigroup, run
+bin/a2os -i examples/A1.txt -o examples/output.txt 
+
+An example omega semigroup is given in S1.txt. 
+To decide its language's position in the Landweber hierarchy, run
+bin/oslh -i examples/S1.txt -o examples/output2.txt
