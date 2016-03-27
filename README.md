@@ -1,5 +1,9 @@
 # OmAlg
 Toolkit for the algebraic theory of omega-automata.
+
+# Installation 
+Build using either CMake or make all.
+
 # Implemented features
 * transform automata into equivalent omega semigroups (Büchi's construction). Supported types: 
     * Deterministic:    Buechi, coBuechi, parity, Muller
