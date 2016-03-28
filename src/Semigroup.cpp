@@ -67,6 +67,10 @@ namespace omalg {
   std::string Semigroup::elementName(size_t index) const {
     return this->elementNames.at(index);
   }
+
+  std::vector<std::string> Semigroup::getElementNames() const {
+    return this->elementNames;
+  }
   
   void Semigroup::calculateGreenRelations() const {
     //calculate r order

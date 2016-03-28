@@ -1,4 +1,5 @@
 #include "OmegaSemigroup.h"
+#include "DeterministicBuechiAutomaton.h"
 
 namespace omalg {
   OmegaSemigroup::OmegaSemigroup(Semigroup theSemigroup, std::vector<std::string> theOmegaElementNames,
@@ -91,6 +92,55 @@ namespace omalg {
 
   bool OmegaSemigroup::isWBRecognizable() const {
     return (this->isDBRecognizable() && this->isDCRecognizable());
+  }
+
+  DeterministicBuechiAutomaton OmegaSemigroup::toWeakBuechi() const {
+    //Check if conversion is possible
+    if (!this->isWBRecognizable()) {
+      throw OperationNotApplicableException();
+    }
+
+    //Get element names which are the state names for the automaton
+    auto states = this->sPlus.getElementNames();
+    //Create new initial state
+    std::string initialName = "q_0";
+    //Change name of initial state if it already occurs in state names
+    while (std::find(states.begin(), states.end(), initialName) != states.end()) {
+      initialName += "0";
+    }
+    //Add initial name to state names
+    states.push_back(initialName);
+    //set initial id
+    size_t initial = states.size() - 1;
+
+    //Get alphabet
+    auto alphabet = this->phi.getAlphabet();
+
+    //Build transition table
+    auto transitionTable = std::vector<std::vector<size_t> >(states.size(), std::vector<size_t>(alphabet.size(), 0));
+    for (size_t a = 0; a < alphabet.size(); ++a) {
+      size_t image_a = this->phi[a];
+      //anything but initial state
+      for (size_t q = 0; q < states.size() - 1; ++q) {
+        transitionTable[q][a] = this->sPlus.product(q, image_a);
+      }
+      //initial state
+      transitionTable[initial][a] = image_a;
+    }
+
+    //Determine final states
+    auto finalStates = std::vector<bool>(states.size(),false);
+    auto linkedPairs = this->sPlus.linkedPairs();
+    for (auto iter = linkedPairs.begin(); iter != linkedPairs.end(); ++iter) {
+      size_t s = iter->first;
+      size_t eOm = this->omegaIterationTable[iter->second];
+      //if se^w is in P for a linked pair (s,e), then s is a final state
+      if (this->P[this->mixedProductTable[s][eOm]]) {
+        finalStates[s] = true;
+      }
+    }
+
+    return DeterministicBuechiAutomaton(states, alphabet, initial, transitionTable, finalStates);
   }
 
   std::string OmegaSemigroup::description() const {

@@ -59,6 +59,12 @@ namespace omalg {
     std::string elementName(size_t index) const;
 
     /**
+     * Getter for element names vector.
+     * @return the vector of element names.
+     */
+    std::vector<std::string> getElementNames() const;
+
+    /**
      * Calculates the R, L, J and orders.
      */
     void calculateGreenRelations() const;

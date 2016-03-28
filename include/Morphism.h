@@ -17,6 +17,12 @@ namespace omalg {
      * @param theAlphabet Alphabet(Domain) of the morphism.
      */
     Morphism(std::vector<size_t> theValues, std::vector<std::string> theAlphabet);
+
+    /**
+     * Getter for alphabet.
+     * @return the alphabet.
+     */
+    std::vector<std::string> getAlphabet() const;
     /**
      * Returns the size of the alphabet - the morphism's domain.
      * @return alphabet size.

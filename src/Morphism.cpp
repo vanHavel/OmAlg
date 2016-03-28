@@ -6,6 +6,10 @@ namespace omalg {
 
   Morphism::Morphism(std::vector<size_t> theValues, std::vector<std::string> theAlphabet)
     : values(theValues), alphabet(theAlphabet) {}
+
+  std::vector<std::string> Morphism::getAlphabet() const {
+    return this->alphabet;
+  }
   
   size_t Morphism::size() const {
     return this->values.size();

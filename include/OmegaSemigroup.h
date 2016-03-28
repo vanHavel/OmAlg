@@ -6,8 +6,11 @@
 
 #include "Semigroup.h"
 #include "Morphism.h"
+#include "GeneralException.h"
 
 namespace omalg {
+
+  class DeterministicBuechiAutomaton;
 
   class OmegaSemigroup {
   private:
@@ -92,6 +95,13 @@ namespace omalg {
      * @return True iff WB-recognizable
      */
     bool isWBRecognizable() const;
+
+		/**
+		 * Turns omega semigroup into equivalent weak buechi automaton, if possible.
+		 * @return Equivalent weak Buechi automaton
+		 * @throw OperationNotApplicableException if recognized language is not weak Buechi recognizable
+		 */
+    DeterministicBuechiAutomaton toWeakBuechi() const;
   };
 
 

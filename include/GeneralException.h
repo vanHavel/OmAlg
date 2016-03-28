@@ -8,9 +8,16 @@ namespace omalg {
 
   class NotYetSupportedException: public std::exception {
     const char* what() const noexcept override {
-          std::string message = "Functionality not yet implemented.";
-          return message.c_str();
-        }
+      std::string message = "Functionality not yet implemented.";
+      return message.c_str();
+    }
+  };
+
+  class OperationNotApplicableException: public std::exception {
+    const char* what() const noexcept override {
+      std::string message = "Operation ca't be performed.";
+      return message.c_str();
+    }
   };
 
 }
