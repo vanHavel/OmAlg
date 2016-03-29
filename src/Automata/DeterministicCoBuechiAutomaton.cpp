@@ -44,6 +44,11 @@ namespace omalg {
   }
 
   DeterministicBuechiAutomaton DeterministicCoBuechiAutomaton::dual() const {
-    return DeterministicBuechiAutomaton(this->getStateNames(), this->getAlphabet(), this->getInitialState(), this->getTransitionTable(), this->getFinalStates());
+    //invert final states
+    auto inverted = this->getFinalStates();
+    for (auto iter = inverted.begin(); iter != inverted.end(); ++iter) {
+      *iter = !(*iter);
+    }
+    return DeterministicBuechiAutomaton(this->getStateNames(), this->getAlphabet(), this->getInitialState(), this->getTransitionTable(), inverted);
   }
 }
