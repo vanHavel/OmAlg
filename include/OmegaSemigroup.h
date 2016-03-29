@@ -12,6 +12,7 @@ namespace omalg {
 
   class DeterministicBuechiAutomaton;
   class DeterministicCoBuechiAutomaton;
+	class DeterministicParityAutomaton;
 
   class OmegaSemigroup {
   private:
@@ -117,6 +118,12 @@ namespace omalg {
 		 * @throw OperationNotApplicableException if recognized language is not det. Buechi recognizable
 		 */
     DeterministicBuechiAutomaton toDetBuechi() const;
+
+    /**
+		 * Turns omega semigroup into equivalent deterministic parity automaton.
+		 * @return Equivalent parity automaton
+		 */
+    DeterministicParityAutomaton toParity() const;
   };
 
 

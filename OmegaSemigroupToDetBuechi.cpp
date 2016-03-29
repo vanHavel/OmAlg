@@ -8,7 +8,7 @@
 #include "DeterministicBuechiAutomaton.h"
 
 /**
- * Reads an omega semigroup from an input file, and transforms it into an equivalent weak
+ * Reads an omega semigroup from an input file, and transforms it into an equivalent det.
  * Buechi automaton (if possible).
  * @param argc The number of command line arguments.
  * @param argv The Command line arguments.

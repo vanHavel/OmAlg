@@ -5,11 +5,11 @@
 #include "IOHandler.h"
 #include "IOHandlerExceptions.h"
 #include "OptParser.h"
-#include "DeterministicCoBuechiAutomaton.h"
+#include "DeterministicParityAutomaton.h"
 
 /**
  * Reads an omega semigroup from an input file, and transforms it into an equivalent
- * coBuechi automaton (if possible).
+ * parity automaton.
  * @param argc The number of command line arguments.
  * @param argv The Command line arguments.
  * @return 0 if and only if successful.
@@ -17,12 +17,12 @@
 int main(int argc, char const* argv[]) {
 //Creation of OptParser and setup of supported options
   Kanedo::OptParser optParser = Kanedo::OptParser();
-  optParser.setHelpText("Given an omega semigroup, construct a deterministic coBuechi automaton "
+  optParser.setHelpText("Given an omega semigroup, construct a deterministic parity automaton "
                             "for its language.");
   optParser.setOption("input_file", "i", "input-file", "Path to input file for omega semigroup");
   optParser.setOption("output_file", "o", "output-file", "Path to output file for resulting automaton");
   optParser.addFlag("help", "h", "help", "Print usage text");
-  optParser.addFlag("suppress_output", "s", "suppress-output", "Suppress output of warnings by os2c");
+  optParser.addFlag("suppress_output", "s", "suppress-output", "Suppress output of warnings by os2p");
 
   //Parse the command line options
   try {
@@ -54,7 +54,7 @@ int main(int argc, char const* argv[]) {
   if(inputFile.empty()) {
     //No input file specified
     if(!suppressWarnings) {
-      std::cerr << "Warning: No input file specified. Reading from stdin. (Type os2c -h for help)";
+      std::cerr << "Warning: No input file specified. Reading from stdin. (Type os2p -h for help)";
       std::cerr << std::endl;
     }
     //Reading from stdin
@@ -86,44 +86,36 @@ int main(int argc, char const* argv[]) {
   }
 
   //construct result
-  try {
-    omalg::DeterministicCoBuechiAutomaton A = S->toCoBuechi();
+  omalg::DeterministicParityAutomaton A = S->toParity();
 
-    //get output file
-    std::string outputFile = optParser.getValue("output_file");
+  //get output file
+  std::string outputFile = optParser.getValue("output_file");
 
-    //write to output file
-    if (outputFile.empty()) {
-      //No output file specified
-      if (!suppressWarnings) {
-        std::cerr << "Warning: No output file specified. Writing to stdout. (Type os2c -h for help)";
-        std::cerr << std::endl;
-      }
-      std::cout << A.description();
+  //write to output file
+  if (outputFile.empty()) {
+    //No output file specified
+    if (!suppressWarnings) {
+      std::cerr << "Warning: No output file specified. Writing to stdout. (Type os2p -h for help)";
+      std::cerr << std::endl;
     }
-    else {
-      std::ofstream out;
-      out.open(outputFile, std::ios::out);
-      if (!out.good()) {
-        std::cerr << "Failed to open file " + outputFile + ".";
-        std::cerr << std::endl;
-        return EXIT_FAILURE;
-      }
-      out << A.description();
-      out.close();
-      if (out.fail()) {
-        std::cerr << "Failed to close file " + outputFile + ".";
-        std::cerr << std::endl;
-      }
+    std::cout << A.description();
+  }
+  else {
+    std::ofstream out;
+    out.open(outputFile, std::ios::out);
+    if (!out.good()) {
+      std::cerr << "Failed to open file " + outputFile + ".";
+      std::cerr << std::endl;
+      return EXIT_FAILURE;
     }
-    return 0;
+    out << A.description();
+    out.close();
+    if (out.fail()) {
+      std::cerr << "Failed to close file " + outputFile + ".";
+      std::cerr << std::endl;
+    }
   }
-  catch (omalg::OperationNotApplicableException const& e) {
-    std::cerr << "Given omega semigroup can not be transformed into equivalent coBuechi automaton." ;
-    std::cerr << std::endl;
-    std::cerr << "The language is not coBuechi recognizable.";
-    std::cerr << std::endl;
-    return EXIT_FAILURE;
-  }
+  return 0;
+
 
 }

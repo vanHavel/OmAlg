@@ -1,6 +1,7 @@
 #include "OmegaSemigroup.h"
 #include "DeterministicBuechiAutomaton.h"
 #include "DeterministicCoBuechiAutomaton.h"
+#include "DeterministicParityAutomaton.h"
 
 namespace omalg {
   OmegaSemigroup::OmegaSemigroup(Semigroup theSemigroup, std::vector<std::string> theOmegaElementNames,
@@ -151,6 +152,11 @@ namespace omalg {
 
   DeterministicBuechiAutomaton OmegaSemigroup::toDetBuechi() const {
     return this->toCoBuechi().dual();
+  }
+
+  DeterministicParityAutomaton OmegaSemigroup::toParity() const {
+    return DeterministicParityAutomaton(std::vector<std::string>(), std::vector<std::string>(), 0, std::vector<std::vector<size_t> >(), std::vector<size_t>());
+    //TODO
   }
 
   std::string OmegaSemigroup::description() const {
