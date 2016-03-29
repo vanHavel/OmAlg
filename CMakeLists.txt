@@ -26,7 +26,6 @@ set(SOURCE_FILES
     src/OmegaSemigroup.cpp
     src/Semigroup.cpp
     vanHavel/UnionFind.cpp
-    vanHavel/UnionFind.h
     vanHavel/vanHavel_Util.cpp)
 
 include_directories(include)
@@ -37,3 +36,6 @@ include_directories(vanHavel)
 
 add_executable(a2os ${SOURCE_FILES} AutomatonToOmegaSemigroup.cpp)
 add_executable(oslh ${SOURCE_FILES} OmegaSemigroupLandweberHierarchy.cpp)
+add_executable(os2w ${SOURCE_FILES} OmegaSemigroupToWeakBuechi.cpp)
+add_executable(os2c ${SOURCE_FILES} OmegaSemigroupToCoBuechi.cpp)
+add_executable(os2d ${SOURCE_FILES} OmegaSemigroupToDetBuechi.cpp)

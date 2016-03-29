@@ -7,6 +7,8 @@
 #include "CoBuechiAutomaton.h"
 #include "DeterministicOmegaAutomaton.h"
 
+class DeterministicBuechiAutomaton;
+
 namespace omalg {
 
   class DeterministicCoBuechiAutomaton: public CoBuechiAutomaton, public DeterministicOmegaAutomaton {
@@ -22,6 +24,12 @@ namespace omalg {
     
     TransitionProfile<DeterministicCoBuechiAutomaton> getTransitionProfileForLetter(size_t index) const;
     TransitionProfile<DeterministicCoBuechiAutomaton> getEpsilonProfile() const;
+
+    /**
+     * Constructs the dual automaton - a det. Buechi automaton for the complement.
+     * @return the dual automaton.
+     */
+    DeterministicBuechiAutomaton dual() const;
   };
 }
 

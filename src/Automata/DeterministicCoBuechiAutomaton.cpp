@@ -1,4 +1,5 @@
 #include "DeterministicCoBuechiAutomaton.h"
+#include "DeterministicBuechiAutomaton.h"
 
 namespace omalg {
   DeterministicCoBuechiAutomaton::DeterministicCoBuechiAutomaton
@@ -40,5 +41,9 @@ namespace omalg {
       newRepresentation[state] = std::make_pair(state, this->isFinal(state));
     }
     return TransitionProfile<DeterministicCoBuechiAutomaton>(newRepresentation);
+  }
+
+  DeterministicBuechiAutomaton DeterministicCoBuechiAutomaton::dual() const {
+    return DeterministicBuechiAutomaton(this->getStateNames(), this->getAlphabet(), this->getInitialState(), this->getTransitionTable(), this->getFinalStates());
   }
 }

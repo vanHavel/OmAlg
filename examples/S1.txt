@@ -1,14 +1,12 @@
-tp(a),tp(b),tp(ab),tp(ba);
-tp(a),tp(ab),tp(ab),tp(ba)
-tp(ba),tp(b),tp(ab),tp(ba)
-tp(ba),tp(ab),tp(ab),tp(ba)
-tp(ba),tp(ab),tp(ab),tp(ba);
-(tp(a))^w,(tp(b))^w;
-(tp(a))^w,(tp(b))^w
-(tp(a))^w,(tp(b))^w
-(tp(a))^w,(tp(b))^w
-(tp(a))^w,(tp(b))^w;
-(tp(a))^w,(tp(b))^w,(tp(b))^w,(tp(b))^w;
-a,b;
-tp(a),tp(b);
-(tp(b))^w;
+a,b,c;
+a,b,c
+b,b,c
+c,c,c;
+a^w, b^w, c^w, ba^w, cb^w, ca^w;
+a^w, b^w, c^w, ba^w, cb^w, ca^w
+ba^w, b^w, c^w, ba^w, cb^w, ca^w
+ca^w, cb^w, c^w, ca^w, cb^w, ca^w;
+a^w, b^w, c^w;
+a,b,c;
+a,b,c;
+b^w, ba^w;

@@ -24,4 +24,8 @@ namespace omalg {
   bool BuechiAutomaton::isFinal(size_t state) const {
     return this->finalStates[state];
   }
+
+  std::vector<bool> BuechiAutomaton::getFinalStates() const {
+    return this->finalStates;
+  }
 }

@@ -10,9 +10,9 @@ namespace omalg {
   class CoBuechiAutomaton: public virtual OmegaAutomaton {
   private:
     std::vector<bool> finalStates;
-
   protected:
     CoBuechiAutomaton(std::vector<bool> theFinalStates);
+    std::vector<bool> getFinalStates() const;
   public:
     virtual std::string description() const override;
     /**

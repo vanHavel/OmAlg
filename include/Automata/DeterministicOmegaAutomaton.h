@@ -9,10 +9,10 @@ namespace omalg {
 
   class DeterministicOmegaAutomaton: public virtual OmegaAutomaton {
 	private:
-      std::vector<std::vector<size_t> > transitionTable;
-		  
+    std::vector<std::vector<size_t> > transitionTable;
 	protected:
-      DeterministicOmegaAutomaton(std::vector<std::vector<size_t> > theTransitionTable);
+    DeterministicOmegaAutomaton(std::vector<std::vector<size_t> > theTransitionTable);
+		std::vector<std::vector<size_t> > getTransitionTable() const;
 
 	public:
 	  virtual std::string description() const override;

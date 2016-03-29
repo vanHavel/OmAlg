@@ -11,6 +11,7 @@
 namespace omalg {
 
   class DeterministicBuechiAutomaton;
+  class DeterministicCoBuechiAutomaton;
 
   class OmegaSemigroup {
   private:
@@ -97,11 +98,25 @@ namespace omalg {
     bool isWBRecognizable() const;
 
 		/**
-		 * Turns omega semigroup into equivalent weak buechi automaton, if possible.
+		 * Turns omega semigroup into equivalent weak Buechi automaton, if possible.
 		 * @return Equivalent weak Buechi automaton
 		 * @throw OperationNotApplicableException if recognized language is not weak Buechi recognizable
 		 */
     DeterministicBuechiAutomaton toWeakBuechi() const;
+
+		/**
+		 * Turns omega semigroup into equivalent coBuechi automaton, if possible.
+		 * @return Equivalent coBuechi automaton
+		 * @throw OperationNotApplicableException if recognized language is not coBuechi recognizable
+		 */
+		DeterministicCoBuechiAutomaton toCoBuechi() const;
+
+    /**
+		 * Turns omega semigroup into equivalent det. Buechi automaton, if possible.
+		 * @return Equivalent det. Buechi automaton
+		 * @throw OperationNotApplicableException if recognized language is not det. Buechi recognizable
+		 */
+    DeterministicBuechiAutomaton toDetBuechi() const;
   };
 
 
