@@ -89,6 +89,7 @@ namespace omalg {
   }
   
   void Semigroup::calculateGreenRelations() const {
+    //The runtime is (O(n^3)).
     //calculate r order
     if (!this->rOrder) {
       this->calculateROrder();
@@ -144,10 +145,12 @@ namespace omalg {
   }
 
   void Semigroup::calculateJDepths() const {
+    //Calculate jOrder first
     if (!this->jOrder) {
       this->calculateGreenRelations();
     }
     size_t size = this->elementNames.size();
+    //Allocate memory
     this->jDepths = new std::vector<size_t>(size, 0);
 
     //calculate strict j order
@@ -161,7 +164,7 @@ namespace omalg {
     //similar to sat checking for horn formulas, we store for each index i the number count[i]
     //of stictly higher j elements, and the indices lower[i] for which i is a strictly higher j
     //element. If a depth is assigned to i, the count for all indices in lower[i] is decreased.
-    //If it hits 0, a new j depth can be assigned.
+    //If it hits 0, a new j depth can be assigned. This is O(n^2) if green relations are calculated.
     auto count = std::vector<size_t>(size, 0);
     auto lower = std::vector<std::list<size_t> >(size, std::list<size_t>());
     auto higher = std::vector<std::list<size_t> >(size, std::list<size_t>());

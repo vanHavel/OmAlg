@@ -10,11 +10,11 @@ Build using CMake. Version 3.4 is required.
     * Nondeterministic: Buechi, coBuechi
 * decide a language L's position in the Landweber hierarchy given an omega-semigroup for L
 * transform omega-semigroups into equivalent automata (if applicable). Supported types:
+    * parity automata (Colcombet's construction)
     * weak Buechi automata
 
 # Currently working on
 - omega-semigroups to deterministic Büchi and co-Büchi automata
-- omega-semigroups to parity automata
 
 # Planned features
 - user manual
