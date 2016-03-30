@@ -136,16 +136,17 @@ namespace omalg {
     else {
       size_t last = currentState.back();
       size_t prod = this->S.sPlus.product(last, element);
-      //If the new element is not in a strictly higher J class than the last OR
+      //If the new element is not in a strictly higher J class than the last (first 2 conditions) OR
       //the last element times the new element falls to a deeper J class than the last one's:
       if (!(this->S.sPlus.j(last, element)) ||
+           (this->S.sPlus.j(element,last))  ||
           !(this->S.sPlus.j(last, prod))) {
         //Pop last, recurse with product of last and element as the new rightmost element.
         currentState.pop_back();
         return successorState(currentState, prod);
       }
       else {
-        //add new element to state.
+        //simply add new element to state.
         currentState.push_back(element);
         return currentState;
       }

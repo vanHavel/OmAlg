@@ -1,3 +1,5 @@
+#include <queue>
+
 #include "Semigroup.h"
 
 namespace omalg {
@@ -142,8 +144,68 @@ namespace omalg {
   }
 
   void Semigroup::calculateJDepths() const {
-    this->jDepths = new std::vector<size_t>(this->elementNames.size(), 0);
-    //TODO
+    if (!this->jOrder) {
+      this->calculateGreenRelations();
+    }
+    size_t size = this->elementNames.size();
+    this->jDepths = new std::vector<size_t>(size, 0);
+
+    //calculate strict j order
+    auto strictJOrder = std::vector<std::vector<bool>>(size, std::vector<bool>(size, false));
+    for (size_t i = 0; i < size; ++i) {
+      for (size_t k = 0; k < size; ++k) {
+        strictJOrder[i][k] = this->j(i,k) && !this->j(k,i);
+      }
+    }
+
+    //similar to sat checking for horn formulas, we store for each index i the number count[i]
+    //of stictly higher j elements, and the indices lower[i] for which i is a strictly higher j
+    //element. If a depth is assigned to i, the count for all indices in lower[i] is decreased.
+    //If it hits 0, a new j depth can be assigned.
+    auto count = std::vector<size_t>(size, 0);
+    auto lower = std::vector<std::list<size_t> >(size, std::list<size_t>());
+    auto higher = std::vector<std::list<size_t> >(size, std::list<size_t>());
+    auto Q = std::queue<size_t>();
+
+    //Determine count and lower sets and higher sets
+    for (size_t i = 0; i < size; ++i) {
+      for (size_t k = 0; k < size; ++k) {
+        if (strictJOrder[i][k]) {
+          count[i]++;
+          lower[k].push_back(i);
+          higher[i].push_back(k);
+        }
+      }
+      //push those elements with count 0 to Q
+      if (count[i] == 0) {
+        Q.push(i);
+      }
+    }
+
+    //Iterate over elements in Q
+    while (!Q.empty()) {
+      size_t cur = Q.front();
+      Q.pop();
+      //assign j depth to maximum depth of higher elements + 1
+      for (auto iter = higher[cur].begin(); iter != higher[cur].end(); ++iter) {
+        if ((*(this->jDepths))[cur] == 0 || (*(this->jDepths))[cur] < (*(this->jDepths))[*iter] + 1) {
+          (*(this->jDepths))[cur] = (*(this->jDepths))[*iter] + 1;
+        }
+      }
+      //Special case: depth 1. There are no higher elements.
+      if((*(this->jDepths))[cur] == 0) {
+        (*(this->jDepths))[cur] = 1;
+      }
+      //Decrease count for all lower elements.
+      for (auto iter = lower[cur].begin(); iter != lower[cur].end(); ++iter) {
+        count[*iter]--;
+        //push to Q
+        if (count[*iter] == 0) {
+          Q.push(*iter);
+        }
+      }
+    }
+
   }
 
   bool Semigroup::J(size_t lhs, size_t rhs) const {
