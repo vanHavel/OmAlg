@@ -31,7 +31,7 @@ set(OMALG_SOURCES
         src/OmegaSemigroup.cpp
         src/Semigroup.cpp
         vanHavel/UnionFind.cpp
-        vanHavel/vanHavel_Util.cpp)
+        vanHavel/vanHavel_Util.cpp src/AutomatonConverter.cpp include/AutomatonConverter.h)
 
 include_directories(
         include

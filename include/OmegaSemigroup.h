@@ -15,6 +15,10 @@ namespace omalg {
 	class DeterministicParityAutomaton;
 
   class OmegaSemigroup {
+
+		//The automaton converter can access private fields of the omega semigroup.
+		friend class AutomatonConverter;
+
   private:
   	Semigroup sPlus;
   	std::vector<std::string> omegaElementNames;

@@ -18,6 +18,10 @@ namespace omalg {
     mutable std::vector<std::vector<bool> >* rOrder = 0;
     mutable std::vector<std::vector<bool> >* lOrder = 0;
 
+    //Allow to store pre-computed j depths to increase efficiency in computations.
+    //This is achieved by calling calculateJDepths.
+    mutable std::vector<size_t>* jDepths = 0;
+
     //Lists of idempotents and linked pairs are cached once calculated.
     //These can not be empty once calculated as every finite semigroup contains an idempotent.
     mutable std::list<std::pair<size_t, size_t> > _linkedPairs = std::list<std::pair<size_t, size_t> >();
@@ -74,6 +78,10 @@ namespace omalg {
      */
     void calculateROrder() const;
 
+    /**
+     * Calculates the J depth function of the semigroup.
+     */
+    void calculateJDepths() const;
 
     /**
      * Functions for Green equivalence relations. Faster if calculateGreenRelations was executed beforehand.
@@ -90,6 +98,13 @@ namespace omalg {
     bool r(size_t lhs, size_t rhs) const;
     bool l(size_t lhs, size_t rhs) const;
     bool h(size_t lhs, size_t rhs) const;
+
+    /**
+     * Returns the J depth of a given element.
+     * @param index index of the element.
+     * @return J depth of the element.
+     */
+    size_t jDepth(size_t index) const;
 
     /**
      * Returns all linked pairs of the semigroup. A linked pair is a tuple (s,e) such that se = s and ee = e.

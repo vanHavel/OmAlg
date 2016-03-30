@@ -28,6 +28,13 @@ namespace omalg {
     else {
       jOrder = 0;
     }
+    if (S.jDepths) {
+      jDepths = new std::vector<size_t>();
+      *jDepths = *S.jDepths;
+    }
+    else {
+      jDepths = 0;
+    }
   }
 
   Semigroup& Semigroup::operator=(Semigroup const& S) {
@@ -54,6 +61,13 @@ namespace omalg {
       }
       else {
         this->jOrder = 0;
+      }
+      if (S.jDepths) {
+        this->jDepths = new std::vector<size_t>();
+        *(this->jDepths) = *S.jDepths;
+      }
+      else {
+        this->jDepths = 0;
       }
     }
     return *this;
@@ -127,19 +141,24 @@ namespace omalg {
     }
   }
 
-  inline bool Semigroup::J(size_t lhs, size_t rhs) const {
+  void Semigroup::calculateJDepths() const {
+    this->jDepths = new std::vector<size_t>(this->elementNames.size(), 0);
+    //TODO
+  }
+
+  bool Semigroup::J(size_t lhs, size_t rhs) const {
     return (this->j(lhs, rhs) && this->j(rhs, lhs));
   }
 
-  inline bool Semigroup::R(size_t lhs, size_t rhs) const {
+  bool Semigroup::R(size_t lhs, size_t rhs) const {
     return (this->r(lhs, rhs) && this->r(rhs, lhs));
   }
 
-  inline bool Semigroup::L(size_t lhs, size_t rhs) const {
+  bool Semigroup::L(size_t lhs, size_t rhs) const {
     return (this->l(lhs, rhs) && this->l(rhs, lhs));
   }
 
-  inline bool Semigroup::H(size_t lhs, size_t rhs) const {
+  bool Semigroup::H(size_t lhs, size_t rhs) const {
     return (this->R(lhs, rhs) && this->L(lhs, rhs));
   }
 
@@ -183,6 +202,13 @@ namespace omalg {
 
   inline bool Semigroup::h(size_t lhs, size_t rhs) const {
     return (this->r(lhs, rhs) && this->l(lhs, rhs));
+  }
+
+  size_t Semigroup::jDepth(size_t index) const {
+    if (!this->jDepths) {
+      this->calculateJDepths();
+    }
+    return (*(this->jDepths))[index];
   }
 
   std::list<size_t> Semigroup::idempotents() const {
