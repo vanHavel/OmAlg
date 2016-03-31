@@ -107,12 +107,19 @@ namespace omalg {
   }
 
   DeterministicCoBuechiAutomaton OmegaSemigroup::toCoBuechi() const {
+    if (!this->isDCRecognizable()) {
+      throw OperationNotApplicableException();
+    }
     auto Converter = AutomatonConverter(*this);
     return Converter.convertToCoBuechi();
   }
 
   DeterministicBuechiAutomaton OmegaSemigroup::toDetBuechi() const {
-    return this->toCoBuechi().dual();
+    if (!this->isDBRecognizable()) {
+      throw OperationNotApplicableException();
+    }
+    auto Converter = AutomatonConverter(*this);
+    return Converter.convertToDetBuechi();
   }
 
   DeterministicParityAutomaton OmegaSemigroup::toParity() const {

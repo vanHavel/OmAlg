@@ -72,7 +72,73 @@ namespace omalg {
   }
 
   DeterministicCoBuechiAutomaton AutomatonConverter::convertToCoBuechi() const {
-    //TODO
+    //Setup semigroup.
+    this->S.sPlus.calculateGreenRelations();
+    //Fetch alphabet size
+    auto alphabetSize = this->S.phi.size();
+    //Auto increasing state ID for created states.
+    size_t stateID = 0;
+    //Queue of created states that have yet to be processed for transition specification.
+    //States are inserted only once after creation, in order of ID.
+    auto toCheck = std::queue<std::list<size_t> >();
+    //Map of created states (their string value is the key) to their state id.
+    auto stateMap = std::unordered_map<std::string, size_t>();
+    //List of transition table for each state, in order of state ID.
+    auto transitionList = std::list<std::vector<size_t> >();
+    //List of final flag for each state, in order of state ID.
+    auto finalList = std::list<bool>();
+    //List of state names for each state, in order of state ID.
+    auto stateList = std::list<std::string>();
+
+    //Create initial state (empty list).
+    stateMap[""] = stateID;
+    finalList.push_back(false);
+    stateList.push_back("<>");
+    ++stateID;
+    toCheck.push(std::list<size_t>());
+
+    //main loop
+    while (!toCheck.empty()) {
+      //get next state to process for transitions
+      auto currentState = toCheck.front();
+      toCheck.pop();
+      auto targetVector = std::vector<size_t>(alphabetSize, 0);
+      //Generate successor state for each alphabet letter
+      for (size_t letter = 0; letter < alphabetSize; ++letter) {
+        auto successor = this->CBAsuccessorState(currentState, this->S.phi[letter]);
+        auto successorString = this->stringValue(successor);
+        //If state does not already exist: create new state
+        if (stateMap.find(successorString) == stateMap.end()) {
+          stateMap[successorString] = stateID;
+          finalList.push_back(this->decideFinality(successor));
+          stateList.push_back(this->stateName(successor));
+          ++stateID;
+          toCheck.push(successor);
+        }
+        //Store transition
+        targetVector[letter] = stateMap[successorString];
+      }
+      //push transition vector to list
+      transitionList.push_back(targetVector);
+    }
+
+    //Create state name vector
+    auto stateNames = std::vector<std::string>(stateList.begin(), stateList.end());
+    //Create transition table
+    auto transitionTable = std::vector<std::vector<size_t> >(transitionList.begin(), transitionList.end());
+    //Create final state vector
+    auto finalStates = std::vector<bool>(finalList.begin(), finalList.end());
+
+    //return result
+    return DeterministicCoBuechiAutomaton(stateNames, this->S.phi.getAlphabet(), 0, transitionTable, finalStates);
+
+  }
+
+  DeterministicBuechiAutomaton AutomatonConverter::convertToDetBuechi() const {
+    this->S.invertP();
+    auto compAut = this->convertToCoBuechi();
+    this->S.invertP();
+    return compAut.dual();
   }
 
   DeterministicBuechiAutomaton AutomatonConverter::convertToWeakBuechi() const {
@@ -140,7 +206,7 @@ namespace omalg {
       //the last element times the new element falls to a deeper J class than the last one's:
       if (!(this->S.sPlus.j(last, element)) ||
            (this->S.sPlus.j(element,last))  ||
-          !(this->S.sPlus.j(last, prod))) {
+          !(this->S.sPlus.r(last, prod))) {
         //Pop last, recurse with product of last and element as the new rightmost element.
         currentState.pop_back();
         return successorState(currentState, prod);
@@ -203,5 +269,110 @@ namespace omalg {
     return res;
   }
 
+  std::list<size_t> AutomatonConverter::CBAsuccessorState(std::list<size_t> const& currentState, size_t element) const {
+    if (currentState.size() == 0) {
+      //initial state
+      std::list<size_t> result = {element};
+      return result;
+    }
+    else if (currentState.size() == 1){
+      //single element states
+      size_t s = currentState.front();
+      size_t se = this->S.sPlus.product(s, element);
+      //Check s <_j element, s J s*element and s not sub loop accepting, (s, element) sub loop accepting
+      if (this->S.sPlus.j(s, element) && !(this->S.sPlus.j(element, s)) && this->S.sPlus.r(s,se) &&
+          !(this->subLoopAccepting(s)) && this->subLoopAccepting(s, element)) {
+        std::list<size_t> result = {s, element};
+        return result;
+      }
+      else {
+        std::list<size_t> result = {se};
+        return result;
+      }
+    }
+    else {
+    //double element states
+      size_t s = currentState.front();
+      size_t t = currentState.back();
+      size_t te = this->S.sPlus.product(t, element);
+      size_t ste = this->S.sPlus.product(s, te);
+      //Check s <_j t*element, s J s*t*element and (s, t*element) sub loop accepting
+      if (this->S.sPlus.j(s, te) && !(this->S.sPlus.j(te, s)) && this->S.sPlus.r(s, ste) &&
+          this->subLoopAccepting(s, te)) {
+        std::list<size_t> result = {s, te};
+        return result;
+      }
+      else {
+        std::list<size_t> result = {ste};
+        return result;
+      }
+    }
+  }
+
+  bool AutomatonConverter::decideFinality(std::list<size_t> const &state) const {
+    //states of Q2 are always final
+    if (state.size() == 2) {
+      return true;
+    }
+    else {
+      return this->subLoopAccepting(state.front());
+    }
+  }
+
+  bool AutomatonConverter::subLoopAccepting(size_t t) const {
+    auto idem = this->S.sPlus.idempotents();
+    //Check idempotents in the same R class for acceptance.
+    for (auto iter = idem.begin(); iter != idem.end(); ++iter) {
+      if (this->S.sPlus.R(t, *iter)) {
+        return this->S.P[this->S.omegaIterationTable[*iter]];
+      }
+    }
+    //R class is irregular -> check above linked pairs.
+    auto pairs = this->S.sPlus.linkedPairs();
+    for (auto iter = pairs.begin(); iter != pairs.end(); ++iter) {
+      size_t r = iter->first;
+      size_t e = iter->second;
+      size_t tr = this->S.sPlus.product(t, r);
+      //Check if t <_j r and tr J t.
+      if (this->S.sPlus.j(t, r) && !(this->S.sPlus.j(r, t)) && this->S.sPlus.r(t, tr)) {
+        //Check if tre^w in P for sub loop acceptance.
+        size_t eOm = this->S.omegaIterationTable[e];
+        if(!(this->S.P[this->S.mixedProductTable[tr][eOm]])) {
+          return false;
+        }
+      }
+    }
+    //All above linked pairs are accepting.
+    return true;
+  }
+
+  bool AutomatonConverter::subLoopAccepting(size_t s, size_t t) const {
+    auto idem = this->S.sPlus.idempotents();
+    //Check idempotents in the same R class for acceptance.
+    for (auto iter = idem.begin(); iter != idem.end(); ++iter) {
+      if (this->S.sPlus.R(t, *iter)) {
+        size_t eOm = this->S.omegaIterationTable[*iter];
+        return this->S.P[this->S.mixedProductTable[s][eOm]];
+      }
+    }
+    //R class is irregular -> check above linked pairs.
+    auto pairs = this->S.sPlus.linkedPairs();
+    for (auto iter = pairs.begin(); iter != pairs.end(); ++iter) {
+      size_t r = iter->first;
+      size_t e = iter->second;
+      size_t tr = this->S.sPlus.product(t, r);
+      size_t str = this->S.sPlus.product(s, tr);
+      //Check if t <_j r and tr J t.
+      if (this->S.sPlus.j(t, r) && !(this->S.sPlus.j(r, t)) && this->S.sPlus.r(t, tr)) {
+        //Check if stre^w in P for sub loop acceptance.
+        size_t eOm = this->S.omegaIterationTable[e];
+        if(!(this->S.P[this->S.mixedProductTable[str][eOm]])) {
+          return false;
+        }
+      }
+    }
+    //All above linked pairs are accepting.
+    return true;
+  }
 
 }

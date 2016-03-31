@@ -35,12 +35,23 @@ namespace omalg {
     DeterministicCoBuechiAutomaton convertToCoBuechi() const;
 
     /**
+     * Execute conversion to det. Buechi automaton.
+     * @return The resulting det. Buechi automaton.
+     */
+    DeterministicBuechiAutomaton convertToDetBuechi() const;
+
+    /**
      * Execute conversion to weak Buechi automaton.
      * @return The resulting weak Buechi automaton.
      */
     DeterministicBuechiAutomaton convertToWeakBuechi() const;
   private:
-    OmegaSemigroup S;
+    /**
+     * The omega semigroup to transform. No method changes the state of the omega semigroup.
+     * It is declared mutable to implement the conversion to det. Buechi more efficiently,
+     * relying on the coBuechi conversion of the complement.
+     */
+    mutable OmegaSemigroup S;
     /**
      * Turns list of integers into a string as key for use in maps.
      */
@@ -67,6 +78,36 @@ namespace omalg {
      * @return a string representation of the state.
      */
     std::string stateName(std::list<size_t> const &state) const;
+
+    /**
+     * Calculate successor state in coBuechi automaton given current state and new rightmost element.
+     * @param currentState list representation of the current state.
+     * @param element new rightmost element.
+     * @return list representation of successor state.
+     */
+    std::list<size_t> CBAsuccessorState(std::list<size_t> const& currentState, size_t element) const;
+
+    /**
+     * Decide whether a given coBuechi state should be final.
+     * @param state list representation of the state.
+     * @return true iff the state is final.
+     */
+    bool decideFinality(std::list<size_t> const &state) const;
+
+    /**
+     * Decide whether a given element is sub loop accepting.
+     * @param t the element to consider.
+     * @return true iff t is sub loop accepting.
+     */
+    bool subLoopAccepting(size_t t) const;
+
+    /**
+     * Decide whether a given pair is sub loop accepting.
+     * @param s first element of the pair.
+     * @param t second element of the pair
+     * @return true iff (s,t) is sub loop accepting.
+     */
+    bool subLoopAccepting(size_t s, size_t t) const;
   };
 
 }
