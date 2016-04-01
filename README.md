@@ -16,4 +16,4 @@ The file manual.pdf contains a comprehensive user manual including installation 
 - user manual
 
 # Planned features
-- none currently
+-  reduce omega semigroups to syntactic omega semigroups

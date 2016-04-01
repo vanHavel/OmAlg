@@ -1,12 +1,12 @@
-a,b,c;
-a,b,c
-b,b,c
-c,c,c;
-a^w, b^w, c^w, ba^w, cb^w, ca^w;
-a^w, b^w, c^w, ba^w, cb^w, ca^w
-ba^w, b^w, c^w, ba^w, cb^w, ca^w
-ca^w, cb^w, c^w, ca^w, cb^w, ca^w;
-a^w, b^w, c^w;
-a,b,c;
-a,b,c;
-b^w, ba^w;
+a,aa,b;
+aa,a,a
+a,aa,aa
+a,aa,b;
+even,odd,inf;
+odd,even,inf
+even,odd,inf
+even,odd,inf;
+inf,inf,even;
+a,b;
+a,b;
+even;
