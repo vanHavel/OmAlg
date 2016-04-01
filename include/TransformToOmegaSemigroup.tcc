@@ -182,7 +182,7 @@ namespace omalg {
         OmegaProfile mixedProduct = (*listIter)->getValue().mixedProduct(*vecIter);
         if (omegaProfiles.find(mixedProduct) == omegaProfiles.end()) {
           omegaProfiles[mixedProduct] = omegaIndex;
-          std::string newName = elementNames[(*listIter)->getIndex()] + "(" + elementNames[vecIter - omegaIters.begin()] + ")^w";
+          std::string newName = elementNames[(*listIter)->getIndex() - rowOffset] + "(" + elementNames[vecIter - omegaIters.begin()] + ")^w";
           omegaNames.insert(omegaNames.end(), newName);
           ++omegaIndex;
         }
@@ -206,7 +206,9 @@ namespace omalg {
       if (mapIter->second >= boundary) {
         for (auto listIter = listBegin; listIter != nodeList.end(); ++listIter) {
           OmegaProfile mixedProduct = (*listIter)->getValue().mixedProduct(mapIter->first);
-          mixedTable[(*listIter)->getIndex()][mapIter->second] = omegaProfiles[mixedProduct];
+          //Subtract 1 from finite index if epsilon is not in the table
+          size_t finIndex = (*listIter)->getIndex() - rowOffset;
+          mixedTable[finIndex][mapIter->second] = omegaProfiles[mixedProduct];
         }
       }
     }
