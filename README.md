@@ -13,7 +13,7 @@ The file manual.pdf contains a comprehensive user manual including installation 
     * weak Buechi automata
 
 # Currently working on
-- user manual
+- reduce omega semigroups to syntactic omega semigroups
 
 # Planned features
--  reduce omega semigroups to syntactic omega semigroups
+-  (none currently)
