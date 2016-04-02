@@ -49,6 +49,12 @@ namespace omalg {
     Semigroup& operator=(Semigroup const& S);
 
     /**
+     * Return number of elements in semigroup
+     * @return the number of elements.
+     */
+    size_t size() const;
+
+    /**
      * Calculates the semigroup product, given two element indices(No check of bounds).
      * @param lhs Left factor.
      * @param rhs Right factor.

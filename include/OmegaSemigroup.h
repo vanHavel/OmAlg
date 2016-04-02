@@ -66,6 +66,11 @@ namespace omalg {
   	 */
   	size_t omegaIteration(size_t element) const;
 
+		/**
+		 * Reduces to syntactic omega semigroup. This is very expensive(O(n^5)).
+		 */
+    void reduceToSyntactic();
+
     /**
      * Returns textual description of omega semigroup in OmAlg format.
      * @return The description as a string.
@@ -128,6 +133,23 @@ namespace omalg {
 		 * @return Equivalent parity automaton
 		 */
     DeterministicParityAutomaton toParity() const;
+
+  private:
+    /**
+     * Check whether two elements of sPlus are syntactically equivalent.
+     * @param lhs the first element.
+     * @param rhs the second element.
+     * @return true iff the elements are equivalent.
+     */
+    bool sPlusEquivalent(size_t lhs, size_t rhs) const;
+
+    /**
+     * Check whether two elements of sOmega are syntactically equivalent.
+     * @param lhs the first element.
+     * @param rhs the second element.
+     * @return true iff the elements are equivalent.
+     */
+    bool sOmegaEquivalent(size_t lhs, size_t rhs) const;
   };
 
 

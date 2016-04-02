@@ -79,6 +79,10 @@ namespace omalg {
   size_t Semigroup::product(size_t lhs, size_t rhs) const {
     return this->multiplicationTable[lhs][rhs];
   }
+
+  size_t Semigroup::size() const {
+    return this->elementNames.size();
+  }
   
   std::string Semigroup::elementName(size_t index) const {
     return this->elementNames.at(index);
