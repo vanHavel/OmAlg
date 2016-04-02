@@ -1,8 +1,8 @@
 Muller;
 deterministic;
 qa,qb,qc;
-a,b,c;
 qa;
+a,b,c;
 (qa,a,qa),(qa,b,qb),(qa,c,qc),
 (qb,a,qa),(qb,b,qb),(qb,c,qc),
 (qc,a,qa),(qc,b,qb),(qc,c,qc);
