@@ -106,7 +106,7 @@ namespace omalg {
     auto representants = std::vector<size_t>(representantList.begin(), representantList.end());
     auto omegaRepresentants = std::vector<size_t>(omegaRepresentantList.begin(), omegaRepresentantList.end());
     size_t pSizeReduced = representants.size();
-    size_t oSizeReduced = representants.size();
+    size_t oSizeReduced = omegaRepresentants.size();
 
     //Build new name vectors
     auto sPlusNamesReduced = std::vector<std::string>(pSizeReduced);
