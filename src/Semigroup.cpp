@@ -93,24 +93,20 @@ namespace omalg {
   }
   
   void Semigroup::calculateGreenRelations() const {
-    //The runtime is (O(n^3)).
+    //The runtime is O(n^2) for the l and r order and O(n^3) for the j order.
     //calculate r order
-    if (!this->rOrder) {
-      this->calculateROrder();
-    }
-    if (!this->lOrder) {
-      //initialize l order
+    if (!this->rOrder || !this->lOrder) {
+      //initialize l and r order
+      this->rOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), false));
       this->lOrder = new std::vector<std::vector<bool> >(this->elementNames.size(), std::vector<bool>(this->elementNames.size(), false));
 
-      //calculate l order
+      //calculate l and r order
       for (size_t i = 0; i < this->elementNames.size(); ++i) {
         for (size_t j = 0; j < this->elementNames.size(); ++j) {
-          for (size_t k = 0; k < this->elementNames.size(); ++k) {
-            if (this->multiplicationTable[k][j] == i) {
-              (*(this->lOrder))[i][j] = true;
-              break;
-            }
-          }
+          auto k = this->multiplicationTable[i][j];
+          (*(this->lOrder))[k][j] = true;
+          (*(this->rOrder))[k][i] = true;
+
         }
       }
     }
@@ -139,10 +135,8 @@ namespace omalg {
       //calculate rOrder
       for (size_t i = 0; i < this->elementNames.size(); ++i) {
         for (size_t j = 0; j < this->elementNames.size(); ++j) {
-          if (std::find(this->multiplicationTable[j].begin(), this->multiplicationTable[j].end(), i)
-          != this->multiplicationTable[j].end()) {
-            (*(this->rOrder))[i][j] = true;
-          }
+          auto k = this->multiplicationTable[i][j];
+          (*(this->rOrder))[k][i] = true;
         }
       }
     }
